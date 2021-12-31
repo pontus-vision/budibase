@@ -1,6 +1,6 @@
 {
   "name": "@budibase/string-templates",
-  "version": "1.0.27-alpha.0",
+  "version": "1.0.28",
   "description": "Handlebars wrapper for Budibase templating.",
   "main": "src/index.cjs",
   "module": "dist/bundle.mjs",
@@ -38,7 +38,8 @@
     "rollup-plugin-node-globals": "^1.4.0",
     "rollup-plugin-node-resolve": "^5.2.0",
     "rollup-plugin-terser": "^7.0.2",
-    "typescript": "^4.1.3"
+    "ts-node": "^10.4.0",
+    "typescript": "^4.5.4"
   },
   "gitHead": "d1836a898cab3f8ab80ee6d8f42be1a9eed7dcdc"
 }
