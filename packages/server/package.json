@@ -1,7 +1,7 @@
 {
   "name": "@budibase/server",
   "email": "hi@budibase.com",
-  "version": "1.0.28",
+  "version": "1.0.29-alpha.0",
   "description": "Budibase Web Server",
   "main": "src/index.ts",
   "repository": {
