@@ -4,7 +4,7 @@ const setup = require("./utilities")
 describe("/component", () => {
   let request = setup.getRequest()
   let config = setup.getConfig()
-
+  jest.setTimeout(500000)
   afterAll(setup.afterAll)
 
   beforeEach(async () => {
