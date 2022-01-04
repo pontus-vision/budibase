@@ -1,9 +1,9 @@
-const Router = require("@koa/router")
-const controller = require("../../controllers/global/templates")
-const joiValidator = require("../../../middleware/joi-validator")
-const Joi = require("joi")
-const { TemplatePurpose, TemplateTypes } = require("../../../constants")
-const adminOnly = require("../../../middleware/adminOnly")
+import Router from "@koa/router"
+import controller from "../../controllers/global/templates"
+import joiValidator from "../../../middleware/joi-validator"
+import Joi from "joi"
+import { TemplatePurpose, TemplateTypes } from "../../../constants"
+import adminOnly from "../../../middleware/adminOnly"
 
 const router = Router()
 
@@ -34,4 +34,4 @@ router
   .get("/api/global/template/:id", controller.find)
   .delete("/api/global/template/:id/:rev", adminOnly, controller.destroy)
 
-module.exports = router
+export default router

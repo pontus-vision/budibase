@@ -1,6 +1,6 @@
-let { wait } = require("../../utilities")
+import { wait } from "../../utilities"
 
-exports.definition = {
+export const definition = {
   name: "Delay",
   icon: "Clock",
   tagline: "Delay for {{inputs.time}} milliseconds",
@@ -31,7 +31,7 @@ exports.definition = {
   type: "LOGIC",
 }
 
-exports.run = async function delay({ inputs }) {
+export const run = async function delay({ inputs }) {
   await wait(inputs.time)
   return {
     success: true,

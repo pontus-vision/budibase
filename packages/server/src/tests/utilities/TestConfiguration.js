@@ -1,6 +1,6 @@
-const { BUILTIN_ROLE_IDS } = require("@budibase/auth/roles")
-const env = require("../../environment")
-const {
+import { BUILTIN_ROLE_IDS } from "@budibase/auth/roles"
+import env from "../../environment"
+import {
   basicTable,
   basicRow,
   basicRole,
@@ -11,17 +11,17 @@ const {
   basicLayout,
   basicWebhook,
   TENANT_ID,
-} = require("./structures")
-const controllers = require("./controllers")
-const supertest = require("supertest")
-const { cleanup } = require("../../utilities/fileSystem")
-const { Cookies, Headers } = require("@budibase/auth").constants
-const { jwt } = require("@budibase/auth").auth
-const auth = require("@budibase/auth")
-const { getGlobalDB } = require("@budibase/auth/tenancy")
-const { createASession } = require("@budibase/auth/sessions")
-const { user: userCache } = require("@budibase/auth/cache")
-const CouchDB = require("../../db")
+} from "./structures"
+import controllers from "./controllers"
+import supertest from "supertest"
+import { cleanup } from "../../utilities/fileSystem"
+import "@budibase/auth"
+import "@budibase/auth"
+import auth, { jwt, Cookies } from "@budibase/auth"
+import { getGlobalDB } from "@budibase/auth/tenancy"
+import { createASession } from "@budibase/auth/sessions"
+import { user as userCache } from "@budibase/auth/cache"
+import CouchDB from "../../db"
 auth.init(CouchDB)
 
 const GLOBAL_USER_ID = "us_uuid1"
@@ -397,4 +397,4 @@ class TestConfiguration {
   }
 }
 
-module.exports = TestConfiguration
+export default TestConfiguration

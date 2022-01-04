@@ -1,8 +1,8 @@
-const TestConfig = require("../../tests/utilities/TestConfiguration")
-const { basicRow, basicLinkedRow, basicTable } = require("../../tests/utilities/structures")
-const LinkController = require("../linkedRows/LinkController")
-const { RelationshipTypes } = require("../../constants")
-const { cloneDeep } = require("lodash/fp")
+import TestConfig from '../../tests/utilities/TestConfiguration';
+import { basicRow, basicLinkedRow, basicTable } from '../../tests/utilities/structures';
+import LinkController from '../linkedRows/LinkController';
+import { RelationshipTypes } from '../../constants';
+import { cloneDeep } from 'lodash/fp';
 
 describe("test the link controller", () => {
   let config = new TestConfig(false)

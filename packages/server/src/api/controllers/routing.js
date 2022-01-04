@@ -1,8 +1,5 @@
-const { getRoutingInfo } = require("../../utilities/routing")
-const {
-  getUserRoleHierarchy,
-  BUILTIN_ROLE_IDS,
-} = require("@budibase/auth/roles")
+import { getRoutingInfo } from "../../utilities/routing"
+import { getUserRoleHierarchy, BUILTIN_ROLE_IDS } from "@budibase/auth/roles"
 
 const URL_SEPARATOR = "/"
 
@@ -56,11 +53,11 @@ async function getRoutingStructure(appId) {
   return { routes: routing.json }
 }
 
-exports.fetch = async ctx => {
+export async function fetch(ctx) {
   ctx.body = await getRoutingStructure(ctx.appId)
 }
 
-exports.clientFetch = async ctx => {
+export async function clientFetch(ctx) {
   const routing = await getRoutingStructure(ctx.appId)
   let roleId = ctx.user.role._id
   const roleIds = await getUserRoleHierarchy(ctx.appId, roleId)

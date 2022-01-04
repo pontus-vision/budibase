@@ -1,16 +1,16 @@
-const userRoutes = require("./global/users")
-const configRoutes = require("./global/configs")
-const workspaceRoutes = require("./global/workspaces")
-const templateRoutes = require("./global/templates")
-const emailRoutes = require("./global/email")
-const authRoutes = require("./global/auth")
-const roleRoutes = require("./global/roles")
-const sessionRoutes = require("./global/sessions")
-const environmentRoutes = require("./system/environment")
-const tenantsRoutes = require("./system/tenants")
-const appRoutes = require("./app")
+import userRoutes from "./global/users"
+import configRoutes from "./global/configs"
+import workspaceRoutes from "./global/workspaces"
+import templateRoutes from "./global/templates"
+import emailRoutes from "./global/email"
+import authRoutes from "./global/auth"
+import roleRoutes from "./global/roles"
+import sessionRoutes from "./global/sessions"
+import environmentRoutes from "./system/environment"
+import tenantsRoutes from "./system/tenants"
+import appRoutes from "./app"
 
-exports.routes = [
+export const routes = [
   configRoutes,
   userRoutes,
   workspaceRoutes,

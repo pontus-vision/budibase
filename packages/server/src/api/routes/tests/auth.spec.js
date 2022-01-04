@@ -1,11 +1,11 @@
-const setup = require("./utilities")
-const { generateUserMetadataID } = require("../../../db/utils")
+import { getRequest, getConfig, afterAll as _afterAll } from "./utilities"
+import { generateUserMetadataID } from "../../../db/utils"
 
 describe("/authenticate", () => {
-  let request = setup.getRequest()
-  let config = setup.getConfig()
+  let request = getRequest()
+  let config = getConfig()
 
-  afterAll(setup.afterAll)
+  afterAll(_afterAll)
 
   beforeEach(async () => {
     await config.init()

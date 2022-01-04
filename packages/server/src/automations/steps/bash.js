@@ -1,8 +1,8 @@
-const { execSync } = require("child_process")
-const { processStringSync } = require("@budibase/string-templates")
-const automationUtils = require("../automationUtils")
+import { execSync } from "child_process"
+import { processStringSync } from "@budibase/string-templates"
+import automationUtils from "../automationUtils"
 
-exports.definition = {
+export const definition = {
   name: "Bash Scripting",
   tagline: "Execute a bash command",
   icon: "JourneyEvent",
@@ -38,7 +38,7 @@ exports.definition = {
   },
 }
 
-exports.run = async function ({ inputs, context }) {
+export const run = async function ({ inputs, context }) {
   if (inputs.code == null) {
     return {
       stdout: "Budibase bash automation failed: Invalid inputs",

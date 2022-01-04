@@ -1,19 +1,19 @@
-const env = require("../../environment")
-const PostHog = require("posthog-node")
+import { POSTHOG_TOKEN, ENABLE_ANALYTICS, SELF_HOSTED } from "../../environment"
+import PostHog from "posthog-node"
 
 let posthogClient
 
-if (env.POSTHOG_TOKEN && env.ENABLE_ANALYTICS && !env.SELF_HOSTED) {
-  posthogClient = new PostHog(env.POSTHOG_TOKEN)
+if (POSTHOG_TOKEN && ENABLE_ANALYTICS && !SELF_HOSTED) {
+  posthogClient = new PostHog(POSTHOG_TOKEN)
 }
 
-exports.isEnabled = async ctx => {
+export async function isEnabled(ctx) {
   ctx.body = {
-    enabled: !env.SELF_HOSTED && env.ENABLE_ANALYTICS === "true",
+    enabled: !SELF_HOSTED && ENABLE_ANALYTICS === "true",
   }
 }
 
-exports.endUserPing = async ctx => {
+export async function endUserPing(ctx) {
   if (!posthogClient) {
     ctx.body = {
       ping: false,

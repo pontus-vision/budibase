@@ -1,4 +1,4 @@
-const path = require("path")
+import { join as pjoin, resolve as presolve } from "path"
 
 // this simply runs all of our path join and resolve functions through
 // a central location incase we need to add some protection to file paths
@@ -8,8 +8,8 @@ const path = require("path")
  * @param args Any number of string arguments to add to a path
  * @returns {string} The final path ready to use
  */
-exports.join = function (...args) {
-  return path.join(...args)
+export function join(...args) {
+  return pjoin(...args)
 }
 
 /**
@@ -17,6 +17,6 @@ exports.join = function (...args) {
  * @param args Any number of string arguments to add to a path
  * @returns {string} The final path ready to use
  */
-exports.resolve = function (...args) {
-  return path.resolve(...args)
+export function resolve(...args) {
+  return presolve(...args)
 }

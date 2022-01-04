@@ -1,8 +1,8 @@
-const linkRows = require("../../db/linkedRows")
-const { cloneDeep } = require("lodash/fp")
-const { FieldTypes, AutoFieldSubTypes } = require("../../constants")
-const { attachmentsRelativeURL } = require("../index")
-const { processFormulas } = require("./utils")
+import linkRows from "../../db/linkedRows"
+import { cloneDeep } from "lodash/fp"
+import { FieldTypes, AutoFieldSubTypes } from "../../constants"
+import { attachmentsRelativeURL } from "../index"
+import { processFormulas } from "./utils"
 
 const BASE_AUTO_ID = 1
 
@@ -141,7 +141,7 @@ function processAutoColumn(
   }
   return { table, row }
 }
-exports.processAutoColumn = processAutoColumn
+export { processAutoColumn }
 
 /**
  * This will coerce a value to the correct types based on the type transform map
@@ -149,7 +149,7 @@ exports.processAutoColumn = processAutoColumn
  * @param {object} type The type fo coerce to
  * @returns {object} The coerced value
  */
-exports.coerce = (row, type) => {
+export const coerce = (row, type) => {
   // no coercion specified for type, skip it
   if (!TYPE_TRANSFORM_MAP[type]) {
     return row
@@ -173,7 +173,7 @@ exports.coerce = (row, type) => {
  * @param {object} opts some input processing options (like disabling auto-column relationships).
  * @returns {object} the row which has been prepared to be written to the DB.
  */
-exports.inputProcessing = (
+export const inputProcessing = (
   user = {},
   table,
   row,
@@ -197,7 +197,7 @@ exports.inputProcessing = (
     if (field.type === FieldTypes.FORMULA) {
       delete clonedRow[key]
     } else {
-      clonedRow[key] = exports.coerce(value, field.type)
+      clonedRow[key] = coerce(value, field.type)
     }
   }
 
@@ -220,7 +220,7 @@ exports.inputProcessing = (
  * @param {object} opts used to set some options for the output, such as disabling relationship squashing.
  * @returns {object[]|object} the enriched rows will be returned.
  */
-exports.outputProcessing = async (
+export const outputProcessing = async (
   ctx,
   table,
   rows,

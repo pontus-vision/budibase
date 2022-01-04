@@ -1,8 +1,8 @@
-const CouchDB = require("../../db")
-const { createRoutingView } = require("../../db/views/staticViews")
-const { ViewNames, getQueryIndex, UNICODE_MAX } = require("../../db/utils")
+import CouchDB from "../../db"
+import { createRoutingView } from "../../db/views/staticViews"
+import { ViewNames, getQueryIndex, UNICODE_MAX } from "../../db/utils"
 
-exports.getRoutingInfo = async appId => {
+export const getRoutingInfo = async appId => {
   const db = new CouchDB(appId)
   try {
     const allRouting = await db.query(getQueryIndex(ViewNames.ROUTING), {
@@ -15,11 +15,11 @@ exports.getRoutingInfo = async appId => {
     /* istanbul ignore next */
     if (err != null && err.name === "not_found") {
       await createRoutingView(appId)
-      return exports.getRoutingInfo(appId)
+      return getRoutingInfo(appId)
     } else {
       throw err
     }
   }
 }
 
-exports.createRoutingView = createRoutingView
+export { createRoutingView }

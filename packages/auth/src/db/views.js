@@ -1,4 +1,4 @@
-const { DocumentTypes, ViewNames } = require("./utils")
+import { DocumentTypes, ViewNames } from "./utils"
 
 function DesignDoc() {
   return {
@@ -9,7 +9,7 @@ function DesignDoc() {
   }
 }
 
-exports.createUserEmailView = async db => {
+export const createUserEmailView = async db => {
   let designDoc
   try {
     designDoc = await db.get("_design/database")

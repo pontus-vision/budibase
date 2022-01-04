@@ -1,15 +1,9 @@
-const Router = require("@koa/router")
-const rowController = require("../controllers/row")
-const authorized = require("../../middleware/authorized")
-const usage = require("../../middleware/usageQuota")
-const {
-  paramResource,
-  paramSubResource,
-} = require("../../middleware/resourceId")
-const {
-  PermissionLevels,
-  PermissionTypes,
-} = require("@budibase/auth/permissions")
+import Router from "@koa/router"
+import rowController from "../controllers/row"
+import authorized from "../../middleware/authorized"
+import usage from "../../middleware/usageQuota"
+import { paramResource, paramSubResource } from "../../middleware/resourceId"
+import { PermissionLevels, PermissionTypes } from "@budibase/auth/permissions"
 
 const router = Router()
 
@@ -251,4 +245,4 @@ router
     rowController.destroy
   )
 
-module.exports = router
+export default router

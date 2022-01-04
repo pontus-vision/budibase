@@ -1,5 +1,5 @@
-const PouchDB = require("pouchdb")
-const env = require("../../environment")
+import PouchDB from "pouchdb"
+import env from "../../environment"
 
 let POUCH_DB_DEFAULTS
 
@@ -14,4 +14,4 @@ if (env.isTest()) {
 
 const Pouch = PouchDB.defaults(POUCH_DB_DEFAULTS)
 
-module.exports = Pouch
+export default Pouch

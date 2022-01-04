@@ -12,12 +12,9 @@ jest.mock("../../../utilities/redis", () => ({
   shutdown: jest.fn(),
 }))
 
-const {
-  clearAllApps,
-  checkBuilderEndpoint,
-} = require("./utilities/TestFunctions")
-const setup = require("./utilities")
-const { AppStatus } = require("../../../db/utils")
+import { clearAllApps, checkBuilderEndpoint } from './utilities/TestFunctions';
+import setup from './utilities';
+import { AppStatus } from '../../../db/utils';
 
 describe("/applications", () => {
   let request = setup.getRequest()

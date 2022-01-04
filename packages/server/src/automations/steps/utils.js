@@ -1,4 +1,4 @@
-exports.getFetchResponse = async fetched => {
+export const getFetchResponse = async fetched => {
   let status = fetched.status,
     message
   const contentType = fetched.headers.get("content-type")
@@ -17,7 +17,7 @@ exports.getFetchResponse = async fetched => {
 // need to make sure all ctx structures have the
 // throw added to them, so that controllers don't
 // throw a ctx.throw undefined when error occurs
-exports.buildCtx = (appId, emitter, { body, params } = {}) => {
+export const buildCtx = (appId, emitter, { body, params } = {}) => {
   const ctx = {
     appId,
     user: { appId },

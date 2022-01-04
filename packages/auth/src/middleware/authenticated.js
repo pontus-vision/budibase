@@ -1,9 +1,9 @@
-const { Cookies, Headers } = require("../constants")
-const { getCookie, clearCookie } = require("../utils")
-const { getUser } = require("../cache/user")
-const { getSession, updateSessionTTL } = require("../security/sessions")
-const { buildMatcherRegex, matches } = require("./matchers")
-const env = require("../environment")
+import { Cookies, Headers } from "../constants"
+import { getCookie, clearCookie } from "../utils"
+import { getUser } from "../cache/user"
+import { getSession, updateSessionTTL } from "../security/sessions"
+import { buildMatcherRegex, matches } from "./matchers"
+import env from "../environment"
 
 function finalise(
   ctx,
@@ -21,7 +21,7 @@ function finalise(
  * The tenancy modules should not be used here and it should be assumed that the tenancy context
  * has not yet been populated.
  */
-module.exports = (
+export default (
   noAuthPatterns = [],
   opts = { publicAllowed: false, populateUser: null }
 ) => {

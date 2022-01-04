@@ -1,9 +1,9 @@
-const Router = require("@koa/router")
-const controller = require("../../controllers/global/email")
-const { EmailTemplatePurpose } = require("../../../constants")
-const joiValidator = require("../../../middleware/joi-validator")
-const adminOnly = require("../../../middleware/adminOnly")
-const Joi = require("joi")
+import Router from "@koa/router"
+import controller from "../../controllers/global/email"
+import { EmailTemplatePurpose } from "../../../constants"
+import joiValidator from "../../../middleware/joi-validator"
+import adminOnly from "../../../middleware/adminOnly"
+import Joi from "joi"
 
 const router = Router()
 
@@ -26,4 +26,4 @@ router.post(
   controller.sendEmail
 )
 
-module.exports = router
+export default router

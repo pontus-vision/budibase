@@ -1,7 +1,7 @@
-const { BUILTIN_ROLE_IDS } = require("@budibase/auth/roles")
-const { BASE_LAYOUT_PROP_IDS } = require("./layouts")
+import { BUILTIN_ROLE_IDS } from "@budibase/auth/roles"
+import { BASE_LAYOUT_PROP_IDS } from "./layouts"
 
-exports.createHomeScreen = () => ({
+export const createHomeScreen = () => ({
   description: "",
   url: "",
   layoutId: BASE_LAYOUT_PROP_IDS.PRIVATE,

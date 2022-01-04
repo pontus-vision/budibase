@@ -1,15 +1,10 @@
-const CouchDB = require("../../db")
-const {
-  Role,
-  getRole,
-  isBuiltin,
-  getAllRoles,
-} = require("@budibase/auth/roles")
-const {
+import CouchDB from "../../db"
+import { Role, getRole, isBuiltin, getAllRoles } from "@budibase/auth/roles"
+import {
   generateRoleID,
   getUserMetadataParams,
   InternalTables,
-} = require("../../db/utils")
+} from "../../db/utils"
 
 const UpdateRolesOptions = {
   CREATED: "created",
@@ -39,15 +34,15 @@ async function updateRolesOnUserTable(db, roleId, updateOption) {
   }
 }
 
-exports.fetch = async function (ctx) {
+export async function fetch(ctx) {
   ctx.body = await getAllRoles(ctx.appId)
 }
 
-exports.find = async function (ctx) {
+export async function find(ctx) {
   ctx.body = await getRole(ctx.appId, ctx.params.roleId)
 }
 
-exports.save = async function (ctx) {
+export async function save(ctx) {
   const db = new CouchDB(ctx.appId)
   let { _id, name, inherits, permissionId } = ctx.request.body
   if (!_id) {
@@ -68,7 +63,7 @@ exports.save = async function (ctx) {
   ctx.message = `Role '${role.name}' created successfully.`
 }
 
-exports.destroy = async function (ctx) {
+export async function destroy(ctx) {
   const db = new CouchDB(ctx.appId)
   const roleId = ctx.params.roleId
   if (isBuiltin(roleId)) {

@@ -1,4 +1,4 @@
-const { getTable } = require("../api/controllers/table/utils")
+import { getTable } from "../api/controllers/table/utils"
 
 /**
  * When values are input to the system generally they will be of type string as this is required for template strings.
@@ -16,7 +16,7 @@ const { getTable } = require("../api/controllers/table/utils")
  * @returns {object} The inputs object which has had all the various types supported by this function converted to their
  * primitive types.
  */
-exports.cleanInputValues = (inputs, schema) => {
+export const cleanInputValues = (inputs, schema) => {
   if (schema == null) {
     return inputs
   }
@@ -58,12 +58,12 @@ exports.cleanInputValues = (inputs, schema) => {
  * @param {object} row The input row structure which requires clean-up after having been through template statements.
  * @returns {Promise<Object>} The cleaned up rows object, will should now have all the required primitive types.
  */
-exports.cleanUpRow = async (appId, tableId, row) => {
+export const cleanUpRow = async (appId, tableId, row) => {
   let table = await getTable(appId, tableId)
-  return exports.cleanInputValues(row, { properties: table.schema })
+  return cleanInputValues(row, { properties: table.schema })
 }
 
-exports.getError = err => {
+export const getError = err => {
   if (err == null) {
     return "No error provided."
   }

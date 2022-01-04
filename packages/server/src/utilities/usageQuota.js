@@ -1,15 +1,12 @@
-const env = require("../environment")
-const { getGlobalDB } = require("@budibase/auth/tenancy")
-const {
-  StaticDatabases,
-  generateNewUsageQuotaDoc,
-} = require("@budibase/auth/db")
+import env from "../environment"
+import { getGlobalDB } from "@budibase/auth/tenancy"
+import { StaticDatabases, generateNewUsageQuotaDoc } from "@budibase/auth/db"
 
 function getNewQuotaReset() {
   return Date.now() + 2592000000
 }
 
-exports.Properties = {
+export const Properties = {
   ROW: "rows",
   UPLOAD: "storage",
   VIEW: "views",
@@ -38,7 +35,7 @@ async function getUsageQuotaDoc(db) {
  * @returns {Promise<void>} When this completes the API key will now be up to date - the quota period may have
  * also been reset after this call.
  */
-exports.update = async (property, usage) => {
+export const update = async (property, usage) => {
   if (!env.USE_QUOTAS) {
     return
   }

@@ -1,15 +1,15 @@
-const { Cookies } = require("../../constants")
-const env = require("../../environment")
-const { authError } = require("./utils")
+import { Cookies } from "../../constants"
+import env from "../../environment"
+import { authError } from "./utils"
 
-exports.options = {
+export const options = {
   secretOrKey: env.JWT_SECRET,
   jwtFromRequest: function (ctx) {
     return ctx.cookies.get(Cookies.Auth)
   },
 }
 
-exports.authenticate = async function (jwt, done) {
+export const authenticate = async function (jwt, done) {
   try {
     return done(null, jwt)
   } catch (err) {

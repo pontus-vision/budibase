@@ -1,17 +1,22 @@
-const { getAppId, setCookie, getCookie, clearCookie } =
-  require("@budibase/auth").utils
-const { Cookies } = require("@budibase/auth").constants
-const { getRole } = require("@budibase/auth/roles")
-const { BUILTIN_ROLE_IDS } = require("@budibase/auth/roles")
-const { generateUserMetadataID, isDevAppID } = require("../db/utils")
-const { dbExists } = require("@budibase/auth/db")
-const { isUserInAppTenant } = require("@budibase/auth/tenancy")
-const { getCachedSelf } = require("../utilities/global")
-const CouchDB = require("../db")
-const env = require("../environment")
-const { isWebhookEndpoint } = require("./utils")
+import {
+  getAppId,
+  getCookie,
+  Cookies,
+  clearCookie,
+  setCookie,
+} from "@budibase/auth"
+// import '@budibase/auth';
+import { getRole } from "@budibase/auth/roles"
+import { BUILTIN_ROLE_IDS } from "@budibase/auth/roles"
+import { generateUserMetadataID, isDevAppID } from "../db/utils"
+import { dbExists } from "@budibase/auth/db"
+import { isUserInAppTenant } from "@budibase/auth/tenancy"
+import { getCachedSelf } from "../utilities/global"
+import CouchDB from "../db"
+import env from "../environment"
+import { isWebhookEndpoint } from "./utils"
 
-module.exports = async (ctx, next) => {
+export default async (ctx, next) => {
   // try to get the appID from the request
   let requestAppId = getAppId(ctx)
   // get app cookie if it exists

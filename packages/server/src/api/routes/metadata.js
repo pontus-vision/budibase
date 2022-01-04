@@ -1,11 +1,11 @@
-const Router = require("@koa/router")
-const controller = require("../controllers/metadata")
-const {
-  middleware: appInfoMiddleware,
+import Router from "@koa/router"
+import controller from "../controllers/metadata"
+import {
+  middleware as appInfoMiddleware,
   AppType,
-} = require("../../middleware/appInfo")
-const authorized = require("../../middleware/authorized")
-const { BUILDER } = require("@budibase/auth/permissions")
+} from "../../middleware/appInfo"
+import authorized from "../../middleware/authorized"
+import { BUILDER } from "@budibase/auth/permissions"
 
 const router = Router()
 
@@ -35,4 +35,4 @@ router
     controller.getMetadata
   )
 
-module.exports = router
+export default router

@@ -1,12 +1,12 @@
-const { definitions } = require("../../integrations")
+import { definitions } from "../../integrations"
 
-exports.fetch = async function (ctx) {
+export async function fetch(ctx) {
   // TODO: fetch these from a github repo etc
   ctx.status = 200
   ctx.body = definitions
 }
 
-exports.find = async function (ctx) {
+export async function find(ctx) {
   ctx.status = 200
   ctx.body = definitions[ctx.params.type]
 }

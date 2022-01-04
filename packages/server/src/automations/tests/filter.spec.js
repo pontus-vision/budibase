@@ -1,5 +1,5 @@
-const setup = require("./utilities")
-const { FilterConditions } = require("../steps/filter")
+import setup from './utilities';
+import { FilterConditions } from '../steps/filter';
 
 describe("test the filter logic", () => {
   async function checkFilter(field, condition, value, pass = true) {

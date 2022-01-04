@@ -1,5 +1,5 @@
-const LinkController = require("./LinkController")
-const {
+import LinkController from "./LinkController"
+import {
   IncludeDocs,
   getLinkDocuments,
   createLinkView,
@@ -7,14 +7,14 @@ const {
   getRelatedTableForField,
   getLinkedTableIDs,
   getLinkedTable,
-} = require("./linkUtils")
-const { flatten } = require("lodash")
-const CouchDB = require("../../db")
-const { FieldTypes } = require("../../constants")
-const { getMultiIDParams, USER_METDATA_PREFIX } = require("../../db/utils")
-const { partition } = require("lodash")
-const { getGlobalUsersFromMetadata } = require("../../utilities/global")
-const { processFormulas } = require("../../utilities/rowProcessor/utils")
+} from "./linkUtils"
+import { flatten } from "lodash"
+import CouchDB from "../../db"
+import { FieldTypes } from "../../constants"
+import { getMultiIDParams, USER_METDATA_PREFIX } from "../../db/utils"
+import { partition } from "lodash"
+import { getGlobalUsersFromMetadata } from "../../utilities/global"
+import { processFormulas } from "../../utilities/rowProcessor/utils"
 
 /**
  * This functionality makes sure that when rows with links are created, updated or deleted they are processed
@@ -30,11 +30,7 @@ const EventType = {
   TABLE_DELETE: "table:delete",
 }
 
-exports.EventType = EventType
-// re-export search here for ease of use
-exports.IncludeDocs = IncludeDocs
-exports.getLinkDocuments = getLinkDocuments
-exports.createLinkView = createLinkView
+export { EventType, IncludeDocs, getLinkDocuments, createLinkView }
 
 function clearRelationshipFields(table, rows) {
   for (let [key, field] of Object.entries(table.schema)) {
@@ -104,7 +100,7 @@ async function getFullLinkedDocs(ctx, appId, links) {
  * @returns {Promise<object>} When the update is complete this will respond successfully. Returns the row for
  * row operations and the table for table operations.
  */
-exports.updateLinks = async function (args) {
+export const updateLinks = async function (args) {
   const { eventType, appId, row, tableId, table, oldTable } = args
   const baseReturnObj = row == null ? table : row
   if (appId == null) {
@@ -151,7 +147,7 @@ exports.updateLinks = async function (args) {
  * @param {array<object>} rows The rows which are to be enriched.
  * @return {Promise<*>} returns the rows with all of the enriched relationships on it.
  */
-exports.attachFullLinkedDocs = async (ctx, table, rows) => {
+export const attachFullLinkedDocs = async (ctx, table, rows) => {
   const appId = ctx.appId
   const linkedTableIds = getLinkedTableIDs(table)
   if (linkedTableIds.length === 0) {
@@ -198,7 +194,7 @@ exports.attachFullLinkedDocs = async (ctx, table, rows) => {
  * @param {array<object>} enriched The pre-enriched rows (full docs) which are to be squashed.
  * @returns {Promise<Array>} The rows after having their links squashed to only contain the ID and primary display.
  */
-exports.squashLinksToPrimaryDisplay = async (appId, table, enriched) => {
+export const squashLinksToPrimaryDisplay = async (appId, table, enriched) => {
   const db = new CouchDB(appId)
   // will populate this as we find them
   const linkedTables = [table]

@@ -1,6 +1,6 @@
 const PARAM_REGEX = /\/:(.*?)(\/.*)?$/g
 
-exports.buildMatcherRegex = patterns => {
+export const buildMatcherRegex = patterns => {
   if (!patterns) {
     return []
   }
@@ -21,7 +21,7 @@ exports.buildMatcherRegex = patterns => {
   })
 }
 
-exports.matches = (ctx, options) => {
+export const matches = (ctx, options) => {
   return options.find(({ regex, method, strict, route }) => {
     let urlMatch
     if (strict) {

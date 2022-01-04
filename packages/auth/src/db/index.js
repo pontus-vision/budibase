@@ -1,13 +1,13 @@
 let Pouch
 
-module.exports.setDB = pouch => {
+export const setDB = pouch => {
   Pouch = pouch
 }
 
-module.exports.getDB = dbName => {
+export const getDB = dbName => {
   return new Pouch(dbName)
 }
 
-module.exports.getCouch = () => {
+export const getCouch = () => {
   return Pouch
 }

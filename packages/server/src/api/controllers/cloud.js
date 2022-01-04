@@ -1,15 +1,15 @@
-const env = require("../../environment")
-const { getAllApps } = require("@budibase/auth/db")
-const CouchDB = require("../../db")
-const {
+import { SELF_HOSTED, MULTI_TENANCY } from "../../environment"
+import { getAllApps } from "@budibase/auth/db"
+import CouchDB from "../../db"
+import {
   exportDB,
   sendTempFile,
   readFileSync,
-} = require("../../utilities/fileSystem")
-const { stringToReadStream } = require("../../utilities")
-const { getGlobalDBName, getGlobalDB } = require("@budibase/auth/tenancy")
-const { create } = require("./application")
-const { getDocParams, DocumentTypes, isDevAppID } = require("../../db/utils")
+} from "../../utilities/fileSystem"
+import { stringToReadStream } from "../../utilities"
+import { getGlobalDBName, getGlobalDB } from "@budibase/auth/tenancy"
+import { create } from "./application"
+import { getDocParams, DocumentTypes, isDevAppID } from "../../db/utils"
 
 async function createApp(appName, appImport) {
   const ctx = {
@@ -23,8 +23,8 @@ async function createApp(appName, appImport) {
   return create(ctx)
 }
 
-exports.exportApps = async ctx => {
-  if (env.SELF_HOSTED || !env.MULTI_TENANCY) {
+export async function exportApps(ctx) {
+  if (SELF_HOSTED || !MULTI_TENANCY) {
     ctx.throw(400, "Exporting only allowed in multi-tenant cloud environments.")
   }
   const apps = await getAllApps(CouchDB, { all: true })
@@ -57,21 +57,22 @@ async function getAllDocType(db, docType) {
 }
 
 async function hasBeenImported() {
-  if (!env.SELF_HOSTED || env.MULTI_TENANCY) {
+  if (!SELF_HOSTED || MULTI_TENANCY) {
     return true
   }
   const apps = await getAllApps(CouchDB, { all: true })
   return apps.length !== 0
 }
 
-exports.hasBeenImported = async ctx => {
+const _hasBeenImported = async ctx => {
   ctx.body = {
     imported: await hasBeenImported(),
   }
 }
+export { _hasBeenImported as hasBeenImported }
 
-exports.importApps = async ctx => {
-  if (!env.SELF_HOSTED || env.MULTI_TENANCY) {
+export async function importApps(ctx) {
+  if (!SELF_HOSTED || MULTI_TENANCY) {
     ctx.throw(400, "Importing only allowed in self hosted environments.")
   }
   const beenImported = await hasBeenImported()

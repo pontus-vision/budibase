@@ -1,5 +1,5 @@
-const selfHostMiddleware = require("../selfhost")
-const env = require("../../environment")
+import selfHostMiddleware from '../selfhost';
+import env from '../../environment';
 jest.mock("../../environment")
 
 class TestConfiguration {

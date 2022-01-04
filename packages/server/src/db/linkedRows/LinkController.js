@@ -1,12 +1,8 @@
-const CouchDB = require("../index")
-const { IncludeDocs, getLinkDocuments } = require("./linkUtils")
-const {
-  generateLinkID,
-  InternalTables,
-  getUserMetadataParams,
-} = require("../utils")
-const Sentry = require("@sentry/node")
-const { FieldTypes, RelationshipTypes } = require("../../constants")
+import CouchDB from "../index"
+import { IncludeDocs, getLinkDocuments } from "./linkUtils"
+import { generateLinkID, InternalTables, getUserMetadataParams } from "../utils"
+import Sentry from "@sentry/node"
+import { FieldTypes, RelationshipTypes } from "../../constants"
 
 /**
  * Creates a new link document structure which can be put to the database. It is important to
@@ -465,4 +461,4 @@ class LinkController {
   }
 }
 
-module.exports = LinkController
+export default LinkController

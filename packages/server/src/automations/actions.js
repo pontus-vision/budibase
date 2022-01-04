@@ -1,19 +1,19 @@
-const sendSmtpEmail = require("./steps/sendSmtpEmail")
-const createRow = require("./steps/createRow")
-const updateRow = require("./steps/updateRow")
-const deleteRow = require("./steps/deleteRow")
-const executeScript = require("./steps/executeScript")
-const executeQuery = require("./steps/executeQuery")
-const outgoingWebhook = require("./steps/outgoingWebhook")
-const serverLog = require("./steps/serverLog")
-const discord = require("./steps/discord")
-const slack = require("./steps/slack")
-const zapier = require("./steps/zapier")
-const integromat = require("./steps/integromat")
-let filter = require("./steps/filter")
-let delay = require("./steps/delay")
-let queryRow = require("./steps/queryRows")
-const env = require("../environment")
+import sendSmtpEmail from "./steps/sendSmtpEmail"
+import createRow from "./steps/createRow"
+import updateRow from "./steps/updateRow"
+import deleteRow from "./steps/deleteRow"
+import executeScript from "./steps/executeScript"
+import executeQuery from "./steps/executeQuery"
+import outgoingWebhook from "./steps/outgoingWebhook"
+import serverLog from "./steps/serverLog"
+import discord from "./steps/discord"
+import slack from "./steps/slack"
+import zapier from "./steps/zapier"
+import integromat from "./steps/integromat"
+import filter from "./steps/filter"
+import delay from "./steps/delay"
+import queryRow from "./steps/queryRows"
+import env from "../environment"
 
 const ACTION_IMPLS = {
   SEND_EMAIL_SMTP: sendSmtpEmail.run,
@@ -62,10 +62,10 @@ if (env.SELF_HOSTED) {
 }
 
 /* istanbul ignore next */
-exports.getAction = async function (actionName) {
+export const getAction = async function (actionName) {
   if (ACTION_IMPLS[actionName] != null) {
     return ACTION_IMPLS[actionName]
   }
 }
 
-exports.ACTION_DEFINITIONS = ACTION_DEFINITIONS
+export { ACTION_DEFINITIONS }

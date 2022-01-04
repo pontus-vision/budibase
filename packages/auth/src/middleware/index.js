@@ -1,14 +1,14 @@
-const jwt = require("./passport/jwt")
-const local = require("./passport/local")
-const google = require("./passport/google")
-const oidc = require("./passport/oidc")
-const { authError } = require("./passport/utils")
-const authenticated = require("./authenticated")
-const auditLog = require("./auditLog")
-const tenancy = require("./tenancy")
-const appTenancy = require("./appTenancy")
+import jwt from "./passport/jwt"
+import local from "./passport/local"
+import google from "./passport/google"
+import oidc from "./passport/oidc"
+import { authError } from "./passport/utils"
+import authenticated from "./authenticated"
+import auditLog from "./auditLog"
+import tenancy from "./tenancy"
+import appTenancy from "./appTenancy"
 
-module.exports = {
+export default {
   google,
   oidc,
   jwt,

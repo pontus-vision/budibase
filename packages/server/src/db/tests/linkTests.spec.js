@@ -1,8 +1,8 @@
-const TestConfig = require("../../tests/utilities/TestConfiguration")
-const { basicTable, basicLinkedRow } = require("../../tests/utilities/structures")
-const linkUtils = require("../linkedRows/linkUtils")
-const links = require("../linkedRows")
-const CouchDB = require("../index")
+import TestConfig from '../../tests/utilities/TestConfiguration';
+import { basicTable, basicLinkedRow } from '../../tests/utilities/structures';
+import linkUtils from '../linkedRows/linkUtils';
+import links from '../linkedRows';
+import CouchDB from '../index';
 
 describe("test link functionality", () => {
   const config = new TestConfig(false)

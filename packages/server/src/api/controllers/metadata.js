@@ -1,15 +1,15 @@
-const { MetadataTypes } = require("../../constants")
-const CouchDB = require("../../db")
-const { generateMetadataID } = require("../../db/utils")
-const { saveEntityMetadata, deleteEntityMetadata } = require("../../utilities")
+import { MetadataTypes } from "../../constants"
+import CouchDB from "../../db"
+import { generateMetadataID } from "../../db/utils"
+import { saveEntityMetadata, deleteEntityMetadata } from "../../utilities"
 
-exports.getTypes = async ctx => {
+export async function getTypes(ctx) {
   ctx.body = {
     types: MetadataTypes,
   }
 }
 
-exports.saveMetadata = async ctx => {
+export async function saveMetadata(ctx) {
   const { type, entityId } = ctx.params
   if (type === MetadataTypes.AUTOMATION_TEST_HISTORY) {
     ctx.throw(400, "Cannot save automation history type")
@@ -22,7 +22,7 @@ exports.saveMetadata = async ctx => {
   )
 }
 
-exports.deleteMetadata = async ctx => {
+export async function deleteMetadata(ctx) {
   const { type, entityId } = ctx.params
   await deleteEntityMetadata(ctx.appId, type, entityId)
   ctx.body = {
@@ -30,7 +30,7 @@ exports.deleteMetadata = async ctx => {
   }
 }
 
-exports.getMetadata = async ctx => {
+export async function getMetadata(ctx) {
   const { type, entityId } = ctx.params
   const db = new CouchDB(ctx.appId)
   const id = generateMetadataID(type, entityId)

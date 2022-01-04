@@ -1,5 +1,5 @@
-const sqlServer = require("mssql")
-const MSSQLIntegration = require("../microsoftSqlServer")
+import sqlServer from 'mssql';
+import MSSQLIntegration from '../microsoftSqlServer';
 jest.mock("mssql")
 
 class TestConfiguration {

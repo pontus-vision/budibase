@@ -16,7 +16,13 @@ if (!LOADED && isDev() && !isTest()) {
   LOADED = true
 }
 
-module.exports = {
+function isAWSLambda() {
+  return process.env.IS_AWS_LAMBDA
+    ? process.env.IS_AWS_LAMBDA.toLowerCase() === "true"
+    : false
+}
+
+export default {
   NODE_ENV: process.env.NODE_ENV,
   SELF_HOSTED: !!parseInt(process.env.SELF_HOSTED),
   PORT: process.env.PORT,
@@ -45,26 +51,27 @@ module.exports = {
   APPS_URL: process.env.APPS_URL,
   _set(key, value) {
     process.env[key] = value
-    module.exports[key] = value
+    //const key = value;
   },
   isDev,
   isTest,
+  isAWSLambda,
   isProd: () => {
     return !isDev()
   },
 }
 
 // if some var haven't been set, define them
-if (!module.exports.APPS_URL) {
-  module.exports.APPS_URL = isDev()
-    ? "http://localhost:4001"
-    : "http://app-service:4002"
-}
+// if (!module.exports.APPS_URL) {
+//  const APPS_URL = isDev()
+//     ? "http://localhost:4001"
+//     : "http://app-service:4002";
+// }
 
-// clean up any environment variable edge cases
-for (let [key, value] of Object.entries(module.exports)) {
-  // handle the edge case of "0" to disable an environment variable
-  if (value === "0") {
-    module.exports[key] = 0
-  }
-}
+// // clean up any environment variable edge cases
+// for (let [key, value] of Object.entries(module.exports)) {
+//   // handle the edge case of "0" to disable an environment variable
+//   if (value === "0") {
+//     const key = 0;
+//   }
+// }

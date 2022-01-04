@@ -1,5 +1,5 @@
-const EventEmitter = require("events").EventEmitter
-const { rowEmission, tableEmission } = require("./utils")
+import { EventEmitter } from "events"
+import { rowEmission, tableEmission } from "./utils"
 
 /**
  * keeping event emitter in one central location as it might be used for things other than
@@ -27,4 +27,4 @@ class BudibaseEmitter extends EventEmitter {
 
 const emitter = new BudibaseEmitter()
 
-module.exports = emitter
+export default emitter

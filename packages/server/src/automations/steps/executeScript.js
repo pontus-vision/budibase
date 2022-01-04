@@ -1,8 +1,8 @@
-const scriptController = require("../../api/controllers/script")
-const { buildCtx } = require("./utils")
-const automationUtils = require("../automationUtils")
+import scriptController from "../../api/controllers/script"
+import { buildCtx } from "./utils"
+import automationUtils from "../automationUtils"
 
-exports.definition = {
+export const definition = {
   name: "JS Scripting",
   tagline: "Execute JavaScript Code",
   icon: "Code",
@@ -38,7 +38,7 @@ exports.definition = {
   },
 }
 
-exports.run = async function ({ inputs, appId, context, emitter }) {
+export const run = async function ({ inputs, appId, context, emitter }) {
   if (inputs.code == null) {
     return {
       success: false,

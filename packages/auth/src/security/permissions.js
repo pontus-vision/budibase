@@ -1,5 +1,5 @@
-const { flatten } = require("lodash")
-const { cloneDeep } = require("lodash/fp")
+import { flatten } from "lodash"
+import { cloneDeep } from "lodash/fp"
 
 const PermissionLevels = {
   READ: "read",
@@ -63,7 +63,7 @@ function getAllowedLevels(userPermLevel) {
   }
 }
 
-exports.BUILTIN_PERMISSION_IDS = {
+export const BUILTIN_PERMISSION_IDS = {
   PUBLIC: "public",
   READ_ONLY: "read_only",
   WRITE: "write",
@@ -122,16 +122,16 @@ const BUILTIN_PERMISSIONS = {
   },
 }
 
-exports.getBuiltinPermissions = () => {
+export const getBuiltinPermissions = () => {
   return cloneDeep(BUILTIN_PERMISSIONS)
 }
 
-exports.getBuiltinPermissionByID = id => {
+export const getBuiltinPermissionByID = id => {
   const perms = Object.values(BUILTIN_PERMISSIONS)
   return perms.find(perm => perm._id === id)
 }
 
-exports.doesHaveBasePermission = (permType, permLevel, rolesHierarchy) => {
+export const doesHaveBasePermission = (permType, permLevel, rolesHierarchy) => {
   const basePermissions = [
     ...new Set(rolesHierarchy.map(role => role.permissionId)),
   ]
@@ -152,11 +152,11 @@ exports.doesHaveBasePermission = (permType, permLevel, rolesHierarchy) => {
   return false
 }
 
-exports.isPermissionLevelHigherThanRead = level => {
+export const isPermissionLevelHigherThanRead = level => {
   return levelToNumber(level) > 1
 }
 
 // utility as a lot of things need simply the builder permission
-exports.BUILDER = PermissionTypes.BUILDER
-exports.PermissionTypes = PermissionTypes
-exports.PermissionLevels = PermissionLevels
+export const BUILDER = PermissionTypes.BUILDER
+
+export { PermissionTypes, PermissionLevels }

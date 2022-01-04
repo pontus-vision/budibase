@@ -146,7 +146,7 @@ const BASE_LAYOUTS = [
   },
 ]
 
-module.exports = {
+export default {
   BASE_LAYOUTS,
   BASE_LAYOUT_PROP_IDS,
   EMPTY_LAYOUT,

@@ -1,12 +1,12 @@
-const { checkBuilderEndpoint, getDB } = require("./utilities/TestFunctions")
-const setup = require("./utilities")
-const { basicTable } = setup.structures
+import { checkBuilderEndpoint, getDB } from "./utilities/TestFunctions"
+import { structures, getRequest, getConfig, afterAll as _afterAll } from "./utilities"
+const { basicTable } = structures
 
 describe("/tables", () => {
-  let request = setup.getRequest()
-  let config = setup.getConfig()
+  let request = getRequest()
+  let config = getConfig()
 
-  afterAll(setup.afterAll)
+  afterAll(_afterAll)
 
   beforeEach(async () => {
     await config.init()

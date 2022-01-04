@@ -3,21 +3,21 @@ jest.mock("pg")
 
 // Mock isProdAppID to we can later mock the implementation and pretend we are
 // using prod app IDs
-const authDb = require("@budibase/auth/db")
+import authDb, { isProdAppID as _isProdAppID } from "@budibase/auth/db"
 const { isProdAppID } = authDb
 const mockIsProdAppID = jest.fn(isProdAppID)
-authDb.isProdAppID = mockIsProdAppID
+_isProdAppID = mockIsProdAppID
 
-const setup = require("./utilities")
-const { checkBuilderEndpoint } = require("./utilities/TestFunctions")
-const { basicQuery, basicDatasource } = setup.structures
+import { structures, getRequest, getConfig, afterAll as _afterAll, switchToSelfHosted } from "./utilities"
+import { checkBuilderEndpoint } from "./utilities/TestFunctions"
+const { basicQuery, basicDatasource } = structures
 
 describe("/queries", () => {
-  let request = setup.getRequest()
-  let config = setup.getConfig()
+  let request = getRequest()
+  let config = getConfig()
   let datasource, query
 
-  afterAll(setup.afterAll)
+  afterAll(_afterAll)
 
   beforeEach(async () => {
     await config.init()
@@ -98,7 +98,7 @@ describe("/queries", () => {
     })
 
     it("should find a query in cloud", async () => {
-      await setup.switchToSelfHosted(async () => {
+      await switchToSelfHosted(async () => {
         const query = await config.createQuery()
         const res = await request
           .get(`/api/queries/${query._id}`)

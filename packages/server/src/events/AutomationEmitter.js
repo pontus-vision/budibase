@@ -1,5 +1,5 @@
-const { rowEmission, tableEmission } = require("./utils")
-const mainEmitter = require("./index")
+import { rowEmission, tableEmission } from "./utils"
+import mainEmitter from "./index"
 
 // max number of automations that can chain on top of each other
 const MAX_AUTOMATION_CHAIN = 5
@@ -48,4 +48,4 @@ class AutomationEmitter {
   }
 }
 
-module.exports = AutomationEmitter
+export default AutomationEmitter

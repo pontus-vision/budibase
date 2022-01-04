@@ -1,12 +1,12 @@
-const { createBullBoard } = require("@bull-board/api")
-const { BullAdapter } = require("@bull-board/api/bullAdapter")
-const { KoaAdapter } = require("@bull-board/koa")
-const env = require("../environment")
+import { createBullBoard } from "@bull-board/api"
+import { BullAdapter } from "@bull-board/api/bullAdapter"
+import { KoaAdapter } from "@bull-board/koa"
+import env from "../environment"
 const Queue = env.isTest()
   ? require("../utilities/queue/inMemoryQueue")
   : require("bull")
-const { JobQueues } = require("../constants")
-const { utils } = require("@budibase/auth/redis")
+import { JobQueues } from "../constants"
+import { utils } from "@budibase/auth/redis"
 const { opts, redisProtocolUrl } = utils.getRedisOptions()
 
 const CLEANUP_PERIOD_MS = 60 * 1000
@@ -21,7 +21,7 @@ async function cleanup() {
 
 const PATH_PREFIX = "/bulladmin"
 
-exports.init = () => {
+export const init = () => {
   // cleanup the events every 5 minutes
   if (!cleanupInternal) {
     cleanupInternal = setInterval(cleanup, CLEANUP_PERIOD_MS)
@@ -45,4 +45,4 @@ exports.init = () => {
   return serverAdapter.registerPlugin()
 }
 
-exports.queue = automationQueue
+export const queue = automationQueue

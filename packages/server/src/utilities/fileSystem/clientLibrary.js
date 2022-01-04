@@ -1,9 +1,9 @@
-const { join } = require("path")
-const { ObjectStoreBuckets } = require("../../constants")
-const fs = require("fs")
-const { upload, retrieveToTmp, streamUpload } = require("./utilities")
-const { resolve } = require("../centralPath")
-const env = require("../../environment")
+import { join } from "path"
+import { ObjectStoreBuckets } from "../../constants"
+import { createReadStream } from "fs"
+import { upload, retrieveToTmp, streamUpload } from "./utilities"
+import { resolve } from "../centralPath"
+import { isDev } from "../../environment"
 const TOP_LEVEL_PATH = join(__dirname, "..", "..", "..")
 
 /**
@@ -33,7 +33,7 @@ const TOP_LEVEL_PATH = join(__dirname, "..", "..", "..")
  * @param appId The app ID to backup
  * @returns {Promise<void>}
  */
-exports.backupClientLibrary = async appId => {
+export async function backupClientLibrary(appId) {
   // Copy existing manifest to tmp
   let tmpManifestPath
   try {
@@ -85,10 +85,10 @@ exports.backupClientLibrary = async appId => {
  * @param appId The app ID to update
  * @returns {Promise<void>}
  */
-exports.updateClientLibrary = async appId => {
+export async function updateClientLibrary(appId) {
   let manifest, client
 
-  if (env.isDev()) {
+  if (isDev()) {
     // Load the symlinked version in dev which is always the newest
     manifest = require.resolve("@budibase/client/manifest.json")
     client = require.resolve("@budibase/client")
@@ -102,7 +102,7 @@ exports.updateClientLibrary = async appId => {
   const manifestUpload = streamUpload(
     ObjectStoreBuckets.APPS,
     join(appId, "manifest.json"),
-    fs.createReadStream(manifest),
+    createReadStream(manifest),
     {
       ContentType: "application/json",
     }
@@ -110,7 +110,7 @@ exports.updateClientLibrary = async appId => {
   const clientUpload = streamUpload(
     ObjectStoreBuckets.APPS,
     join(appId, "budibase-client.js"),
-    fs.createReadStream(client),
+    createReadStream(client),
     {
       ContentType: "application/javascript",
     }
@@ -124,7 +124,7 @@ exports.updateClientLibrary = async appId => {
  * @param appId The app ID to revert
  * @returns {Promise<void>}
  */
-exports.revertClientLibrary = async appId => {
+export async function revertClientLibrary(appId) {
   // Copy backups manifest to tmp directory
   const tmpManifestPath = await retrieveToTmp(
     ObjectStoreBuckets.APPS,

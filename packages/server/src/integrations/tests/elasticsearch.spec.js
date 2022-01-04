@@ -1,5 +1,5 @@
-const elasticsearch = require("@elastic/elasticsearch")
-const ElasticSearchIntegration = require("../elasticsearch")
+import elasticsearch from '@elastic/elasticsearch';
+import ElasticSearchIntegration from '../elasticsearch';
 jest.mock("@elastic/elasticsearch")
 
 class TestConfiguration {

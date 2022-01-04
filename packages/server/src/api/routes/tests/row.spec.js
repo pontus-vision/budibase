@@ -1,17 +1,17 @@
-const { outputProcessing } = require("../../../utilities/rowProcessor")
-const setup = require("./utilities")
-const { basicRow } = setup.structures
+import { outputProcessing } from "../../../utilities/rowProcessor"
+import { structures, getRequest, getConfig, afterAll as _afterAll, switchToSelfHosted } from "./utilities"
+const { basicRow } = structures
 
 // mock the fetch for the search system
 jest.mock("node-fetch")
 
 describe("/rows", () => {
-  let request = setup.getRequest()
-  let config = setup.getConfig()
+  let request = getRequest()
+  let config = getConfig()
   let table
   let row
 
-  afterAll(setup.afterAll)
+  afterAll(_afterAll)
 
   beforeEach(async () => {
     await config.init()
@@ -386,7 +386,7 @@ describe("/rows", () => {
         tableId: table._id,
       })
       // the environment needs configured for this
-      await setup.switchToSelfHosted(async () => {
+      await switchToSelfHosted(async () => {
         const enriched = await outputProcessing({ appId: config.getAppId() }, table, [row])
         expect(enriched[0].attachment[0].url).toBe(
           `/prod-budi-app-assets/${config.getAppId()}/attachments/test/thing.csv`

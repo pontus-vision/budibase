@@ -1,8 +1,8 @@
-const CouchDB = require("../db")
-const { InternalTables } = require("../db/utils")
-const { getGlobalUser } = require("../utilities/global")
+import CouchDB from "../db"
+import { InternalTables } from "../db/utils"
+import { getGlobalUser } from "../utilities/global"
 
-exports.getFullUser = async (ctx, userId) => {
+export const getFullUser = async (ctx, userId) => {
   const global = await getGlobalUser(ctx.appId, userId)
   let metadata
   try {

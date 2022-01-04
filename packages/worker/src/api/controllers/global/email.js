@@ -1,7 +1,7 @@
-const { sendEmail } = require("../../../utilities/email")
-const { getGlobalDB } = require("@budibase/auth/tenancy")
+import { sendEmail as sendMailImp } from "../../../utilities/email"
+import { getGlobalDB } from "@budibase/auth/tenancy"
 
-exports.sendEmail = async ctx => {
+export const sendEmail = async ctx => {
   let {
     workspaceId,
     email,
@@ -17,7 +17,7 @@ exports.sendEmail = async ctx => {
     const db = getGlobalDB()
     user = await db.get(userId)
   }
-  const response = await sendEmail(email, purpose, {
+  const response = await sendMailImp(email, purpose, {
     workspaceId,
     user,
     contents,

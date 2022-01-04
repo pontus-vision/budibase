@@ -1,9 +1,9 @@
-const { Curl } = require("../../curl")
-const fs = require("fs")
-const path = require('path')
+import { Curl } from "../../curl"
+import { readFileSync } from "fs"
+import { join } from 'path'
 
 const getData = (file) => {
-  return fs.readFileSync(path.join(__dirname, `./data/${file}.txt`), "utf8")
+  return readFileSync(join(__dirname, `./data/${file}.txt`), "utf8")
 }
 
 describe("Curl Import", () => {

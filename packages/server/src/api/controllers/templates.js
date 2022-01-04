@@ -1,11 +1,11 @@
-const fetch = require("node-fetch")
-const { downloadTemplate } = require("../../utilities/fileSystem")
+import fetch from "node-fetch"
+import { downloadTemplate } from "../../utilities/fileSystem"
 
 // development flag, can be used to test against templates exported locally
 const DEFAULT_TEMPLATES_BUCKET =
   "prod-budi-templates.s3-eu-west-1.amazonaws.com"
 
-exports.fetch = async function (ctx) {
+const _fetch = async function (ctx) {
   const { type = "app" } = ctx.query
   let response,
     error = false
@@ -25,10 +25,11 @@ exports.fetch = async function (ctx) {
     ctx.body = []
   }
 }
+export { _fetch as fetch }
 
 // can't currently test this, have to ignore from coverage
 /* istanbul ignore next */
-exports.downloadTemplate = async function (ctx) {
+const _downloadTemplate = async function (ctx) {
   const { type, name } = ctx.params
 
   await downloadTemplate(type, name)
@@ -37,3 +38,4 @@ exports.downloadTemplate = async function (ctx) {
     message: `template ${type}:${name} downloaded successfully.`,
   }
 }
+export { _downloadTemplate as downloadTemplate }

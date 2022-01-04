@@ -1,6 +1,6 @@
-const TestConfig = require("../../../../tests/utilities/TestConfiguration")
-const structures = require("../../../../tests/utilities/structures")
-const env = require("../../../../environment")
+import TestConfig from "../../../../tests/utilities/TestConfiguration"
+import structures from "../../../../tests/utilities/structures"
+import env from "../../../../environment"
 
 jest.mock("../../../../utilities/workerRequests", () => ({
   getGlobalUsers: jest.fn(() => {
@@ -16,16 +16,16 @@ jest.mock("../../../../utilities/workerRequests", () => ({
   removeAppFromUserRoles: jest.fn(),
 }))
 
-exports.delay = ms => new Promise(resolve => setTimeout(resolve, ms))
+export const delay = ms => new Promise(resolve => setTimeout(resolve, ms))
 
 let request, config
 
-exports.beforeAll = () => {
+export const beforeAll = () => {
   config = new TestConfig()
   request = config.getRequest()
 }
 
-exports.afterAll = () => {
+export const afterAll = () => {
   if (config) {
     config.end()
   }
@@ -35,21 +35,21 @@ exports.afterAll = () => {
   config = null
 }
 
-exports.getRequest = () => {
+export const getRequest = () => {
   if (!request) {
-    exports.beforeAll()
+    beforeAll()
   }
   return request
 }
 
-exports.getConfig = () => {
+export const getConfig = () => {
   if (!config) {
-    exports.beforeAll()
+    beforeAll()
   }
   return config
 }
 
-exports.switchToSelfHosted = async func => {
+export const switchToSelfHosted = async func => {
   // self hosted stops any attempts to Dynamo
   env._set("NODE_ENV", "production")
   env._set("SELF_HOSTED", true)
@@ -67,4 +67,4 @@ exports.switchToSelfHosted = async func => {
   }
 }
 
-exports.structures = structures
+export { structures }

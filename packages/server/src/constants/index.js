@@ -1,8 +1,7 @@
-const { BUILTIN_ROLE_IDS } = require("@budibase/auth/roles")
-const { UserStatus } = require("@budibase/auth").constants
-const { ObjectStoreBuckets } = require("@budibase/auth").objectStore
+import { BUILTIN_ROLE_IDS } from "@budibase/auth/roles"
+import { UserStatus, ObjectStoreBuckets } from "@budibase/auth"
 
-exports.JobQueues = {
+export const JobQueues = {
   AUTOMATIONS: "automationQueue",
 }
 
@@ -19,8 +18,7 @@ const FilterTypes = {
   ONE_OF: "oneOf",
 }
 
-exports.FilterTypes = FilterTypes
-exports.NoEmptyFilterStrings = [
+export const NoEmptyFilterStrings = [
   FilterTypes.STRING,
   FilterTypes.FUZZY,
   FilterTypes.EQUAL,
@@ -29,7 +27,7 @@ exports.NoEmptyFilterStrings = [
   FilterTypes.NOT_CONTAINS,
 ]
 
-exports.FieldTypes = {
+export const FieldTypes = {
   STRING: "string",
   LONGFORM: "longform",
   OPTIONS: "options",
@@ -45,26 +43,26 @@ exports.FieldTypes = {
   INTERNAL: "internal",
 }
 
-exports.SwitchableTypes = [
+export const SwitchableTypes = [
   exports.FieldTypes.STRING,
   exports.FieldTypes.OPTIONS,
   exports.FieldTypes.NUMBER,
   exports.FieldTypes.BOOLEAN,
 ]
 
-exports.RelationshipTypes = {
+export const RelationshipTypes = {
   ONE_TO_MANY: "one-to-many",
   MANY_TO_ONE: "many-to-one",
   MANY_TO_MANY: "many-to-many",
 }
 
-exports.AuthTypes = {
+export const AuthTypes = {
   APP: "app",
   BUILDER: "builder",
   EXTERNAL: "external",
 }
 
-exports.DataSourceOperation = {
+export const DataSourceOperation = {
   CREATE: "CREATE",
   READ: "READ",
   UPDATE: "UPDATE",
@@ -75,12 +73,12 @@ exports.DataSourceOperation = {
   DELETE_TABLE: "DELETE_TABLE",
 }
 
-exports.SortDirection = {
+export const SortDirection = {
   ASCENDING: "ASCENDING",
   DESCENDING: "DESCENDING",
 }
 
-exports.USERS_TABLE_SCHEMA = {
+export const USERS_TABLE_SCHEMA = {
   _id: "ta_users",
   type: "table",
   views: {},
@@ -142,7 +140,7 @@ exports.USERS_TABLE_SCHEMA = {
   primaryDisplay: "email",
 }
 
-exports.AutoFieldSubTypes = {
+export const AutoFieldSubTypes = {
   CREATED_BY: "createdBy",
   CREATED_AT: "createdAt",
   UPDATED_BY: "updatedBy",
@@ -150,29 +148,29 @@ exports.AutoFieldSubTypes = {
   AUTO_ID: "autoID",
 }
 
-exports.OBJ_STORE_DIRECTORY = "/prod-budi-app-assets"
-exports.BaseQueryVerbs = {
+export const OBJ_STORE_DIRECTORY = "/prod-budi-app-assets"
+
+export const BaseQueryVerbs = {
   CREATE: "create",
   READ: "read",
   UPDATE: "update",
   DELETE: "delete",
 }
 
-exports.MetadataTypes = {
+export const MetadataTypes = {
   AUTOMATION_TEST_INPUT: "automationTestInput",
   AUTOMATION_TEST_HISTORY: "automationTestHistory",
 }
 
-exports.InvalidColumns = {
+export const InvalidColumns = {
   ID: "_id",
   REV: "_rev",
   TABLE_ID: "tableId",
 }
 
-exports.BuildSchemaErrors = {
+export const BuildSchemaErrors = {
   NO_KEY: "no_key",
   INVALID_COLUMN: "invalid_column",
 }
 
-// pass through the list from the auth/core lib
-exports.ObjectStoreBuckets = ObjectStoreBuckets
+export { FilterTypes, ObjectStoreBuckets }

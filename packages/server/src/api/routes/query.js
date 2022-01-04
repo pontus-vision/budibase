@@ -1,20 +1,20 @@
-const Router = require("@koa/router")
-const queryController = require("../controllers/query")
-const authorized = require("../../middleware/authorized")
-const {
+import Router from "@koa/router"
+import queryController from "../controllers/query"
+import authorized from "../../middleware/authorized"
+import {
   PermissionLevels,
   PermissionTypes,
   BUILDER,
-} = require("@budibase/auth/permissions")
-const {
+} from "@budibase/auth/permissions"
+import {
   bodyResource,
   bodySubResource,
   paramResource,
-} = require("../../middleware/resourceId")
-const {
+} from "../../middleware/resourceId"
+import {
   generateQueryPreviewValidation,
   generateQueryValidation,
-} = require("../controllers/query/validation")
+} from "../controllers/query/validation"
 
 const router = Router()
 
@@ -54,4 +54,4 @@ router
     queryController.destroy
   )
 
-module.exports = router
+export default router

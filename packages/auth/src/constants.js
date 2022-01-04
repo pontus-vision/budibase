@@ -1,16 +1,16 @@
-exports.UserStatus = {
+export const UserStatus = {
   ACTIVE: "active",
   INACTIVE: "inactive",
 }
 
-exports.Cookies = {
+export const Cookies = {
   CurrentApp: "budibase:currentapp",
   Auth: "budibase:auth",
   Init: "budibase:init",
   OIDC_CONFIG: "budibase:oidc:config",
 }
 
-exports.Headers = {
+export const Headers = {
   API_KEY: "x-budibase-api-key",
   API_VER: "x-budibase-api-version",
   APP_ID: "x-budibase-app-id",
@@ -18,14 +18,14 @@ exports.Headers = {
   TENANT_ID: "x-budibase-tenant-id",
 }
 
-exports.GlobalRoles = {
+export const GlobalRoles = {
   OWNER: "owner",
   ADMIN: "admin",
   BUILDER: "builder",
   WORKSPACE_MANAGER: "workspace_manager",
 }
 
-exports.Configs = {
+export const Configs = {
   SETTINGS: "settings",
   ACCOUNT: "account",
   SMTP: "smtp",
@@ -34,5 +34,5 @@ exports.Configs = {
   OIDC_LOGOS: "logos_oidc",
 }
 
-exports.MAX_VALID_DATE = new Date(2147483647000)
-exports.DEFAULT_TENANT_ID = "default"
+export const MAX_VALID_DATE = new Date(2147483647000)
+export const DEFAULT_TENANT_ID = "default"

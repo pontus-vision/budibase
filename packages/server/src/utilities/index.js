@@ -1,17 +1,16 @@
-const env = require("../environment")
-const { OBJ_STORE_DIRECTORY } = require("../constants")
-const { sanitizeKey } = require("@budibase/auth/src/objectStore")
-const CouchDB = require("../db")
-const { generateMetadataID } = require("../db/utils")
-const Readable = require("stream").Readable
+import env from "../environment"
+import { OBJ_STORE_DIRECTORY } from "../constants"
+import { sanitizeKey } from "@budibase/auth/src/objectStore"
+import CouchDB from "../db"
+import { generateMetadataID } from "../db/utils"
+import { Readable } from "stream"
 
 const BB_CDN = "https://cdn.budi.live"
 
-exports.wait = ms => new Promise(resolve => setTimeout(resolve, ms))
+export const wait = ms => new Promise(resolve => setTimeout(resolve, ms))
+export const isDev = env.isDev
 
-exports.isDev = env.isDev
-
-exports.removeFromArray = (array, element) => {
+export const removeFromArray = (array, element) => {
   const index = array.indexOf(element)
   if (index !== -1) {
     array.splice(index, 1)
@@ -25,7 +24,7 @@ exports.removeFromArray = (array, element) => {
  * @param {string} url The URL to test and remove any extra double slashes.
  * @return {string} The updated url.
  */
-exports.checkSlashesInUrl = url => {
+export const checkSlashesInUrl = url => {
   return url.replace(/(https?:\/\/)|(\/)+/g, "$1$2")
 }
 
@@ -33,7 +32,7 @@ exports.checkSlashesInUrl = url => {
  * Gets the address of the object store, depending on whether self hosted or in cloud.
  * @return {string} The base URL of the object store (MinIO or S3).
  */
-exports.objectStoreUrl = () => {
+export const objectStoreUrl = () => {
   if (env.SELF_HOSTED) {
     // can use a relative url for this as all goes through the proxy (this is hosted in minio)
     return OBJ_STORE_DIRECTORY
@@ -52,11 +51,9 @@ exports.objectStoreUrl = () => {
  * @return {string} The URL to be inserted into appPackage response or server rendered
  * app index file.
  */
-exports.clientLibraryPath = (appId, version) => {
+export const clientLibraryPath = (appId, version) => {
   if (env.isProd()) {
-    let url = `${exports.objectStoreUrl()}/${sanitizeKey(
-      appId
-    )}/budibase-client.js`
+    let url = `${objectStoreUrl()}/${sanitizeKey(appId)}/budibase-client.js`
     // append app version to bust the cache
     if (version) {
       url += `?v=${version}`
@@ -67,13 +64,11 @@ exports.clientLibraryPath = (appId, version) => {
   }
 }
 
-exports.attachmentsRelativeURL = attachmentKey => {
-  return exports.checkSlashesInUrl(
-    `${exports.objectStoreUrl()}/${attachmentKey}`
-  )
+export const attachmentsRelativeURL = attachmentKey => {
+  return checkSlashesInUrl(`${objectStoreUrl()}/${attachmentKey}`)
 }
 
-exports.updateEntityMetadata = async (appId, type, entityId, updateFn) => {
+export const updateEntityMetadata = async (appId, type, entityId, updateFn) => {
   const db = new CouchDB(appId)
   const id = generateMetadataID(type, entityId)
   // read it to see if it exists, we'll overwrite it no matter what
@@ -99,13 +94,13 @@ exports.updateEntityMetadata = async (appId, type, entityId, updateFn) => {
   }
 }
 
-exports.saveEntityMetadata = async (appId, type, entityId, metadata) => {
-  return exports.updateEntityMetadata(appId, type, entityId, () => {
+export const saveEntityMetadata = async (appId, type, entityId, metadata) => {
+  return updateEntityMetadata(appId, type, entityId, () => {
     return metadata
   })
 }
 
-exports.deleteEntityMetadata = async (appId, type, entityId) => {
+export const deleteEntityMetadata = async (appId, type, entityId) => {
   const db = new CouchDB(appId)
   const id = generateMetadataID(type, entityId)
   let rev
@@ -122,7 +117,7 @@ exports.deleteEntityMetadata = async (appId, type, entityId) => {
   }
 }
 
-exports.escapeDangerousCharacters = string => {
+export const escapeDangerousCharacters = string => {
   return string
     .replace(/[\\]/g, "\\\\")
     .replace(/[\b]/g, "\\b")
@@ -132,7 +127,7 @@ exports.escapeDangerousCharacters = string => {
     .replace(/[\t]/g, "\\t")
 }
 
-exports.stringToReadStream = string => {
+export const stringToReadStream = string => {
   return new Readable({
     read() {
       this.push(string)
@@ -141,7 +136,7 @@ exports.stringToReadStream = string => {
   })
 }
 
-exports.doesDatabaseExist = async dbName => {
+export const doesDatabaseExist = async dbName => {
   try {
     const db = new CouchDB(dbName, { skip_setup: true })
     const info = await db.info()
@@ -151,7 +146,7 @@ exports.doesDatabaseExist = async dbName => {
   }
 }
 
-exports.formatBytes = bytes => {
+export const formatBytes = bytes => {
   const units = ["B", "KB", "MB", "GB", "TB", "PB", "EB", "ZB", "YB"]
   const byteIncrements = 1024
   let unit = 0

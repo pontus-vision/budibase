@@ -1,5 +1,5 @@
-const csv = require("csvtojson")
-const { FieldTypes } = require("../constants")
+import csv from "csvtojson"
+import { FieldTypes } from "../constants"
 
 const VALIDATORS = {
   [FieldTypes.STRING]: () => true,
@@ -137,7 +137,7 @@ async function transform({ schema, csvString, existingTable }) {
   }
 }
 
-module.exports = {
+export default {
   parse,
   transform,
   updateSchema,

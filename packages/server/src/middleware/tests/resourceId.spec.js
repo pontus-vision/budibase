@@ -1,10 +1,4 @@
-const {
-  paramResource,
-  paramSubResource,
-  bodyResource,
-  bodySubResource,
-  ResourceIdGetter
-} = require("../resourceId")
+import { paramResource, paramSubResource, bodyResource, bodySubResource, ResourceIdGetter } from '../resourceId';
 
 class TestConfiguration {
   constructor(middleware) {

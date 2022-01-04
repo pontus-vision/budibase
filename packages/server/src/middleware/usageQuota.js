@@ -1,11 +1,11 @@
-const CouchDB = require("../db")
-const usageQuota = require("../utilities/usageQuota")
-const env = require("../environment")
-const { getTenantId } = require("@budibase/auth/tenancy")
-const {
+import CouchDB from "../db"
+import usageQuota from "../utilities/usageQuota"
+import env from "../environment"
+import { getTenantId } from "@budibase/auth/tenancy"
+import {
   isExternalTable,
-  isRowId: isExternalRowId,
-} = require("../integrations/utils")
+  isRowId as isExternalRowId,
+} from "../integrations/utils"
 
 // tenants without limits
 const EXCLUDED_TENANTS = ["bb", "default", "bbtest", "bbstaging"]
@@ -35,7 +35,7 @@ function getProperty(url) {
   }
 }
 
-module.exports = async (ctx, next) => {
+export default async (ctx, next) => {
   const tenantId = getTenantId()
 
   // if in development or a self hosted cloud usage quotas should not be executed

@@ -7,13 +7,13 @@ const db = jest.fn(() => {
 })
 jest.mock("../../../../../db", () => db)
 
-const { RestImporter } = require("../index")
+import { RestImporter } from "../index"
 
-const fs = require("fs")
-const path = require('path')
+import { readFileSync } from "fs"
+import { join } from 'path'
 
 const getData = (file) => {
-  return fs.readFileSync(path.join(__dirname, `../sources/tests/${file}`), "utf8")
+  return readFileSync(join(__dirname, `../sources/tests/${file}`), "utf8")
 }
 
 // openapi2 (swagger)

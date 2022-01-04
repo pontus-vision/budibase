@@ -1,7 +1,7 @@
-const Router = require("@koa/router")
-const controller = require("../controllers/deploy")
-const authorized = require("../../middleware/authorized")
-const { BUILDER } = require("@budibase/auth/permissions")
+import Router from "@koa/router"
+import controller from "../controllers/deploy"
+import authorized from "../../middleware/authorized"
+import { BUILDER } from "@budibase/auth/permissions"
 
 const router = Router()
 
@@ -14,4 +14,4 @@ router
   )
   .post("/api/deploy", authorized(BUILDER), controller.deployApp)
 
-module.exports = router
+export default router

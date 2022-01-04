@@ -1,33 +1,25 @@
-const { newid } = require("../hashing")
-const Replication = require("./Replication")
-const { DEFAULT_TENANT_ID, Configs } = require("../constants")
-const env = require("../environment")
-const { StaticDatabases, SEPARATOR, DocumentTypes } = require("./constants")
-const {
-  getTenantId,
-  getTenantIDFromAppID,
-  getGlobalDBName,
-} = require("../tenancy")
-const fetch = require("node-fetch")
-const { getCouch } = require("./index")
-const { getAppMetadata } = require("../cache/appMetadata")
-const { checkSlashesInUrl } = require("../helpers")
+import { newid } from "../hashing"
+import Replication from "./Replication"
+import { DEFAULT_TENANT_ID, Configs } from "../constants"
+import env from "../environment"
+import { StaticDatabases, SEPARATOR, DocumentTypes } from "./constants"
+import { getTenantId, getTenantIDFromAppID, getGlobalDBName } from "../tenancy"
+import fetch from "node-fetch"
+import { getCouch } from "./index"
+import { getAppMetadata } from "../cache/appMetadata"
+import { checkSlashesInUrl } from "../helpers"
 
 const NO_APP_ERROR = "No app provided"
 
 const UNICODE_MAX = "\ufff0"
 
-exports.ViewNames = {
+export const ViewNames = {
   USER_BY_EMAIL: "by_email",
 }
 
-exports.StaticDatabases = StaticDatabases
-
-exports.DocumentTypes = DocumentTypes
-exports.APP_PREFIX = DocumentTypes.APP + SEPARATOR
-exports.APP_DEV = exports.APP_DEV_PREFIX = DocumentTypes.APP_DEV + SEPARATOR
-exports.SEPARATOR = SEPARATOR
-exports.getTenantIDFromAppID = getTenantIDFromAppID
+export const APP_PREFIX = DocumentTypes.APP + SEPARATOR
+export const APP_DEV = (exports.APP_DEV_PREFIX =
+  DocumentTypes.APP_DEV + SEPARATOR)
 
 /**
  * If creating DB allDocs/query params with only a single top level ID this can be used, this
@@ -52,39 +44,39 @@ function getDocParams(docType, docId = null, otherProps = {}) {
   }
 }
 
-exports.isDevAppID = appId => {
+export const isDevAppID = appId => {
   if (!appId) {
     throw NO_APP_ERROR
   }
   return appId.startsWith(exports.APP_DEV_PREFIX)
 }
 
-exports.isProdAppID = appId => {
+export const isProdAppID = appId => {
   if (!appId) {
     throw NO_APP_ERROR
   }
-  return appId.startsWith(exports.APP_PREFIX) && !exports.isDevAppID(appId)
+  return appId.startsWith(exports.APP_PREFIX) && !isDevAppID(appId)
 }
 
 function isDevApp(app) {
   if (!app) {
     throw NO_APP_ERROR
   }
-  return exports.isDevAppID(app.appId)
+  return isDevAppID(app.appId)
 }
 
 /**
  * Generates a new workspace ID.
  * @returns {string} The new workspace ID which the workspace doc can be stored under.
  */
-exports.generateWorkspaceID = () => {
+export const generateWorkspaceID = () => {
   return `${DocumentTypes.WORKSPACE}${SEPARATOR}${newid()}`
 }
 
 /**
  * Gets parameters for retrieving workspaces.
  */
-exports.getWorkspaceParams = (id = "", otherProps = {}) => {
+export const getWorkspaceParams = (id = "", otherProps = {}) => {
   return {
     ...otherProps,
     startkey: `${DocumentTypes.WORKSPACE}${SEPARATOR}${id}`,
@@ -96,14 +88,14 @@ exports.getWorkspaceParams = (id = "", otherProps = {}) => {
  * Generates a new global user ID.
  * @returns {string} The new user ID which the user doc can be stored under.
  */
-exports.generateGlobalUserID = id => {
+export const generateGlobalUserID = id => {
   return `${DocumentTypes.USER}${SEPARATOR}${id || newid()}`
 }
 
 /**
  * Gets parameters for retrieving users.
  */
-exports.getGlobalUserParams = (globalId, otherProps = {}) => {
+export const getGlobalUserParams = (globalId, otherProps = {}) => {
   if (!globalId) {
     globalId = ""
   }
@@ -118,14 +110,14 @@ exports.getGlobalUserParams = (globalId, otherProps = {}) => {
  * Generates a template ID.
  * @param ownerId The owner/user of the template, this could be global or a workspace level.
  */
-exports.generateTemplateID = ownerId => {
+export const generateTemplateID = ownerId => {
   return `${DocumentTypes.TEMPLATE}${SEPARATOR}${ownerId}${SEPARATOR}${newid()}`
 }
 
 /**
  * Gets parameters for retrieving templates. Owner ID must be specified, either global or a workspace level.
  */
-exports.getTemplateParams = (ownerId, templateId, otherProps = {}) => {
+export const getTemplateParams = (ownerId, templateId, otherProps = {}) => {
   if (!templateId) {
     templateId = ""
   }
@@ -146,21 +138,21 @@ exports.getTemplateParams = (ownerId, templateId, otherProps = {}) => {
  * Generates a new role ID.
  * @returns {string} The new role ID which the role doc can be stored under.
  */
-exports.generateRoleID = id => {
+export const generateRoleID = id => {
   return `${DocumentTypes.ROLE}${SEPARATOR}${id || newid()}`
 }
 
 /**
  * Gets parameters for retrieving a role, this is a utility function for the getDocParams function.
  */
-exports.getRoleParams = (roleId = null, otherProps = {}) => {
+export const getRoleParams = (roleId = null, otherProps = {}) => {
   return getDocParams(DocumentTypes.ROLE, roleId, otherProps)
 }
 
 /**
  * Convert a development app ID to a deployed app ID.
  */
-exports.getDeployedAppID = appId => {
+export const getDeployedAppID = appId => {
   // if dev, convert it
   if (appId.startsWith(exports.APP_DEV_PREFIX)) {
     const id = appId.split(exports.APP_DEV_PREFIX)[1]
@@ -172,7 +164,7 @@ exports.getDeployedAppID = appId => {
 /**
  * Convert a deployed app ID to a development app ID.
  */
-exports.getDevelopmentAppID = appId => {
+export const getDevelopmentAppID = appId => {
   if (!appId.startsWith(exports.APP_DEV_PREFIX)) {
     const id = appId.split(exports.APP_PREFIX)[1]
     return `${exports.APP_DEV_PREFIX}${id}`
@@ -180,7 +172,7 @@ exports.getDevelopmentAppID = appId => {
   return appId
 }
 
-exports.getCouchUrl = () => {
+export const getCouchUrl = () => {
   if (!env.COUCH_DB_URL) return
 
   // username and password already exist in URL
@@ -199,7 +191,7 @@ exports.getCouchUrl = () => {
   return `${protocol}://${env.COUCH_DB_USERNAME}:${env.COUCH_DB_PASSWORD}@${rest}`
 }
 
-exports.getStartEndKeyURL = (base, baseKey, tenantId = null) => {
+export const getStartEndKeyURL = (base, baseKey, tenantId = null) => {
   const tenancy = tenantId ? `${SEPARATOR}${tenantId}` : ""
   return `${base}?startkey="${baseKey}${tenancy}"&endkey="${baseKey}${tenancy}${UNICODE_MAX}"`
 }
@@ -208,7 +200,7 @@ exports.getStartEndKeyURL = (base, baseKey, tenantId = null) => {
  * if in production this will use the CouchDB _all_dbs call to retrieve a list of databases. If testing
  * when using Pouch it will use the pouchdb-all-dbs package.
  */
-exports.getAllDbs = async () => {
+export const getAllDbs = async () => {
   // specifically for testing we use the pouch package for this
   if (env.isTest()) {
     return getCouch().allDbs()
@@ -223,17 +215,13 @@ exports.getAllDbs = async () => {
       throw "Cannot connect to CouchDB instance"
     }
   }
-  let couchUrl = `${exports.getCouchUrl()}/_all_dbs`
+  let couchUrl = `${getCouchUrl()}/_all_dbs`
   if (env.MULTI_TENANCY) {
     let tenantId = getTenantId()
     // get prod apps
-    await addDbs(
-      exports.getStartEndKeyURL(couchUrl, DocumentTypes.APP, tenantId)
-    )
+    await addDbs(getStartEndKeyURL(couchUrl, DocumentTypes.APP, tenantId))
     // get dev apps
-    await addDbs(
-      exports.getStartEndKeyURL(couchUrl, DocumentTypes.APP_DEV, tenantId)
-    )
+    await addDbs(getStartEndKeyURL(couchUrl, DocumentTypes.APP_DEV, tenantId))
     // add global db name
     dbs.push(getGlobalDBName(tenantId))
   } else {
@@ -250,12 +238,12 @@ exports.getAllDbs = async () => {
  * different users/companies apps as there is no security around it - all apps are returned.
  * @return {Promise<object[]>} returns the app information document stored in each app database.
  */
-exports.getAllApps = async (CouchDB, { dev, all, idsOnly } = {}) => {
+export const getAllApps = async (CouchDB, { dev, all, idsOnly } = {}) => {
   let tenantId = getTenantId()
   if (!env.MULTI_TENANCY && !tenantId) {
     tenantId = DEFAULT_TENANT_ID
   }
-  let dbs = await exports.getAllDbs()
+  let dbs = await getAllDbs()
   const appDbNames = dbs.filter(dbName => {
     const split = dbName.split(SEPARATOR)
     // it is an app, check the tenantId
@@ -306,22 +294,22 @@ exports.getAllApps = async (CouchDB, { dev, all, idsOnly } = {}) => {
 /**
  * Utility function for getAllApps but filters to production apps only.
  */
-exports.getDeployedAppIDs = async CouchDB => {
-  return (await exports.getAllApps(CouchDB, { idsOnly: true })).filter(
-    id => !exports.isDevAppID(id)
+export const getDeployedAppIDs = async CouchDB => {
+  return (await getAllApps(CouchDB, { idsOnly: true })).filter(
+    id => !isDevAppID(id)
   )
 }
 
 /**
  * Utility function for the inverse of above.
  */
-exports.getDevAppIDs = async CouchDB => {
-  return (await exports.getAllApps(CouchDB, { idsOnly: true })).filter(id =>
-    exports.isDevAppID(id)
+export const getDevAppIDs = async CouchDB => {
+  return (await getAllApps(CouchDB, { idsOnly: true })).filter(id =>
+    isDevAppID(id)
   )
 }
 
-exports.dbExists = async (CouchDB, dbName) => {
+export const dbExists = async (CouchDB, dbName) => {
   let exists = false
   try {
     const db = CouchDB(dbName, { skip_setup: true })
@@ -468,9 +456,15 @@ function generateNewUsageQuotaDoc() {
   }
 }
 
-exports.Replication = Replication
-exports.getScopedConfig = getScopedConfig
-exports.generateConfigID = generateConfigID
-exports.getConfigParams = getConfigParams
-exports.getScopedFullConfig = getScopedFullConfig
-exports.generateNewUsageQuotaDoc = generateNewUsageQuotaDoc
+export {
+  StaticDatabases,
+  DocumentTypes,
+  SEPARATOR,
+  getTenantIDFromAppID,
+  Replication,
+  getScopedConfig,
+  generateConfigID,
+  getConfigParams,
+  getScopedFullConfig,
+  generateNewUsageQuotaDoc,
+}

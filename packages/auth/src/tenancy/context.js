@@ -1,21 +1,21 @@
-const env = require("../environment")
-const { Headers } = require("../../constants")
-const cls = require("./FunctionContext")
+import env from "../environment"
+import { Headers } from "../../constants"
+import cls from "./FunctionContext"
 
-exports.DEFAULT_TENANT_ID = "default"
+export const DEFAULT_TENANT_ID = "default"
 
-exports.isDefaultTenant = () => {
-  return exports.getTenantId() === exports.DEFAULT_TENANT_ID
+export const isDefaultTenant = () => {
+  return getTenantId() === exports.DEFAULT_TENANT_ID
 }
 
-exports.isMultiTenant = () => {
+export const isMultiTenant = () => {
   return env.MULTI_TENANCY
 }
 
 const TENANT_ID = "tenantId"
 
 // used for automations, API endpoints should always be in context already
-exports.doInTenant = (tenantId, task) => {
+export const doInTenant = (tenantId, task) => {
   return cls.run(() => {
     // set the tenant id
     cls.setOnContext(TENANT_ID, tenantId)
@@ -25,17 +25,17 @@ exports.doInTenant = (tenantId, task) => {
   })
 }
 
-exports.updateTenantId = tenantId => {
+export const updateTenantId = tenantId => {
   cls.setOnContext(TENANT_ID, tenantId)
 }
 
-exports.setTenantId = (
+export const setTenantId = (
   ctx,
   opts = { allowQs: false, allowNoTenant: false }
 ) => {
   let tenantId
   // exit early if not multi-tenant
-  if (!exports.isMultiTenant()) {
+  if (!isMultiTenant()) {
     cls.setOnContext(TENANT_ID, this.DEFAULT_TENANT_ID)
     return
   }
@@ -67,13 +67,13 @@ exports.setTenantId = (
   }
 }
 
-exports.isTenantIdSet = () => {
+export const isTenantIdSet = () => {
   const tenantId = cls.getFromContext(TENANT_ID)
   return !!tenantId
 }
 
-exports.getTenantId = () => {
-  if (!exports.isMultiTenant()) {
+export const getTenantId = () => {
+  if (!isMultiTenant()) {
     return exports.DEFAULT_TENANT_ID
   }
   const tenantId = cls.getFromContext(TENANT_ID)

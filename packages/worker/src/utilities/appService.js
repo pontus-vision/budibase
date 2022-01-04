@@ -1,8 +1,8 @@
-const fetch = require("node-fetch")
-const { Headers } = require("@budibase/auth/constants")
-const { getTenantId, isTenantIdSet } = require("@budibase/auth/tenancy")
-const { checkSlashesInUrl } = require("../utilities")
-const env = require("../environment")
+import fetch from "node-fetch"
+import { Headers } from "@budibase/auth/constants"
+import { getTenantId, isTenantIdSet } from "@budibase/auth/tenancy"
+import { checkSlashesInUrl } from "../utilities"
+import env from "../environment"
 
 async function makeAppRequest(url, method, body) {
   if (env.isTest()) {
@@ -21,7 +21,7 @@ async function makeAppRequest(url, method, body) {
   return fetch(checkSlashesInUrl(env.APPS_URL + url), request)
 }
 
-exports.syncUserInApps = async userId => {
+export const syncUserInApps = async userId => {
   const response = await makeAppRequest(
     `/api/users/metadata/sync/${userId}`,
     "POST",

@@ -10,9 +10,9 @@ jest.mock("node-fetch", () =>
     text: jest.fn()
   }))
 )
-const fetch = require("node-fetch")
-const RestIntegration = require("../rest")
-const { AuthType } = require("../rest")
+import fetch from "node-fetch"
+import { integration } from "../rest"
+import { AuthType } from "../rest"
 
 const HEADERS = {
   "Accept": "application/json",
@@ -21,7 +21,7 @@ const HEADERS = {
 
 class TestConfiguration {
   constructor(config = {}) {
-    this.integration = new RestIntegration.integration(config)
+    this.integration = new integration(config)
   }
 }
 

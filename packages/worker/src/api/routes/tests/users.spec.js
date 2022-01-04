@@ -1,5 +1,5 @@
-const setup = require("./utilities")
-const { TENANT_ID } = require("./utilities/structures")
+import setup from './utilities';
+import { TENANT_ID } from './utilities/structures';
 
 jest.mock("nodemailer")
 const sendMailMock = setup.emailMock()

@@ -1,9 +1,12 @@
-const Router = require("@koa/router")
-const compress = require("koa-compress")
-const zlib = require("zlib")
-const { routes } = require("./routes")
-const { buildAuthMiddleware, auditLog, buildTenancyMiddleware } =
-  require("@budibase/auth").auth
+import Router from "@koa/router"
+import compress from "koa-compress"
+import zlib from "zlib"
+import { routes } from "./routes"
+import {
+  buildAuthMiddleware,
+  buildTenancyMiddleware,
+  auditLog,
+} from "@budibase/auth"
 
 const PUBLIC_ENDPOINTS = [
   // old deprecated endpoints kept for backwards compat
@@ -116,4 +119,4 @@ for (let route of routes) {
   router.use(route.allowedMethods())
 }
 
-module.exports = router
+export default router

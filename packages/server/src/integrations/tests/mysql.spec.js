@@ -1,4 +1,4 @@
-const MySQLIntegration = require("../mysql")
+import MySQLIntegration from '../mysql';
 jest.mock("mysql2")
 
 class TestConfiguration {

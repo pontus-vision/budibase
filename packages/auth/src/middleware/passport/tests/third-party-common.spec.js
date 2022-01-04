@@ -1,16 +1,12 @@
 // Mock data
 
-require("../../../tests/utilities/dbConfig")
+import '../../../tests/utilities/dbConfig';
 
-const database = require("../../../db")
-const { authenticateThirdParty } = require("../third-party-common")
-const { data } = require("./utilities/mock-data")
-
-const {
-  StaticDatabases,
-  generateGlobalUserID
-} = require("../../../db/utils")
-const { newid } = require("../../../hashing")
+import database from '../../../db';
+import { authenticateThirdParty } from '../third-party-common';
+import { data } from './utilities/mock-data';
+import { StaticDatabases, generateGlobalUserID } from '../../../db/utils';
+import { newid } from '../../../hashing';
 
 let db
 

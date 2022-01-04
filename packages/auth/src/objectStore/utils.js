@@ -1,7 +1,7 @@
-const { join } = require("path")
-const { tmpdir } = require("os")
+import { join } from "path"
+import { tmpdir } from "os"
 
-exports.ObjectStoreBuckets = {
+export const ObjectStoreBuckets = {
   BACKUPS: "backups",
   APPS: "prod-budi-app-assets",
   TEMPLATES: "templates",
@@ -9,6 +9,6 @@ exports.ObjectStoreBuckets = {
   GLOBAL_CLOUD: "prod-budi-tenant-uploads",
 }
 
-exports.budibaseTempDir = function () {
-  return join(tmpdir(), ".budibase")
+export const budibaseTempDir = function () {
+  return join(process.env.BUDIBASE_TMP_DIR || tmpdir(), ".budibase")
 }

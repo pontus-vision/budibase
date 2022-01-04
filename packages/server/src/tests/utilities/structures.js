@@ -1,12 +1,12 @@
-const { BUILTIN_ROLE_IDS } = require("@budibase/auth/roles")
-const { BUILTIN_PERMISSION_IDS } = require("@budibase/auth/permissions")
-const { createHomeScreen } = require("../../constants/screens")
-const { EMPTY_LAYOUT } = require("../../constants/layouts")
-const { cloneDeep } = require("lodash/fp")
+import { BUILTIN_ROLE_IDS } from "@budibase/auth/roles"
+import { BUILTIN_PERMISSION_IDS } from "@budibase/auth/permissions"
+import { createHomeScreen } from "../../constants/screens"
+import { EMPTY_LAYOUT } from "../../constants/layouts"
+import { cloneDeep } from "lodash/fp"
 
-exports.TENANT_ID = "default"
+export const TENANT_ID = "default"
 
-exports.basicTable = () => {
+export const basicTable = () => {
   return {
     name: "TestTable",
     type: "table",
@@ -28,7 +28,7 @@ exports.basicTable = () => {
   }
 }
 
-exports.basicAutomation = () => {
+export const basicAutomation = () => {
   return {
     name: "My Automation",
     screenId: "kasdkfldsafkl",
@@ -44,7 +44,7 @@ exports.basicAutomation = () => {
   }
 }
 
-exports.basicRow = tableId => {
+export const basicRow = tableId => {
   return {
     name: "Test Contact",
     description: "original description",
@@ -52,15 +52,15 @@ exports.basicRow = tableId => {
   }
 }
 
-exports.basicLinkedRow = (tableId, linkedRowId, linkField = "link") => {
+export const basicLinkedRow = (tableId, linkedRowId, linkField = "link") => {
   // this is based on the basic linked tables you get from the test configuration
   return {
-    ...exports.basicRow(tableId),
+    ...basicRow(tableId),
     [linkField]: [linkedRowId],
   }
 }
 
-exports.basicRole = () => {
+export const basicRole = () => {
   return {
     name: "NewRole",
     inherits: BUILTIN_ROLE_IDS.BASIC,
@@ -68,7 +68,7 @@ exports.basicRole = () => {
   }
 }
 
-exports.basicDatasource = () => {
+export const basicDatasource = () => {
   return {
     datasource: {
       type: "datasource",
@@ -79,7 +79,7 @@ exports.basicDatasource = () => {
   }
 }
 
-exports.basicQuery = datasourceId => {
+export const basicQuery = datasourceId => {
   return {
     datasourceId: datasourceId,
     name: "New Query",
@@ -90,7 +90,7 @@ exports.basicQuery = datasourceId => {
   }
 }
 
-exports.basicUser = role => {
+export const basicUser = role => {
   return {
     email: "bill@bill.com",
     password: "yeeooo",
@@ -98,15 +98,15 @@ exports.basicUser = role => {
   }
 }
 
-exports.basicScreen = () => {
+export const basicScreen = () => {
   return createHomeScreen()
 }
 
-exports.basicLayout = () => {
+export const basicLayout = () => {
   return cloneDeep(EMPTY_LAYOUT)
 }
 
-exports.basicWebhook = automationId => {
+export const basicWebhook = automationId => {
   return {
     live: true,
     name: "webhook",

@@ -1,17 +1,21 @@
 // need to load environment first
-const env = require("./environment")
-const CouchDB = require("./db")
-require("@budibase/auth").init(CouchDB)
-const Koa = require("koa")
-const destroyable = require("server-destroy")
-const koaBody = require("koa-body")
-const koaSession = require("koa-session")
-const { passport } = require("@budibase/auth").auth
-const logger = require("koa-pino-logger")
-const http = require("http")
-const api = require("./api")
-const redis = require("./utilities/redis")
-const Sentry = require("@sentry/node")
+import env from "./environment"
+
+import CouchDB from "./db"
+
+import * as auth from "@budibase/auth"
+
+auth.init(CouchDB)
+import Koa from "koa"
+import destroyable from "server-destroy"
+import koaBody from "koa-body"
+import koaSession from "koa-session"
+import "@budibase/auth"
+import logger from "koa-pino-logger"
+import http from "http"
+import api from "./api"
+import redis from "./utilities/redis"
+import Sentry from "@sentry/node"
 
 const app = new Koa()
 
@@ -31,8 +35,8 @@ app.use(
 )
 
 // authentication
-app.use(passport.initialize())
-app.use(passport.session())
+app.use(auth.passport.initialize())
+app.use(auth.passport.session())
 
 // api routes
 app.use(api.routes())
@@ -61,7 +65,7 @@ server.on("close", async () => {
   await redis.shutdown()
 })
 
-module.exports = server.listen(parseInt(env.PORT || 4002), async () => {
+export default server.listen(parseInt(env.PORT || 4002), async () => {
   console.log(`Worker running on ${JSON.stringify(server.address())}`)
   await redis.init()
 })

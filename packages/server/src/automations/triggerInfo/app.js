@@ -1,4 +1,4 @@
-exports.definition = {
+export const definition = {
   name: "App Action",
   event: "app:trigger",
   icon: "Apps",

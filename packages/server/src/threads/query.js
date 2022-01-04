@@ -1,6 +1,6 @@
 require("./utils").threadSetup()
-const ScriptRunner = require("../utilities/scriptRunner")
-const { integrations } = require("../integrations")
+import ScriptRunner from "../utilities/scriptRunner"
+import { integrations } from "../integrations"
 
 function formatResponse(resp) {
   if (typeof resp === "string") {
@@ -65,7 +65,7 @@ async function runAndTransform(datasource, queryVerb, query, transformer) {
   return { rows, keys, info, extra }
 }
 
-module.exports = (input, callback) => {
+export default (input, callback) => {
   runAndTransform(
     input.datasource,
     input.queryVerb,

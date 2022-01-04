@@ -1,18 +1,18 @@
-const env = require("../../environment")
-const jwt = require("jsonwebtoken")
-const { generateGlobalUserID } = require("../../db/utils")
-const { saveUser } = require("../../utils")
-const { authError } = require("./utils")
-const { newid } = require("../../hashing")
-const { createASession } = require("../../security/sessions")
-const { getGlobalUserByEmail } = require("../../utils")
-const { getGlobalDB, getTenantId } = require("../../tenancy")
-const fetch = require("node-fetch")
+import env from "../../environment"
+import jwt from "jsonwebtoken"
+import { generateGlobalUserID } from "../../db/utils"
+import { saveUser } from "../../utils"
+import { authError } from "./utils"
+import { newid } from "../../hashing"
+import { createASession } from "../../security/sessions"
+import { getGlobalUserByEmail } from "../../utils"
+import { getGlobalDB, getTenantId } from "../../tenancy"
+import fetch from "node-fetch"
 
 /**
  * Common authentication logic for third parties. e.g. OAuth, OIDC.
  */
-exports.authenticateThirdParty = async function (
+export const authenticateThirdParty = async function (
   thirdPartyUser,
   requireLocalAccount = true,
   done,

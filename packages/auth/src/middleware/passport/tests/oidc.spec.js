@@ -1,6 +1,9 @@
 // Mock data
 
-const { data } = require("./utilities/mock-data")
+import { data } from './utilities/mock-data';
+import oidc from '../oidc';
+import { mockStrategy } from '@techpass/passport-openidconnect';
+import mockFetch from 'node-fetch';
 
 const issuer = "mockIssuer"
 const sub = "mockSub"
@@ -10,7 +13,7 @@ const profile = {
     email : data.email
   }
 }
-let jwtClaims = {}  
+let jwtClaims = {}
 const idToken = "mockIdToken"
 const params = {}
 
@@ -36,18 +39,16 @@ describe("oidc", () => {
   describe("strategyFactory", () => {  
     // mock passport strategy factory
     jest.mock("@techpass/passport-openidconnect")
-    const mockStrategy = require("@techpass/passport-openidconnect").Strategy
     
     // mock the request to retrieve the oidc configuration
     jest.mock("node-fetch")
-    const mockFetch = require("node-fetch")
     mockFetch.mockReturnValue({
       ok: true,
       json: () => oidcConfigUrlResponse
     })
   
     it("should create successfully create an oidc strategy", async () => {
-      const oidc = require("../oidc")
+
   
       await oidc.strategyFactory(oidcConfig, callbackUrl)
   

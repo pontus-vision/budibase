@@ -1,4 +1,4 @@
-const env = require("../environment")
+import env from "../environment"
 
 const SLOT_REFRESH_MS = 2000
 const CONNECT_TIMEOUT_MS = 10000
@@ -6,7 +6,7 @@ const SEPARATOR = "-"
 const REDIS_URL = !env.REDIS_URL ? "localhost:6379" : env.REDIS_URL
 const REDIS_PASSWORD = !env.REDIS_PASSWORD ? "budibase" : env.REDIS_PASSWORD
 
-exports.Databases = {
+export const Databases = {
   PW_RESETS: "pwReset",
   VERIFICATIONS: "verification",
   INVITATIONS: "invitation",
@@ -18,9 +18,9 @@ exports.Databases = {
   APP_METADATA: "appMetadata",
 }
 
-exports.SEPARATOR = SEPARATOR
+export { SEPARATOR }
 
-exports.getRedisOptions = (clustered = false) => {
+export const getRedisOptions = (clustered = false) => {
   const [host, port, ...rest] = REDIS_URL.split(":")
 
   let redisProtocolUrl
@@ -47,14 +47,14 @@ exports.getRedisOptions = (clustered = false) => {
   return { opts, host, port, redisProtocolUrl }
 }
 
-exports.addDbPrefix = (db, key) => {
+export const addDbPrefix = (db, key) => {
   if (key.includes(db)) {
     return key
   }
   return `${db}${SEPARATOR}${key}`
 }
 
-exports.removeDbPrefix = key => {
+export const removeDbPrefix = key => {
   let parts = key.split(SEPARATOR)
   if (parts.length >= 2) {
     parts.shift()

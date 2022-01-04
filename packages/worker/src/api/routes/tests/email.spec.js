@@ -1,11 +1,11 @@
-const setup = require("./utilities")
-const { EmailTemplatePurpose } = require("../../../constants")
-const { TENANT_ID } = require("./utilities/structures")
+import setup from './utilities';
+import { EmailTemplatePurpose } from '../../../constants';
+import { TENANT_ID } from './utilities/structures';
 
 // mock the email system
 const sendMailMock = jest.fn()
 jest.mock("nodemailer")
-const nodemailer = require("nodemailer")
+import nodemailer from 'nodemailer';
 nodemailer.createTransport.mockReturnValue({
   sendMail: sendMailMock,
   verify: jest.fn()

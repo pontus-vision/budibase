@@ -1,16 +1,16 @@
 jest.mock("pg")
 
-let setup = require("./utilities")
-let { basicDatasource } = setup.structures
-let { checkBuilderEndpoint } = require("./utilities/TestFunctions")
-const pg = require("pg")
+import { structures, getRequest, getConfig, afterAll as _afterAll } from "./utilities"
+let { basicDatasource } = structures
+import { checkBuilderEndpoint } from "./utilities/TestFunctions"
+import { queryMock } from "pg"
 
 describe("/datasources", () => {
-  let request = setup.getRequest()
-  let config = setup.getConfig()
+  let request = getRequest()
+  let config = getConfig()
   let datasource
 
-  afterAll(setup.afterAll)
+  afterAll(_afterAll)
 
   beforeEach(async () => {
     await config.init()
@@ -95,7 +95,7 @@ describe("/datasources", () => {
       // this is mock data, can't test it
       expect(res.body).toBeDefined()
       const expSql = `select "users"."name" as "users.name", "users"."age" as "users.age" from (select * from "users" where "users"."name" ilike $1 limit $2) as "users"`
-      expect(pg.queryMock).toHaveBeenCalledWith(expSql, ["John%", 5000])
+      expect(queryMock).toHaveBeenCalledWith(expSql, ["John%", 5000])
     })
   })
 

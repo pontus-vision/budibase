@@ -1,4 +1,4 @@
-exports.definition = {
+export const definition = {
   name: "Row Created",
   event: "row:save",
   icon: "TableRowAddBottom",

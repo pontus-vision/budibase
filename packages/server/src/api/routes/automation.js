@@ -1,18 +1,18 @@
-const Router = require("@koa/router")
-const controller = require("../controllers/automation")
-const authorized = require("../../middleware/authorized")
-const joiValidator = require("../../middleware/joi-validator")
-const {
+import Router from "@koa/router"
+import controller from "../controllers/automation"
+import authorized from "../../middleware/authorized"
+import joiValidator from "../../middleware/joi-validator"
+import {
   BUILDER,
   PermissionLevels,
   PermissionTypes,
-} = require("@budibase/auth/permissions")
-const Joi = require("joi")
-const { bodyResource, paramResource } = require("../../middleware/resourceId")
-const {
-  middleware: appInfoMiddleware,
+} from "@budibase/auth/permissions"
+import Joi from "joi"
+import { bodyResource, paramResource } from "../../middleware/resourceId"
+import {
+  middleware as appInfoMiddleware,
   AppType,
-} = require("../../middleware/appInfo")
+} from "../../middleware/appInfo"
 
 const router = Router()
 
@@ -102,4 +102,4 @@ router
     controller.test
   )
 
-module.exports = router
+export default router

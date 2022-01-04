@@ -6,7 +6,7 @@ function isTest() {
   )
 }
 
-module.exports = {
+export default {
   JWT_SECRET: process.env.JWT_SECRET,
   COUCH_DB_URL: process.env.COUCH_DB_URL,
   COUCH_DB_USERNAME: process.env.COUCH_DB_USER,
@@ -29,6 +29,6 @@ module.exports = {
   isTest,
   _set(key, value) {
     process.env[key] = value
-    module.exports[key] = value
+    // const key = value;
   },
 }

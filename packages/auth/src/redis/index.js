@@ -1,12 +1,12 @@
-const env = require("../environment")
+import env from "../environment"
 // ioredis mock is all in memory
 const Redis = env.isTest() ? require("ioredis-mock") : require("ioredis")
-const {
+import {
   addDbPrefix,
   removeDbPrefix,
   getRedisOptions,
   SEPARATOR,
-} = require("./utils")
+} from "./utils"
 
 const RETRY_PERIOD_MS = 2000
 const STARTUP_TIMEOUT_MS = 5000
@@ -214,4 +214,4 @@ class RedisWrapper {
   }
 }
 
-module.exports = RedisWrapper
+export default RedisWrapper

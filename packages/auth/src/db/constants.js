@@ -1,9 +1,9 @@
-exports.SEPARATOR = "_"
+export const SEPARATOR = "_"
 
 const PRE_APP = "app"
 const PRE_DEV = "dev"
 
-exports.DocumentTypes = {
+export const DocumentTypes = {
   USER: "us",
   WORKSPACE: "workspace",
   CONFIG: "config",
@@ -16,7 +16,7 @@ exports.DocumentTypes = {
   MIGRATIONS: "migrations",
 }
 
-exports.StaticDatabases = {
+export const StaticDatabases = {
   GLOBAL: {
     name: "global-db",
     docs: {

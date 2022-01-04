@@ -1,22 +1,22 @@
-require("svelte/register")
+import "svelte/register"
 
-const send = require("koa-send")
-const { resolve, join } = require("../../../utilities/centralPath")
-const uuid = require("uuid")
-const { ObjectStoreBuckets } = require("../../../constants")
-const { processString } = require("@budibase/string-templates")
-const { getDeployedApps } = require("../../../utilities/workerRequests")
-const CouchDB = require("../../../db")
-const {
+import send from "koa-send"
+import { resolve, join } from "../../../utilities/centralPath"
+import { v4 } from "uuid"
+import { ObjectStoreBuckets } from "../../../constants"
+import { processString } from "@budibase/string-templates"
+import { getDeployedApps } from "../../../utilities/workerRequests"
+import CouchDB from "../../../db"
+import {
   loadHandlebarsFile,
   NODE_MODULES_PATH,
   TOP_LEVEL_PATH,
-} = require("../../../utilities/fileSystem")
-const env = require("../../../environment")
-const { clientLibraryPath } = require("../../../utilities")
-const { upload } = require("../../../utilities/fileSystem")
-const { attachmentsRelativeURL } = require("../../../utilities")
-const { DocumentTypes } = require("../../../db/utils")
+} from "../../../utilities/fileSystem"
+import { SELF_HOSTED, isProd } from "../../../environment"
+import { clientLibraryPath } from "../../../utilities"
+import { upload } from "../../../utilities/fileSystem"
+import { attachmentsRelativeURL } from "../../../utilities"
+import { DocumentTypes } from "../../../db/utils"
 
 async function prepareUpload({ s3Key, bucket, metadata, file }) {
   const response = await upload({
@@ -48,12 +48,12 @@ async function checkForSelfHostedURL(ctx) {
   }
 }
 
-exports.serveBuilder = async function (ctx) {
+export async function serveBuilder(ctx) {
   let builderPath = resolve(TOP_LEVEL_PATH, "builder")
   await send(ctx, ctx.file, { root: builderPath })
 }
 
-exports.uploadFile = async function (ctx) {
+export async function uploadFile(ctx) {
   let files =
     ctx.request.files.file.length > 1
       ? Array.from(ctx.request.files.file)
@@ -62,7 +62,7 @@ exports.uploadFile = async function (ctx) {
   const uploads = files.map(async file => {
     const fileExtension = [...file.name.split(".")].pop()
     // filenames converted to UUIDs so they are unique
-    const processedFileName = `${uuid.v4()}.${fileExtension}`
+    const processedFileName = `${v4()}.${fileExtension}`
 
     return prepareUpload({
       file,
@@ -74,9 +74,9 @@ exports.uploadFile = async function (ctx) {
   ctx.body = await Promise.all(uploads)
 }
 
-exports.serveApp = async function (ctx) {
+export async function serveApp(ctx) {
   let appId = ctx.params.appId
-  if (env.SELF_HOSTED) {
+  if (SELF_HOSTED) {
     appId = await checkForSelfHostedURL(ctx)
   }
   const App = require("./templates/BudibaseApp.svelte").default
@@ -85,7 +85,7 @@ exports.serveApp = async function (ctx) {
 
   const { head, html, css } = App.render({
     title: appInfo.name,
-    production: env.isProd(),
+    production: isProd(),
     appId,
     clientLibPath: clientLibraryPath(appId, appInfo.version),
   })
@@ -99,7 +99,7 @@ exports.serveApp = async function (ctx) {
   })
 }
 
-exports.serveClientLibrary = async function (ctx) {
+export async function serveClientLibrary(ctx) {
   return send(ctx, "budibase-client.js", {
     root: join(NODE_MODULES_PATH, "@budibase", "client", "dist"),
   })

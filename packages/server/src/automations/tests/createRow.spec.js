@@ -1,7 +1,7 @@
 jest.mock("../../utilities/usageQuota")
 
-const usageQuota = require("../../utilities/usageQuota")
-const setup = require("./utilities")
+import usageQuota from '../../utilities/usageQuota';
+import setup from './utilities';
 
 describe("test the create row action", () => {
   let table, row

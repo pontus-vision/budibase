@@ -1,17 +1,17 @@
-const fetch = require("node-fetch")
-const env = require("../environment")
-const { checkSlashesInUrl } = require("./index")
-const { getDeployedAppID } = require("@budibase/auth/db")
-const { updateAppRole } = require("./global")
-const { Headers } = require("@budibase/auth/constants")
-const { getTenantId, isTenantIdSet } = require("@budibase/auth/tenancy")
+import fetch from "node-fetch"
+import { INTERNAL_API_KEY, WORKER_URL } from "../environment"
+import { checkSlashesInUrl } from "./index"
+import { getDeployedAppID } from "@budibase/auth/db"
+import { updateAppRole } from "./global"
+import { Headers } from "@budibase/auth/constants"
+import { getTenantId, isTenantIdSet } from "@budibase/auth/tenancy"
 
 function request(ctx, request) {
   if (!request.headers) {
     request.headers = {}
   }
   if (!ctx) {
-    request.headers[Headers.API_KEY] = env.INTERNAL_API_KEY
+    request.headers[Headers.API_KEY] = INTERNAL_API_KEY
     if (isTenantIdSet()) {
       request.headers[Headers.TENANT_ID] = getTenantId()
     }
@@ -31,13 +31,14 @@ function request(ctx, request) {
   return request
 }
 
-exports.request = request
+const _request = request
+export { _request as request }
 
 // have to pass in the tenant ID as this could be coming from an automation
-exports.sendSmtpEmail = async (to, from, subject, contents, automation) => {
+export async function sendSmtpEmail(to, from, subject, contents, automation) {
   // tenant ID will be set in header
   const response = await fetch(
-    checkSlashesInUrl(env.WORKER_URL + `/api/global/email/send`),
+    checkSlashesInUrl(WORKER_URL + `/api/global/email/send`),
     request(null, {
       method: "POST",
       body: {
@@ -58,10 +59,10 @@ exports.sendSmtpEmail = async (to, from, subject, contents, automation) => {
   return response.json()
 }
 
-exports.getDeployedApps = async () => {
+export async function getDeployedApps() {
   try {
     const response = await fetch(
-      checkSlashesInUrl(env.WORKER_URL + `/api/apps`),
+      checkSlashesInUrl(WORKER_URL + `/api/apps`),
       request(null, {
         method: "GET",
       })
@@ -81,10 +82,10 @@ exports.getDeployedApps = async () => {
   }
 }
 
-exports.getGlobalSelf = async (ctx, appId = null) => {
+export async function getGlobalSelf(ctx, appId = null) {
   const endpoint = `/api/global/users/self`
   const response = await fetch(
-    checkSlashesInUrl(env.WORKER_URL + endpoint),
+    checkSlashesInUrl(WORKER_URL + endpoint),
     // we don't want to use API key when getting self
     request(ctx, { method: "GET" })
   )
@@ -98,10 +99,10 @@ exports.getGlobalSelf = async (ctx, appId = null) => {
   return json
 }
 
-exports.removeAppFromUserRoles = async (ctx, appId) => {
+export async function removeAppFromUserRoles(ctx, appId) {
   const deployedAppId = getDeployedAppID(appId)
   const response = await fetch(
-    checkSlashesInUrl(env.WORKER_URL + `/api/global/roles/${deployedAppId}`),
+    checkSlashesInUrl(WORKER_URL + `/api/global/roles/${deployedAppId}`),
     request(ctx, {
       method: "DELETE",
     })

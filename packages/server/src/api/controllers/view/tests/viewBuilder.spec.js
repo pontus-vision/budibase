@@ -1,4 +1,4 @@
-const viewTemplate = require("../viewBuilder");
+import viewTemplate from "../viewBuilder";
 
 describe("viewBuilder", () => {
 

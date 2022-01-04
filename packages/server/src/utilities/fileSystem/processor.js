@@ -1,4 +1,4 @@
-const jimp = require("jimp")
+import jimp from "jimp"
 
 const FORMATS = {
   IMAGES: ["png", "jpg", "jpeg", "gif", "bmp", "tiff"],
@@ -18,4 +18,4 @@ async function process(file) {
   return file
 }
 
-exports.process = process
+export { process }

@@ -1,8 +1,8 @@
-const queryController = require("../../api/controllers/query")
-const { buildCtx } = require("./utils")
-const automationUtils = require("../automationUtils")
+import queryController from "../../api/controllers/query"
+import { buildCtx } from "./utils"
+import automationUtils from "../automationUtils"
 
-exports.definition = {
+export const definition = {
   name: "External Data Connector",
   tagline: "Execute Data Connector",
   icon: "Data",
@@ -45,7 +45,7 @@ exports.definition = {
   },
 }
 
-exports.run = async function ({ inputs, appId, emitter }) {
+export const run = async function ({ inputs, appId, emitter }) {
   if (inputs.query == null) {
     return {
       success: false,

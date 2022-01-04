@@ -1,32 +1,32 @@
-const authRoutes = require("./auth")
-const layoutRoutes = require("./layout")
-const screenRoutes = require("./screen")
-const userRoutes = require("./user")
-const applicationRoutes = require("./application")
-const tableRoutes = require("./table")
-const rowRoutes = require("./row")
-const viewRoutes = require("./view")
-const staticRoutes = require("./static")
-const componentRoutes = require("./component")
-const automationRoutes = require("./automation")
-const webhookRoutes = require("./webhook")
-const roleRoutes = require("./role")
-const deployRoutes = require("./deploy")
-const apiKeysRoutes = require("./apikeys")
-const templatesRoutes = require("./templates")
-const analyticsRoutes = require("./analytics")
-const routingRoutes = require("./routing")
-const integrationRoutes = require("./integration")
-const permissionRoutes = require("./permission")
-const datasourceRoutes = require("./datasource")
-const queryRoutes = require("./query")
-const hostingRoutes = require("./hosting")
-const backupRoutes = require("./backup")
-const metadataRoutes = require("./metadata")
-const devRoutes = require("./dev")
-const cloudRoutes = require("./cloud")
+import authRoutes from "./auth"
+import layoutRoutes from "./layout"
+import screenRoutes from "./screen"
+import userRoutes from "./user"
+import applicationRoutes from "./application"
+import tableRoutes from "./table"
+import rowRoutes from "./row"
+import viewRoutes from "./view"
+import staticRoutes from "./static"
+import componentRoutes from "./component"
+import automationRoutes from "./automation"
+import webhookRoutes from "./webhook"
+import roleRoutes from "./role"
+import deployRoutes from "./deploy"
+import apiKeysRoutes from "./apikeys"
+import templatesRoutes from "./templates"
+import analyticsRoutes from "./analytics"
+import routingRoutes from "./routing"
+import integrationRoutes from "./integration"
+import permissionRoutes from "./permission"
+import datasourceRoutes from "./datasource"
+import queryRoutes from "./query"
+import hostingRoutes from "./hosting"
+import backupRoutes from "./backup"
+import metadataRoutes from "./metadata"
+import devRoutes from "./dev"
+import cloudRoutes from "./cloud"
 
-exports.mainRoutes = [
+export const mainRoutes = [
   authRoutes,
   deployRoutes,
   layoutRoutes,
@@ -57,4 +57,4 @@ exports.mainRoutes = [
   rowRoutes,
 ]
 
-exports.staticRoutes = staticRoutes
+export { staticRoutes }

@@ -1,16 +1,16 @@
-const env = require("../../../../environment")
-const controllers = require("./controllers")
-const supertest = require("supertest")
-const { jwt } = require("@budibase/auth").auth
-const { Cookies } = require("@budibase/auth").constants
-const { Configs, LOGO_URL } = require("../../../../constants")
-const { getGlobalUserByEmail } = require("@budibase/auth").utils
-const { createASession } = require("@budibase/auth/sessions")
-const { newid } = require("../../../../../../auth/src/hashing")
-const { TENANT_ID } = require("./structures")
-const auth = require("@budibase/auth")
-const CouchDB = require("../../../../db")
-const { doInTenant } = require("@budibase/auth/tenancy")
+import env from "../../../../environment"
+import controllers from "./controllers"
+import supertest from "supertest"
+import "@budibase/auth"
+import "@budibase/auth"
+import { Configs, LOGO_URL } from "../../../../constants"
+import "@budibase/auth"
+import { createASession } from "@budibase/auth/sessions"
+import { newid } from "../../../../../../auth/src/hashing"
+import { TENANT_ID } from "./structures"
+import auth, { jwt, Cookies, getGlobalUserByEmail } from "@budibase/auth"
+import CouchDB from "../../../../db"
+import { doInTenant } from "@budibase/auth/tenancy"
 auth.init(CouchDB)
 
 class TestConfiguration {
@@ -255,4 +255,4 @@ class TestConfiguration {
   }
 }
 
-module.exports = TestConfiguration
+export default TestConfiguration

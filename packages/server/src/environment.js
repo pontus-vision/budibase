@@ -1,4 +1,4 @@
-function isTest() {
+export function isTest() {
   return (
     process.env.NODE_ENV === "jest" ||
     process.env.NODE_ENV === "cypress" ||
@@ -17,15 +17,26 @@ function isCypress() {
   return process.env.NODE_ENV === "cypress"
 }
 
+function isAWSLambda() {
+  return process.env.IS_AWS_LAMBDA
+    ? process.env.IS_AWS_LAMBDA.toLowerCase() === "true"
+    : false
+}
+
 let LOADED = false
 if (!LOADED && isDev() && !isTest()) {
   require("dotenv").config()
   LOADED = true
 }
 
+export function _set(key, value) {
+  process.env[key] = value
+  // const key = value;
+}
+
 let inThread = false
 
-module.exports = {
+export default {
   // important
   PORT: process.env.PORT,
   JWT_SECRET: process.env.JWT_SECRET,
@@ -65,13 +76,11 @@ module.exports = {
   DEPLOYMENT_CREDENTIALS_URL: process.env.DEPLOYMENT_CREDENTIALS_URL,
   ALLOW_DEV_AUTOMATIONS: process.env.ALLOW_DEV_AUTOMATIONS,
   DISABLE_THREADING: process.env.DISABLE_THREADING,
-  _set(key, value) {
-    process.env[key] = value
-    module.exports[key] = value
-  },
+  _set,
   isTest,
   isCypress,
   isDev,
+  isAWSLambda,
   isProd: () => {
     return !isDev()
   },
@@ -86,13 +95,13 @@ module.exports = {
 
 // threading can cause memory issues with node-ts in development
 if (isDev() && module.exports.DISABLE_THREADING == null) {
-  module.exports._set("DISABLE_THREADING", "1")
+  _set("DISABLE_THREADING", "1")
 }
 
-// clean up any environment variable edge cases
-for (let [key, value] of Object.entries(module.exports)) {
-  // handle the edge case of "0" to disable an environment variable
-  if (value === "0") {
-    module.exports[key] = 0
-  }
-}
+// // clean up any environment variable edge cases
+// for (let [key, value] of Object.entries(module.exports)) {
+//   // handle the edge case of "0" to disable an environment variable
+//   if (value === "0") {
+//     const key = 0;
+//   }
+// }

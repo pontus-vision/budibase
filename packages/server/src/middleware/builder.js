@@ -1,14 +1,14 @@
-const { APP_DEV_PREFIX } = require("../db/utils")
-const {
+import { APP_DEV_PREFIX } from "../db/utils"
+import {
   doesUserHaveLock,
   updateLock,
   checkDebounce,
   setDebounce,
-} = require("../utilities/redis")
-const CouchDB = require("../db")
-const { DocumentTypes } = require("../db/utils")
-const { PermissionTypes } = require("@budibase/auth/permissions")
-const { app: appCache } = require("@budibase/auth/cache")
+} from "../utilities/redis"
+import CouchDB from "../db"
+import { DocumentTypes } from "../db/utils"
+import { PermissionTypes } from "@budibase/auth/permissions"
+import { app as appCache } from "@budibase/auth/cache"
 
 const DEBOUNCE_TIME_SEC = 30
 
@@ -58,7 +58,7 @@ async function updateAppUpdatedAt(ctx) {
   await setDebounce(appId, DEBOUNCE_TIME_SEC)
 }
 
-module.exports = async (ctx, permType) => {
+export default async (ctx, permType) => {
   const appId = ctx.appId
   // this only functions within an app context
   if (!appId) {

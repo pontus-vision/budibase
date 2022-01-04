@@ -1,24 +1,24 @@
-const CouchDB = require("../../../db")
-const {
+import CouchDB from "../../../db"
+import {
   buildExternalTableId,
   breakExternalTableId,
-} = require("../../../integrations/utils")
-const {
+} from "../../../integrations/utils"
+import {
   getTable,
   generateForeignKey,
   generateJunctionTableName,
   foreignKeyStructure,
   hasTypeChanged,
-} = require("./utils")
-const {
+} from "./utils"
+import {
   DataSourceOperation,
   FieldTypes,
   RelationshipTypes,
-} = require("../../../constants")
-const { makeExternalQuery } = require("../../../integrations/base/utils")
-const { cloneDeep } = require("lodash/fp")
-const csvParser = require("../../../utilities/csvParser")
-const { handleRequest } = require("../row/external")
+} from "../../../constants"
+import { makeExternalQuery } from "../../../integrations/base/utils"
+import { cloneDeep } from "lodash/fp"
+import { transform } from "../../../utilities/csvParser"
+import { handleRequest } from "../row/external"
 
 async function makeTableRequest(
   datasource,
@@ -158,7 +158,7 @@ function isRelationshipSetup(column) {
   return column.foreignKey || column.through
 }
 
-exports.save = async function (ctx) {
+export async function save(ctx) {
   const appId = ctx.appId
   const table = ctx.request.body
   // can't do this right now
@@ -266,7 +266,7 @@ exports.save = async function (ctx) {
   return tableToSave
 }
 
-exports.destroy = async function (ctx) {
+export async function destroy(ctx) {
   const appId = ctx.appId
   const tableToDelete = await getTable(appId, ctx.params.tableId)
   if (!tableToDelete || !tableToDelete.created) {
@@ -289,14 +289,14 @@ exports.destroy = async function (ctx) {
   return tableToDelete
 }
 
-exports.bulkImport = async function (ctx) {
+export async function bulkImport(ctx) {
   const appId = ctx.appId
   const table = await getTable(appId, ctx.params.tableId)
   const { dataImport } = ctx.request.body
   if (!dataImport || !dataImport.schema || !dataImport.csvString) {
     ctx.throw(400, "Provided data import information is invalid.")
   }
-  const rows = await csvParser.transform({
+  const rows = await transform({
     ...dataImport,
     existingTable: table,
   })

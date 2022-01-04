@@ -1,4 +1,4 @@
-const Sql = require("../base/sql")
+import Sql from '../base/sql';
 
 const TABLE_NAME = "test"
 

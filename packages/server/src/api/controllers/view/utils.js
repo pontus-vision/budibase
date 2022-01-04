@@ -1,14 +1,14 @@
-const {
+import {
   ViewNames,
   generateMemoryViewID,
   getMemoryViewParams,
   DocumentTypes,
   SEPARATOR,
-} = require("../../../db/utils")
-const env = require("../../../environment")
+} from "../../../db/utils"
+import { SELF_HOSTED } from "../../../environment"
 
-exports.getView = async (db, viewName) => {
-  if (env.SELF_HOSTED) {
+export async function getView(db, viewName) {
+  if (SELF_HOSTED) {
     const designDoc = await db.get("_design/database")
     return designDoc.views[viewName]
   } else {
@@ -22,9 +22,9 @@ exports.getView = async (db, viewName) => {
   }
 }
 
-exports.getViews = async db => {
+export async function getViews(db) {
   const response = []
-  if (env.SELF_HOSTED) {
+  if (SELF_HOSTED) {
     const designDoc = await db.get("_design/database")
     for (let name of Object.keys(designDoc.views)) {
       // Only return custom views, not built ins
@@ -54,8 +54,8 @@ exports.getViews = async db => {
   return response
 }
 
-exports.saveView = async (db, originalName, viewName, viewTemplate) => {
-  if (env.SELF_HOSTED) {
+export async function saveView(db, originalName, viewName, viewTemplate) {
+  if (SELF_HOSTED) {
     const designDoc = await db.get("_design/database")
     designDoc.views = {
       ...designDoc.views,
@@ -91,8 +91,8 @@ exports.saveView = async (db, originalName, viewName, viewTemplate) => {
   }
 }
 
-exports.deleteView = async (db, viewName) => {
-  if (env.SELF_HOSTED) {
+export async function deleteView(db, viewName) {
+  if (SELF_HOSTED) {
     const designDoc = await db.get("_design/database")
     const view = designDoc.views[viewName]
     delete designDoc.views[viewName]
@@ -106,16 +106,16 @@ exports.deleteView = async (db, viewName) => {
   }
 }
 
-exports.migrateToInMemoryView = async (db, viewName) => {
+export async function migrateToInMemoryView(db, viewName) {
   // delete the view initially
   const designDoc = await db.get("_design/database")
   const view = designDoc.views[viewName]
   delete designDoc.views[viewName]
   await db.put(designDoc)
-  await exports.saveView(db, null, viewName, view)
+  await saveView(db, null, viewName, view)
 }
 
-exports.migrateToDesignView = async (db, viewName) => {
+export async function migrateToDesignView(db, viewName) {
   let view = await db.get(generateMemoryViewID(viewName))
   const designDoc = await db.get("_design/database")
   designDoc.views[viewName] = view.view
@@ -123,7 +123,7 @@ exports.migrateToDesignView = async (db, viewName) => {
   await db.remove(view._id, view._rev)
 }
 
-exports.getFromDesignDoc = async (db, viewName) => {
+export async function getFromDesignDoc(db, viewName) {
   const designDoc = await db.get("_design/database")
   let view = designDoc.views[viewName]
   if (view == null) {
@@ -132,7 +132,7 @@ exports.getFromDesignDoc = async (db, viewName) => {
   return view
 }
 
-exports.getFromMemoryDoc = async (db, viewName) => {
+export async function getFromMemoryDoc(db, viewName) {
   let view = await db.get(generateMemoryViewID(viewName))
   if (view) {
     view = view.view

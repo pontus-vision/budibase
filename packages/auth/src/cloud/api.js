@@ -1,4 +1,4 @@
-const fetch = require("node-fetch")
+import fetch from "node-fetch"
 class API {
   constructor(host) {
     this.host = host
@@ -41,4 +41,4 @@ class API {
   put = this.apiCall("PUT")
 }
 
-module.exports = API
+export default API

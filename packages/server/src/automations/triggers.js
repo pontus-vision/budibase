@@ -1,14 +1,16 @@
-const CouchDB = require("../db")
-const emitter = require("../events/index")
-const { getAutomationParams } = require("../db/utils")
-const { coerce } = require("../utilities/rowProcessor")
-const { definitions } = require("./triggerInfo")
-const { isDevAppID } = require("../db/utils")
+import CouchDB from "../db"
+import emitter from "../events/index"
+import { getAutomationParams } from "../db/utils"
+import { coerce } from "../utilities/rowProcessor"
+import { definitions } from "./triggerInfo"
+import { isDevAppID } from "../db/utils"
+
 // need this to call directly, so we can get a response
-const { queue } = require("./bullboard")
-const { checkTestFlag } = require("../utilities/redis")
-const utils = require("./utils")
-const env = require("../environment")
+import { queue } from "./bullboard"
+
+import { checkTestFlag } from "../utilities/redis"
+import utils from "./utils"
+import env from "../environment"
 
 const TRIGGER_DEFINITIONS = definitions
 const JOB_OPTS = {
@@ -80,7 +82,7 @@ emitter.on("row:delete", async function (event) {
   await queueRelevantRowAutomations(event, "row:delete")
 })
 
-exports.externalTrigger = async function (
+export const externalTrigger = async function (
   automation,
   params,
   { getResponses } = {}
@@ -108,4 +110,4 @@ exports.externalTrigger = async function (
   }
 }
 
-exports.TRIGGER_DEFINITIONS = TRIGGER_DEFINITIONS
+export { TRIGGER_DEFINITIONS }

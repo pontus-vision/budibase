@@ -10,10 +10,10 @@ jest.mock("@budibase/auth/tenancy", () => ({
   getTenantId: () => "testing123"
 }))
 
-const usageQuotaMiddleware = require("../usageQuota")
-const usageQuota = require("../../utilities/usageQuota")
-const CouchDB = require("../../db")
-const env = require("../../environment")
+import usageQuotaMiddleware from '../usageQuota';
+import usageQuota from '../../utilities/usageQuota';
+import CouchDB from '../../db';
+import env from '../../environment';
 
 class TestConfiguration {
   constructor() {

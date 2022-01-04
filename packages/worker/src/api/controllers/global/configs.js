@@ -1,21 +1,22 @@
-const {
+import {
   generateConfigID,
   getConfigParams,
   getGlobalUserParams,
   getScopedFullConfig,
   getAllApps,
-} = require("@budibase/auth/db")
-const { Configs } = require("../../../constants")
-const email = require("../../../utilities/email")
-const { upload, ObjectStoreBuckets } = require("@budibase/auth").objectStore
-const CouchDB = require("../../../db")
-const { getGlobalDB, getTenantId } = require("@budibase/auth/tenancy")
-const env = require("../../../environment")
-const { googleCallbackUrl, oidcCallbackUrl } = require("./auth")
+} from "@budibase/auth/db"
+import { Configs } from "../../../constants"
+import email from "../../../utilities/email"
+import "@budibase/auth"
+import CouchDB from "../../../db"
+import { getGlobalDB, getTenantId } from "@budibase/auth/tenancy"
+import env from "../../../environment"
+import { googleCallbackUrl, oidcCallbackUrl } from "./auth"
+import { ObjectStoreBuckets } from "@budibase/auth/src/objectStore/utils"
 
 const BB_TENANT_CDN = "https://tenants.cdn.budi.live"
 
-exports.save = async function (ctx) {
+export const save = async function (ctx) {
   const db = getGlobalDB()
   const { type, workspace, user, config } = ctx.request.body
 
@@ -51,7 +52,7 @@ exports.save = async function (ctx) {
   }
 }
 
-exports.fetch = async function (ctx) {
+export const fetch = async function (ctx) {
   const db = getGlobalDB()
   const response = await db.allDocs(
     getConfigParams(
@@ -68,7 +69,7 @@ exports.fetch = async function (ctx) {
  * Gets the most granular config for a particular configuration type.
  * The hierarchy is type -> workspace -> user.
  */
-exports.find = async function (ctx) {
+export const find = async function (ctx) {
   const db = getGlobalDB()
 
   const { userId, workspaceId } = ctx.query
@@ -101,7 +102,7 @@ exports.find = async function (ctx) {
   }
 }
 
-exports.publicOidc = async function (ctx) {
+export const publicOidc = async function (ctx) {
   const db = getGlobalDB()
   try {
     // Find the config with the most granular scope based on context
@@ -123,7 +124,7 @@ exports.publicOidc = async function (ctx) {
   }
 }
 
-exports.publicSettings = async function (ctx) {
+export const publicSettings = async function (ctx) {
   const db = getGlobalDB()
 
   try {
@@ -175,7 +176,7 @@ exports.publicSettings = async function (ctx) {
   }
 }
 
-exports.upload = async function (ctx) {
+export const upload = async function (ctx) {
   if (ctx.request.files == null || ctx.request.files.file.length > 1) {
     ctx.throw(400, "One file must be uploaded.")
   }
@@ -230,7 +231,7 @@ exports.upload = async function (ctx) {
   }
 }
 
-exports.destroy = async function (ctx) {
+export const destroy = async function (ctx) {
   const db = getGlobalDB()
   const { id, rev } = ctx.params
 
@@ -242,7 +243,7 @@ exports.destroy = async function (ctx) {
   }
 }
 
-exports.configChecklist = async function (ctx) {
+export const configChecklist = async function (ctx) {
   const db = getGlobalDB()
 
   try {

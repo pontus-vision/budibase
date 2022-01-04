@@ -1,7 +1,7 @@
-const { sendSmtpEmail } = require("../../utilities/workerRequests")
-const automationUtils = require("../automationUtils")
+import { sendSmtpEmail } from "../../utilities/workerRequests"
+import automationUtils from "../automationUtils"
 
-exports.definition = {
+export const definition = {
   description: "Send an email using SMTP",
   tagline: "Send SMTP email to {{inputs.to}}",
   icon: "Email",
@@ -48,7 +48,7 @@ exports.definition = {
   },
 }
 
-exports.run = async function ({ inputs }) {
+export const run = async function ({ inputs }) {
   let { to, from, subject, contents } = inputs
   if (!contents) {
     contents = "<h1>No content</h1>"

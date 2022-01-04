@@ -1,7 +1,7 @@
-const fetch = require("node-fetch")
-const { getFetchResponse } = require("./utils")
+import fetch from "node-fetch"
+import { getFetchResponse } from "./utils"
 
-exports.definition = {
+export const definition = {
   name: "Slack Message",
   tagline: "Send a message to Slack",
   description: "Send a message to Slack",
@@ -43,7 +43,7 @@ exports.definition = {
   },
 }
 
-exports.run = async function ({ inputs }) {
+export async function run({ inputs }) {
   let { url, text } = inputs
   const response = await fetch(url, {
     method: "post",

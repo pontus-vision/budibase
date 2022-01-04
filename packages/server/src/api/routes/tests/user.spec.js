@@ -1,6 +1,6 @@
-const { BUILTIN_ROLE_IDS } = require("@budibase/auth/roles")
-const { checkPermissionsEndpoint } = require("./utilities/TestFunctions")
-const setup = require("./utilities")
+import { BUILTIN_ROLE_IDS } from "@budibase/auth/roles"
+import { checkPermissionsEndpoint } from "./utilities/TestFunctions"
+import { getRequest, getConfig, afterAll as _afterAll } from "./utilities"
 
 jest.mock("../../../utilities/workerRequests", () => ({
   getGlobalUsers: jest.fn(() => {
@@ -13,10 +13,10 @@ jest.mock("../../../utilities/workerRequests", () => ({
 }))
 
 describe("/users", () => {
-  let request = setup.getRequest()
-  let config = setup.getConfig()
+  let request = getRequest()
+  let config = getConfig()
 
-  afterAll(setup.afterAll)
+  afterAll(_afterAll)
 
   beforeEach(async () => {
     await config.init()

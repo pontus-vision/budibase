@@ -1,4 +1,4 @@
-exports.definition = {
+export const definition = {
   name: "Webhook",
   event: "web:trigger",
   icon: "Send",

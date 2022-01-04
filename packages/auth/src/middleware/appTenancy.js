@@ -1,13 +1,13 @@
-const {
+import {
   isMultiTenant,
   updateTenantId,
   isTenantIdSet,
   DEFAULT_TENANT_ID,
-} = require("../tenancy")
-const ContextFactory = require("../tenancy/FunctionContext")
-const { getTenantIDFromAppID } = require("../db/utils")
+} from "../tenancy"
+import ContextFactory from "../tenancy/FunctionContext"
+import { getTenantIDFromAppID } from "../db/utils"
 
-module.exports = () => {
+export default () => {
   return ContextFactory.getMiddleware(ctx => {
     // if not in multi-tenancy mode make sure its default and exit
     if (!isMultiTenant()) {

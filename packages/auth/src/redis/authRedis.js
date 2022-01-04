@@ -1,5 +1,5 @@
-const Client = require("./index")
-const utils = require("./utils")
+import Client from "./index"
+import utils from "./utils"
 
 let userClient, sessionClient, appClient
 
@@ -15,7 +15,7 @@ process.on("exit", async () => {
   if (appClient) await appClient.finish()
 })
 
-module.exports = {
+export default {
   getUserClient: async () => {
     if (!userClient) {
       await init()

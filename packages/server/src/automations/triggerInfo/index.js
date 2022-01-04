@@ -1,11 +1,11 @@
-const app = require("./app")
-const cron = require("./cron")
-const rowDeleted = require("./rowDeleted")
-const rowSaved = require("./rowSaved")
-const rowUpdated = require("./rowUpdated")
-const webhook = require("./webhook")
+import app from "./app"
+import cron from "./cron"
+import rowDeleted from "./rowDeleted"
+import rowSaved from "./rowSaved"
+import rowUpdated from "./rowUpdated"
+import webhook from "./webhook"
 
-exports.definitions = {
+export const definitions = {
   ROW_SAVED: rowSaved.definition,
   ROW_UPDATED: rowUpdated.definition,
   ROW_DELETED: rowDeleted.definition,

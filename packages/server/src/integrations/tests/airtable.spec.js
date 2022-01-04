@@ -1,5 +1,5 @@
-const Airtable = require("airtable")
-const AirtableIntegration = require("../airtable")
+import Airtable from 'airtable';
+import AirtableIntegration from '../airtable';
 jest.mock("airtable")
 
 class TestConfiguration {

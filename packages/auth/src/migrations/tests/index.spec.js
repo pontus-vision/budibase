@@ -1,10 +1,7 @@
-require("../../tests/utilities/dbConfig")
-
-const { migrateIfRequired, MIGRATION_DBS, MIGRATIONS, getMigrationsDoc } = require("../index")
-const database = require("../../db")
-const {
-  StaticDatabases,
-} = require("../../db/utils")
+import '../../tests/utilities/dbConfig';
+import { migrateIfRequired, MIGRATION_DBS, MIGRATIONS, getMigrationsDoc } from '../index';
+import database from '../../db';
+import { StaticDatabases } from '../../db/utils';
 
 Date.now = jest.fn(() => 1487076708000)
 let db

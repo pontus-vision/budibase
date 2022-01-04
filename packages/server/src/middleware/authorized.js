@@ -1,21 +1,20 @@
-const {
+import {
   getUserRoleHierarchy,
   getRequiredResourceRole,
   BUILTIN_ROLE_IDS,
-} = require("@budibase/auth/roles")
-const {
+} from "@budibase/auth/roles"
+import {
   PermissionTypes,
   doesHaveBasePermission,
-} = require("@budibase/auth/permissions")
-const builderMiddleware = require("./builder")
-const { isWebhookEndpoint } = require("./utils")
+} from "@budibase/auth/permissions"
+import builderMiddleware from "./builder"
+import { isWebhookEndpoint } from "./utils"
 
 function hasResource(ctx) {
   return ctx.resourceId != null
 }
 
-module.exports =
-  (permType, permLevel = null) =>
+export default (permType, permLevel = null) =>
   async (ctx, next) => {
     // webhooks don't need authentication, each webhook unique
     // also internal requests (between services) don't need authorized

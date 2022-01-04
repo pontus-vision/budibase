@@ -1,4 +1,4 @@
-const setup = require("./utilities")
+import { getRequest, getConfig, afterAll as _afterAll } from "./utilities"
 
 function priceTable() {
   return {
@@ -21,11 +21,11 @@ function priceTable() {
 }
 
 describe("/views", () => {
-  let request = setup.getRequest()
-  let config = setup.getConfig()
+  let request = getRequest()
+  let config = getConfig()
   let table
 
-  afterAll(setup.afterAll)
+  afterAll(_afterAll)
 
   beforeEach(async () => {
     await config.init()

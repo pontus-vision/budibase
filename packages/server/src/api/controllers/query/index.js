@@ -1,14 +1,10 @@
-const { processString } = require("@budibase/string-templates")
-const CouchDB = require("../../../db")
-const {
-  generateQueryID,
-  getQueryParams,
-  isProdAppID,
-} = require("../../../db/utils")
-const { BaseQueryVerbs } = require("../../../constants")
-const { Thread, ThreadType } = require("../../../threads")
-const { save: saveDatasource } = require("../datasource")
-const { RestImporter } = require("./import")
+import { processString } from "@budibase/string-templates"
+import CouchDB from "../../../db"
+import { generateQueryID, getQueryParams, isProdAppID } from "../../../db/utils"
+import { BaseQueryVerbs } from "../../../constants"
+import { Thread, ThreadType } from "../../../threads"
+import { save as saveDatasource } from "../datasource"
+import { RestImporter } from "./import"
 
 const Runner = new Thread(ThreadType.QUERY, { timeoutMs: 10000 })
 
@@ -24,7 +20,7 @@ function enrichQueries(input) {
   return wasArray ? queries : queries[0]
 }
 
-exports.fetch = async function (ctx) {
+export async function fetch(ctx) {
   const db = new CouchDB(ctx.appId)
 
   const body = await db.allDocs(
@@ -36,7 +32,7 @@ exports.fetch = async function (ctx) {
   ctx.body = enrichQueries(body.rows.map(row => row.doc))
 }
 
-exports.import = async ctx => {
+const _import = async ctx => {
   const body = ctx.request.body
   const data = body.data
 
@@ -74,8 +70,9 @@ exports.import = async ctx => {
   }
   ctx.status = 200
 }
+export { _import as import }
 
-exports.save = async function (ctx) {
+export async function save(ctx) {
   const db = new CouchDB(ctx.appId)
   const query = ctx.request.body
 
@@ -131,7 +128,7 @@ async function enrichQueryFields(fields, parameters = {}) {
   return enrichedQuery
 }
 
-exports.find = async function (ctx) {
+export async function find(ctx) {
   const db = new CouchDB(ctx.appId)
   const query = enrichQueries(await db.get(ctx.params.queryId))
   // remove properties that could be dangerous in real app
@@ -142,7 +139,7 @@ exports.find = async function (ctx) {
   ctx.body = query
 }
 
-exports.preview = async function (ctx) {
+export async function preview(ctx) {
   const db = new CouchDB(ctx.appId)
 
   const datasource = await db.get(ctx.request.body.datasourceId)
@@ -169,7 +166,7 @@ exports.preview = async function (ctx) {
   }
 }
 
-exports.execute = async function (ctx) {
+export async function execute(ctx) {
   const db = new CouchDB(ctx.appId)
 
   const query = await db.get(ctx.params.queryId)
@@ -194,7 +191,7 @@ exports.execute = async function (ctx) {
   }
 }
 
-exports.destroy = async function (ctx) {
+export async function destroy(ctx) {
   const db = new CouchDB(ctx.appId)
   await db.remove(ctx.params.queryId, ctx.params.revId)
   ctx.message = `Query deleted.`

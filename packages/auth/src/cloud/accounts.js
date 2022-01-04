@@ -1,10 +1,10 @@
-const API = require("./api")
-const env = require("../environment")
-const { Headers } = require("../constants")
+import API from "./api"
+import env from "../environment"
+import { Headers } from "../constants"
 
 const api = new API(env.ACCOUNT_PORTAL_URL)
 
-exports.getAccount = async email => {
+export const getAccount = async email => {
   const payload = {
     email,
   }

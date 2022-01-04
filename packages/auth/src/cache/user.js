@@ -1,7 +1,7 @@
-const redis = require("../redis/authRedis")
-const { getTenantId, lookupTenantId, getGlobalDB } = require("../tenancy")
-const env = require("../environment")
-const accounts = require("../cloud/accounts")
+import redis from "../redis/authRedis"
+import { getTenantId, lookupTenantId, getGlobalDB } from "../tenancy"
+import env from "../environment"
+import accounts from "../cloud/accounts"
 
 const EXPIRY_SECONDS = 3600
 
@@ -32,7 +32,7 @@ const populateFromDB = async (userId, tenantId) => {
  * @param {*} populateUser function to provide the user for re-caching. default to couch db
  * @returns
  */
-exports.getUser = async (
+export const getUser = async (
   userId,
   tenantId = null,
   populateUser = populateFromDB
@@ -58,7 +58,7 @@ exports.getUser = async (
   return user
 }
 
-exports.invalidateUser = async userId => {
+export const invalidateUser = async userId => {
   const client = await redis.getUserClient()
   await client.delete(userId)
 }

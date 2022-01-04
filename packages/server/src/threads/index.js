@@ -1,5 +1,5 @@
-const workerFarm = require("worker-farm")
-const env = require("../environment")
+import workerFarm from "worker-farm"
+import env from "../environment"
 
 const ThreadType = {
   QUERY: "query",
@@ -62,5 +62,4 @@ class Thread {
   }
 }
 
-module.exports.Thread = Thread
-module.exports.ThreadType = ThreadType
+export { Thread, ThreadType }

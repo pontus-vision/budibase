@@ -1,22 +1,22 @@
-const TestConfig = require("../../../tests/utilities/TestConfiguration")
-const actions = require("../../actions")
-const emitter = require("../../../events/index")
-const env = require("../../../environment")
+import TestConfig from "../../../tests/utilities/TestConfiguration"
+import { ACTION_DEFINITIONS, getAction } from "../../actions"
+import emitter from "../../../events/index"
+import env from "../../../environment"
 
 let config
 
-exports.getConfig = () => {
+export const getConfig = () => {
   if (!config) {
     config = new TestConfig(false)
   }
   return config
 }
 
-exports.afterAll = () => {
+export const afterAll = () => {
   config.end()
 }
 
-exports.runInProd = async fn => {
+export const runInProd = async fn => {
   env._set("NODE_ENV", "production")
   env._set("USE_QUOTAS", 1)
   let error
@@ -32,8 +32,8 @@ exports.runInProd = async fn => {
   }
 }
 
-exports.runStep = async function runStep(stepId, inputs) {
-  let step = await actions.getAction(stepId)
+export const runStep = async function runStep(stepId, inputs) {
+  let step = await getAction(stepId)
   expect(step).toBeDefined()
   return step({
     inputs,
@@ -44,6 +44,5 @@ exports.runStep = async function runStep(stepId, inputs) {
   })
 }
 
-exports.apiKey = "test"
-
-exports.actions = actions.ACTION_DEFINITIONS
+export const apiKey = "test"
+export const actions = ACTION_DEFINITIONS

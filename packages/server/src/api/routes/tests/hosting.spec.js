@@ -1,15 +1,15 @@
 // mock out node fetch for this
 jest.mock("node-fetch")
 
-const { checkBuilderEndpoint } = require("./utilities/TestFunctions")
-const setup = require("./utilities")
+import { checkBuilderEndpoint } from "./utilities/TestFunctions"
+import { getRequest, getConfig, afterAll as _afterAll } from "./utilities"
 
 describe("/hosting", () => {
-  let request = setup.getRequest()
-  let config = setup.getConfig()
+  let request = getRequest()
+  let config = getConfig()
   let app
 
-  afterAll(setup.afterAll)
+  afterAll(_afterAll)
 
   beforeEach(async () => {
     app = await config.init()

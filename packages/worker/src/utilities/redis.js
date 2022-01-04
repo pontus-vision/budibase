@@ -1,5 +1,5 @@
-const { Client, utils } = require("@budibase/auth/redis")
-const { newid } = require("@budibase/auth").utils
+import { Client, utils, newid } from "@budibase/auth/redis"
+import "@budibase/auth"
 
 function getExpirySecondsForDB(db) {
   switch (db) {
@@ -42,7 +42,7 @@ async function getACode(db, code, deleteCode = true) {
   return value
 }
 
-exports.init = async () => {
+export const init = async () => {
   pwResetClient = new Client(utils.Databases.PW_RESETS)
   invitationClient = new Client(utils.Databases.INVITATIONS)
   await pwResetClient.init()
@@ -52,7 +52,7 @@ exports.init = async () => {
 /**
  * make sure redis connection is closed.
  */
-exports.shutdown = async () => {
+export const shutdown = async () => {
   if (pwResetClient) await pwResetClient.finish()
   if (invitationClient) await invitationClient.finish()
 }
@@ -63,7 +63,7 @@ exports.shutdown = async () => {
  * @param {string} userId the ID of the user which is to be reset.
  * @return {Promise<string>} returns the code that was stored to redis.
  */
-exports.getResetPasswordCode = async (userId, info) => {
+export const getResetPasswordCode = async (userId, info) => {
   return writeACode(utils.Databases.PW_RESETS, { userId, info })
 }
 
@@ -73,7 +73,7 @@ exports.getResetPasswordCode = async (userId, info) => {
  * @param {boolean} deleteCode If the code is used/finished with this will delete it - defaults to true.
  * @return {Promise<string>} returns the user ID if it is found
  */
-exports.checkResetPasswordCode = async (resetCode, deleteCode = true) => {
+export const checkResetPasswordCode = async (resetCode, deleteCode = true) => {
   try {
     return getACode(utils.Databases.PW_RESETS, resetCode, deleteCode)
   } catch (err) {
@@ -87,7 +87,7 @@ exports.checkResetPasswordCode = async (resetCode, deleteCode = true) => {
  * @param {object|null} info Information to be carried along with the invitation.
  * @return {Promise<string>} returns the code that was stored to redis.
  */
-exports.getInviteCode = async (email, info) => {
+export const getInviteCode = async (email, info) => {
   return writeACode(utils.Databases.INVITATIONS, { email, info })
 }
 
@@ -97,7 +97,7 @@ exports.getInviteCode = async (email, info) => {
  * @param {boolean} deleteCode whether or not the code should be deleted after retrieval - defaults to true.
  * @return {Promise<object>} If the code is valid then an email address will be returned.
  */
-exports.checkInviteCode = async (inviteCode, deleteCode = true) => {
+export const checkInviteCode = async (inviteCode, deleteCode = true) => {
   try {
     return getACode(utils.Databases.INVITATIONS, inviteCode, deleteCode)
   } catch (err) {

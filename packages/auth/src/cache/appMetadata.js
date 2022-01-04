@@ -1,6 +1,6 @@
-const redis = require("../redis/authRedis")
-const { getCouch } = require("../db")
-const { DocumentTypes } = require("../db/constants")
+import redis from "../redis/authRedis"
+import { getCouch } from "../db"
+import { DocumentTypes } from "../db/constants"
 
 const AppState = {
   INVALID: "invalid",
@@ -30,7 +30,7 @@ const isInvalid = metadata => {
  * @param {object} CouchDB the database being passed
  * @returns {object} the app metadata.
  */
-exports.getAppMetadata = async (appId, CouchDB = null) => {
+export const getAppMetadata = async (appId, CouchDB = null) => {
   const client = await redis.getAppClient()
   // try cache
   let metadata = await client.get(appId)
@@ -73,7 +73,7 @@ exports.getAppMetadata = async (appId, CouchDB = null) => {
  * @param newMetadata {object|undefined} optional - can simply provide the new metadata to update with.
  * @return {Promise<void>} will respond with success when cache is updated.
  */
-exports.invalidateAppMetadata = async (appId, newMetadata = null) => {
+export const invalidateAppMetadata = async (appId, newMetadata = null) => {
   if (!appId) {
     throw "Cannot invalidate if no app ID provided."
   }

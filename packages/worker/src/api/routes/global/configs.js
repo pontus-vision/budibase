@@ -1,9 +1,9 @@
-const Router = require("@koa/router")
-const controller = require("../../controllers/global/configs")
-const joiValidator = require("../../../middleware/joi-validator")
-const adminOnly = require("../../../middleware/adminOnly")
-const Joi = require("joi")
-const { Configs } = require("../../../constants")
+import Router from "@koa/router"
+import controller from "../../controllers/global/configs"
+import joiValidator from "../../../middleware/joi-validator"
+import adminOnly from "../../../middleware/adminOnly"
+import Joi from "joi"
+import { Configs } from "../../../constants"
 
 const router = Router()
 
@@ -119,4 +119,4 @@ router
     controller.upload
   )
 
-module.exports = router
+export default router

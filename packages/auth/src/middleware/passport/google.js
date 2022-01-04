@@ -1,6 +1,5 @@
-const GoogleStrategy = require("passport-google-oauth").OAuth2Strategy
-
-const { authenticateThirdParty } = require("./third-party-common")
+import { OAuth2Strategy as GoogleStrategy } from "passport-google-oauth"
+import { authenticateThirdParty } from "./third-party-common"
 
 async function authenticate(accessToken, refreshToken, profile, done) {
   const thirdPartyUser = {
@@ -27,7 +26,7 @@ async function authenticate(accessToken, refreshToken, profile, done) {
  * from couchDB rather than environment variables, using this factory is necessary for dynamically configuring passport.
  * @returns Dynamically configured Passport Google Strategy
  */
-exports.strategyFactory = async function (
+export const strategyFactory = async function (
   config,
   callbackUrl,
   verify = authenticate
@@ -54,5 +53,5 @@ exports.strategyFactory = async function (
     throw new Error("Error constructing google authentication strategy", err)
   }
 }
-// expose for testing
-exports.authenticate = authenticate
+
+export { authenticate }

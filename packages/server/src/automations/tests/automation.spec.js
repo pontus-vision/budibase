@@ -9,15 +9,15 @@ jest.mock("../../utilities/redis", () => ({
 
 jest.spyOn(global.console, "error")
 
-require("../../environment")
-const automation = require("../index")
-const thread = require("../../threads/automation")
-const triggers = require("../triggers")
-const { basicAutomation } = require("../../tests/utilities/structures")
-const { wait } = require("../../utilities")
-const { makePartial } = require("../../tests/utilities")
-const { cleanInputValues } = require("../automationUtils")
-const setup = require("./utilities")
+import '../../environment';
+import automation from '../index';
+import thread from '../../threads/automation';
+import triggers from '../triggers';
+import { basicAutomation } from '../../tests/utilities/structures';
+import { wait } from '../../utilities';
+import { makePartial } from '../../tests/utilities';
+import { cleanInputValues } from '../automationUtils';
+import setup from './utilities';
 
 describe("Run through some parts of the automations system", () => {
   let config = setup.getConfig()

@@ -1,5 +1,5 @@
-const AWS = require("aws-sdk")
-const DynamoDBIntegration = require("../dynamodb")
+import AWS from 'aws-sdk';
+import DynamoDBIntegration from '../dynamodb';
 jest.mock("aws-sdk")
 
 class TestConfiguration {

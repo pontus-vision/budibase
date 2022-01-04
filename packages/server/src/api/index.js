@@ -1,16 +1,16 @@
-const Router = require("@koa/router")
-const {
+import Router from "@koa/router"
+import {
   buildAuthMiddleware,
-  auditLog,
   buildTenancyMiddleware,
   buildAppTenancyMiddleware,
-} = require("@budibase/auth").auth
-const currentApp = require("../middleware/currentapp")
-const compress = require("koa-compress")
-const zlib = require("zlib")
-const { mainRoutes, staticRoutes } = require("./routes")
-const pkg = require("../../package.json")
-const env = require("../environment")
+  auditLog,
+} from "@budibase/auth"
+import currentApp from "../middleware/currentapp"
+import compress from "koa-compress"
+import zlib from "zlib"
+import { mainRoutes, staticRoutes } from "./routes"
+import pkg from "../../package.json"
+import env from "../environment"
 
 const router = new Router()
 
@@ -86,4 +86,4 @@ for (let route of mainRoutes) {
 router.use(staticRoutes.routes())
 router.use(staticRoutes.allowedMethods())
 
-module.exports = router
+export default router

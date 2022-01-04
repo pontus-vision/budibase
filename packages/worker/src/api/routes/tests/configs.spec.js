@@ -1,8 +1,8 @@
-const setup = require("./utilities")
+import setup from './utilities';
 
 // mock the email system
 jest.mock("nodemailer")
-const nodemailer = require("nodemailer")
+import nodemailer from 'nodemailer';
 nodemailer.createTransport.mockReturnValue({
   verify: jest.fn(),
 })

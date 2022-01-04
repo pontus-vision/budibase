@@ -1,18 +1,18 @@
-const {
+import {
   PermissionLevels,
   PermissionTypes,
   getBuiltinPermissionByID,
   isPermissionLevelHigherThanRead,
-} = require("@budibase/auth/permissions")
-const { lowerBuiltinRoleID, getBuiltinRoles } = require("@budibase/auth/roles")
-const { DocumentTypes } = require("../db/utils")
+} from "@budibase/auth/permissions"
+import { lowerBuiltinRoleID, getBuiltinRoles } from "@budibase/auth/roles"
+import { DocumentTypes } from "../db/utils"
 
 const CURRENTLY_SUPPORTED_LEVELS = [
   PermissionLevels.WRITE,
   PermissionLevels.READ,
 ]
 
-exports.getPermissionType = resourceId => {
+export const getPermissionType = resourceId => {
   const docType = Object.values(DocumentTypes).filter(docType =>
     resourceId.startsWith(docType)
   )[0]
@@ -38,8 +38,8 @@ exports.getPermissionType = resourceId => {
  * @param resourceId
  * @returns {{}}
  */
-exports.getBasePermissions = resourceId => {
-  const type = exports.getPermissionType(resourceId)
+export const getBasePermissions = resourceId => {
+  const type = getPermissionType(resourceId)
   const permissions = {}
   for (let [roleId, role] of Object.entries(getBuiltinRoles())) {
     if (!role.permissionId) {
@@ -64,4 +64,4 @@ exports.getBasePermissions = resourceId => {
   return permissions
 }
 
-exports.CURRENTLY_SUPPORTED_LEVELS = CURRENTLY_SUPPORTED_LEVELS
+export { CURRENTLY_SUPPORTED_LEVELS }

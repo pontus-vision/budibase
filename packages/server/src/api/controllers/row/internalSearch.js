@@ -1,6 +1,6 @@
-const { SearchIndexes } = require("../../../db/utils")
-const fetch = require("node-fetch")
-const { getCouchUrl } = require("@budibase/auth/db")
+import { SearchIndexes } from "../../../db/utils"
+import fetch from "node-fetch"
+import { getCouchUrl } from "@budibase/auth/db"
 
 /**
  * Class to build lucene query URLs.
@@ -331,7 +331,7 @@ const recursiveSearch = async (appId, query, params) => {
  *   bookmark {string} The bookmark to resume from
  * @returns {Promise<{hasNextPage: boolean, rows: *[]}>}
  */
-exports.paginatedSearch = async (appId, query, params) => {
+export async function paginatedSearch(appId, query, params) {
   let limit = params.limit
   if (limit == null || isNaN(limit) || limit < 0) {
     limit = 50
@@ -377,7 +377,7 @@ exports.paginatedSearch = async (appId, query, params) => {
  *   limit {number} The desired number of results
  * @returns {Promise<{rows: *}>}
  */
-exports.fullSearch = async (appId, query, params) => {
+export async function fullSearch(appId, query, params) {
   let limit = params.limit
   if (limit == null || isNaN(limit) || limit < 0) {
     limit = 1000

@@ -1,8 +1,8 @@
-const rowController = require("../../api/controllers/row")
-const automationUtils = require("../automationUtils")
-const { buildCtx } = require("./utils")
+import rowController from "../../api/controllers/row"
+import automationUtils from "../automationUtils"
+import { buildCtx } from "./utils"
 
-exports.definition = {
+export const definition = {
   name: "Update Row",
   tagline: "Update a {{inputs.enriched.table.name}} row",
   icon: "Refresh",
@@ -55,7 +55,7 @@ exports.definition = {
   },
 }
 
-exports.run = async function ({ inputs, appId, emitter }) {
+export const run = async function ({ inputs, appId, emitter }) {
   if (inputs.rowId == null || inputs.row == null) {
     return {
       success: false,

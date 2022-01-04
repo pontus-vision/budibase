@@ -1,15 +1,15 @@
-const CouchDB = require("../../../db")
-const linkRows = require("../../../db/linkedRows")
-const { getRowParams, generateTableID } = require("../../../db/utils")
-const { FieldTypes } = require("../../../constants")
-const {
+import CouchDB from "../../../db"
+import { updateLinks, EventType } from "../../../db/linkedRows"
+import { getRowParams, generateTableID } from "../../../db/utils"
+import { FieldTypes } from "../../../constants"
+import {
   TableSaveFunctions,
   hasTypeChanged,
   getTable,
   handleDataImport,
-} = require("./utils")
+} from "./utils"
 
-exports.save = async function (ctx) {
+export async function save(ctx) {
   const appId = ctx.appId
   const db = new CouchDB(appId)
   const { dataImport, ...rest } = ctx.request.body
@@ -78,11 +78,9 @@ exports.save = async function (ctx) {
 
   // update linked rows
   try {
-    const linkResp = await linkRows.updateLinks({
+    const linkResp = await updateLinks({
       appId,
-      eventType: oldTable
-        ? linkRows.EventType.TABLE_UPDATED
-        : linkRows.EventType.TABLE_SAVE,
+      eventType: oldTable ? EventType.TABLE_UPDATED : EventType.TABLE_SAVE,
       table: tableToSave,
       oldTable: oldTable,
     })
@@ -107,7 +105,7 @@ exports.save = async function (ctx) {
   return tableToSave
 }
 
-exports.destroy = async function (ctx) {
+export async function destroy(ctx) {
   const appId = ctx.appId
   const db = new CouchDB(appId)
   const tableToDelete = await db.get(ctx.params.tableId)
@@ -121,9 +119,9 @@ exports.destroy = async function (ctx) {
   await db.bulkDocs(rows.rows.map(row => ({ ...row.doc, _deleted: true })))
 
   // update linked rows
-  await linkRows.updateLinks({
+  await updateLinks({
     appId,
-    eventType: linkRows.EventType.TABLE_DELETE,
+    eventType: EventType.TABLE_DELETE,
     table: tableToDelete,
   })
 
@@ -142,7 +140,7 @@ exports.destroy = async function (ctx) {
   return tableToDelete
 }
 
-exports.bulkImport = async function (ctx) {
+export async function bulkImport(ctx) {
   const appId = ctx.appId
   const table = await getTable(appId, ctx.params.tableId)
   const { dataImport } = ctx.request.body

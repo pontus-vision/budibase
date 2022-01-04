@@ -1,1 +1,1 @@
-exports.TENANT_ID = "default"
+export const TENANT_ID = "default"

@@ -1,4 +1,4 @@
-module.exports = {
+export default {
   email: require("../../../controllers/global/email"),
   workspaces: require("../../../controllers/global/workspaces"),
   config: require("../../../controllers/global/configs"),

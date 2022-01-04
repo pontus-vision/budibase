@@ -1,50 +1,53 @@
-const CouchDB = require("../../db")
-const env = require("../../environment")
-const packageJson = require("../../../package.json")
-const {
+import CouchDB from "../../db"
+
+// import CouchDB from ('../../db')
+import env from "../../environment"
+
+import packageJson from "../../../package.json"
+import {
   createLinkView,
   createRoutingView,
   createAllSearchIndex,
-} = require("../../db/views/staticViews")
-const {
+} from "../../db/views/staticViews"
+import {
   getTemplateStream,
   createApp,
   deleteApp,
-} = require("../../utilities/fileSystem")
-const {
+} from "../../utilities/fileSystem"
+import {
   generateAppID,
   getLayoutParams,
   getScreenParams,
   generateDevAppID,
   DocumentTypes,
   AppStatus,
-} = require("../../db/utils")
-const { BUILTIN_ROLE_IDS, AccessController } = require("@budibase/auth/roles")
-const { BASE_LAYOUTS } = require("../../constants/layouts")
-const { cloneDeep } = require("lodash/fp")
-const { processObject } = require("@budibase/string-templates")
-const {
+} from "../../db/utils"
+import { BUILTIN_ROLE_IDS, AccessController } from "@budibase/auth/roles"
+import { BASE_LAYOUTS } from "../../constants/layouts"
+import { cloneDeep } from "lodash/fp"
+import { processObject } from "@budibase/string-templates"
+import {
   getAllApps,
   isDevAppID,
   getDeployedAppID,
   Replication,
-} = require("@budibase/auth/db")
-const { USERS_TABLE_SCHEMA } = require("../../constants")
-const {
+} from "@budibase/auth/db"
+import { USERS_TABLE_SCHEMA } from "../../constants"
+import {
   getDeployedApps,
   removeAppFromUserRoles,
-} = require("../../utilities/workerRequests")
-const { clientLibraryPath, stringToReadStream } = require("../../utilities")
-const { getAllLocks } = require("../../utilities/redis")
-const {
+} from "../../utilities/workerRequests"
+import { clientLibraryPath, stringToReadStream } from "../../utilities"
+import { getAllLocks } from "../../utilities/redis"
+import {
   updateClientLibrary,
   backupClientLibrary,
   revertClientLibrary,
-} = require("../../utilities/fileSystem/clientLibrary")
-const { getTenantId, isMultiTenant } = require("@budibase/auth/tenancy")
-const { syncGlobalUsers } = require("./user")
-const { app: appCache } = require("@budibase/auth/cache")
-const { cleanupAutomations } = require("../../automations/utils")
+} from "../../utilities/fileSystem/clientLibrary"
+import { getTenantId, isMultiTenant } from "@budibase/auth/tenancy"
+import { syncGlobalUsers } from "./user"
+import { app as appCache } from "@budibase/auth/cache"
+import { cleanupAutomations } from "../../automations/utils"
 
 const URL_REGEX_SLASH = /\/|\\/g
 
@@ -140,7 +143,7 @@ async function createInstance(template) {
   return { _id: appId }
 }
 
-exports.fetch = async ctx => {
+export const fetch = async ctx => {
   const dev = ctx.query && ctx.query.status === AppStatus.DEV
   const all = ctx.query && ctx.query.status === AppStatus.ALL
   const apps = await getAllApps(CouchDB, { dev, all })
@@ -165,7 +168,7 @@ exports.fetch = async ctx => {
   ctx.body = apps
 }
 
-exports.fetchAppDefinition = async ctx => {
+export const fetchAppDefinition = async ctx => {
   const db = new CouchDB(ctx.params.appId)
   const layouts = await getLayouts(db)
   const userRoleId = getUserRoleId(ctx)
@@ -181,7 +184,7 @@ exports.fetchAppDefinition = async ctx => {
   }
 }
 
-exports.fetchAppPackage = async ctx => {
+export const fetchAppPackage = async ctx => {
   const db = new CouchDB(ctx.params.appId)
   const application = await db.get(DocumentTypes.APP_METADATA)
   const layouts = await getLayouts(db)
@@ -202,7 +205,7 @@ exports.fetchAppPackage = async ctx => {
   }
 }
 
-exports.create = async ctx => {
+export const create = async ctx => {
   const { useTemplate, templateKey, templateString } = ctx.request.body
   const instanceConfig = {
     useTemplate,
@@ -259,13 +262,13 @@ exports.create = async ctx => {
   ctx.body = newApplication
 }
 
-exports.update = async ctx => {
+export const update = async ctx => {
   const data = await updateAppPackage(ctx, ctx.request.body, ctx.params.appId)
   ctx.status = 200
   ctx.body = data
 }
 
-exports.updateClient = async ctx => {
+export const updateClient = async ctx => {
   // Get current app version
   const db = new CouchDB(ctx.params.appId)
   const application = await db.get(DocumentTypes.APP_METADATA)
@@ -287,7 +290,7 @@ exports.updateClient = async ctx => {
   ctx.body = data
 }
 
-exports.revertClient = async ctx => {
+export const revertClient = async ctx => {
   // Check app can be reverted
   const db = new CouchDB(ctx.params.appId)
   const application = await db.get(DocumentTypes.APP_METADATA)
@@ -310,7 +313,7 @@ exports.revertClient = async ctx => {
   ctx.body = data
 }
 
-exports.delete = async ctx => {
+export const del = async ctx => {
   const db = new CouchDB(ctx.params.appId)
 
   const result = await db.destroy()
@@ -329,7 +332,7 @@ exports.delete = async ctx => {
   ctx.body = result
 }
 
-exports.sync = async (ctx, next) => {
+export const sync = async (ctx, next) => {
   const appId = ctx.params.appId
   if (!isDevAppID(appId)) {
     ctx.throw(400, "This action cannot be performed for production apps")

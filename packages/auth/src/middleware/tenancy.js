@@ -1,8 +1,8 @@
-const { setTenantId } = require("../tenancy")
-const ContextFactory = require("../tenancy/FunctionContext")
-const { buildMatcherRegex, matches } = require("./matchers")
+import { setTenantId } from "../tenancy"
+import ContextFactory from "../tenancy/FunctionContext"
+import { buildMatcherRegex, matches } from "./matchers"
 
-module.exports = (
+export default (
   allowQueryStringPatterns,
   noTenancyPatterns,
   opts = { noTenancyRequired: false }

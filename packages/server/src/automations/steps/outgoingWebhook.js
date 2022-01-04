@@ -1,6 +1,6 @@
-const fetch = require("node-fetch")
-const { getFetchResponse } = require("./utils")
-const automationUtils = require("../automationUtils")
+import fetch from "node-fetch"
+import { getFetchResponse } from "./utils"
+import { getError } from "../automationUtils"
 
 const RequestType = {
   POST: "POST",
@@ -12,11 +12,7 @@ const RequestType = {
 
 const BODY_REQUESTS = [RequestType.POST, RequestType.PUT, RequestType.PATCH]
 
-/**
- * NOTE: this functionality is deprecated - it no longer should be used.
- */
-
-exports.definition = {
+export const definition = {
   deprecated: true,
   name: "Outgoing webhook",
   tagline: "Send a {{inputs.requestMethod}} request",
@@ -76,7 +72,7 @@ exports.definition = {
   },
 }
 
-exports.run = async function ({ inputs }) {
+export async function run({ inputs }) {
   let { requestMethod, url, requestBody, headers } = inputs
   if (!url.startsWith("http")) {
     url = `http://${url}`
@@ -127,7 +123,7 @@ exports.run = async function ({ inputs }) {
     /* istanbul ignore next */
     return {
       success: false,
-      response: automationUtils.getError(err),
+      response: getError(err),
     }
   }
 }

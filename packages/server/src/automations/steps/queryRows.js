@@ -1,8 +1,8 @@
-const rowController = require("../../api/controllers/row")
-const tableController = require("../../api/controllers/table")
-const { FieldTypes } = require("../../constants")
-const { buildCtx } = require("./utils")
-const automationUtils = require("../automationUtils")
+import rowController from "../../api/controllers/row"
+import tableController from "../../api/controllers/table"
+import { FieldTypes } from "../../constants"
+import { buildCtx } from "./utils"
+import automationUtils from "../automationUtils"
 
 const SortOrders = {
   ASCENDING: "ascending",
@@ -14,7 +14,7 @@ const SortOrdersPretty = {
   [SortOrders.DESCENDING]: "Descending",
 }
 
-exports.definition = {
+export const definition = {
   description: "Query rows from the database",
   icon: "Search",
   name: "Query rows",
@@ -81,7 +81,7 @@ async function getTable(appId, tableId) {
   return ctx.body
 }
 
-exports.run = async function ({ inputs, appId }) {
+export const run = async function ({ inputs, appId }) {
   const { tableId, filters, sortColumn, sortOrder, limit } = inputs
   const table = await getTable(appId, tableId)
   let sortType = FieldTypes.STRING

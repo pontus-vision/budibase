@@ -1,5 +1,5 @@
-const mongo = require("mongodb")
-const MongoDBIntegration = require("../mongodb")
+import mongo from 'mongodb';
+import MongoDBIntegration from '../mongodb';
 jest.mock("mongodb")
 
 class TestConfiguration {

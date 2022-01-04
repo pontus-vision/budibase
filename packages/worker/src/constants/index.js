@@ -1,16 +1,14 @@
-const { Configs } = require("@budibase/auth").constants
+import { Configs } from "@budibase/auth"
 
-exports.LOGO_URL =
+export const LOGO_URL =
   "https://d33wubrfki0l68.cloudfront.net/aac32159d7207b5085e74a7ef67afbb7027786c5/2b1fd/img/logo/bb-emblem.svg"
 
-exports.UserStatus = {
+export const UserStatus = {
   ACTIVE: "active",
   INACTIVE: "inactive",
 }
 
-exports.Configs = Configs
-
-exports.ConfigUploads = {
+export const ConfigUploads = {
   LOGO: "logo",
   OIDC_LOGO: "oidc_logo",
 }
@@ -172,12 +170,16 @@ const TemplateMetadata = {
 }
 
 // all purpose combined
-exports.TemplatePurpose = {
+export const TemplatePurpose = {
   ...EmailTemplatePurpose,
 }
-exports.TemplateTypes = TemplateTypes
-exports.EmailTemplatePurpose = EmailTemplatePurpose
-exports.TemplateMetadata = TemplateMetadata
-exports.TemplateBindings = TemplateBindings
-exports.InternalTemplateBindings = InternalTemplateBindings
-exports.GLOBAL_OWNER = "global"
+
+export {
+  Configs,
+  TemplateTypes,
+  EmailTemplatePurpose,
+  TemplateMetadata,
+  TemplateBindings,
+  InternalTemplateBindings,
+}
+export const GLOBAL_OWNER = "global"

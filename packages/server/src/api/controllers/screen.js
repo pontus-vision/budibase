@@ -1,8 +1,8 @@
-const CouchDB = require("../../db")
-const { getScreenParams, generateScreenID } = require("../../db/utils")
-const { AccessController } = require("@budibase/auth/roles")
+import CouchDB from "../../db"
+import { getScreenParams, generateScreenID } from "../../db/utils"
+import { AccessController } from "@budibase/auth/roles"
 
-exports.fetch = async ctx => {
+export async function fetch(ctx) {
   const appId = ctx.appId
   const db = new CouchDB(appId)
 
@@ -20,7 +20,7 @@ exports.fetch = async ctx => {
   )
 }
 
-exports.save = async ctx => {
+export async function save(ctx) {
   const appId = ctx.appId
   const db = new CouchDB(appId)
   let screen = ctx.request.body
@@ -38,7 +38,7 @@ exports.save = async ctx => {
   }
 }
 
-exports.destroy = async ctx => {
+export async function destroy(ctx) {
   const db = new CouchDB(ctx.appId)
   await db.remove(ctx.params.screenId, ctx.params.screenRev)
   ctx.body = {

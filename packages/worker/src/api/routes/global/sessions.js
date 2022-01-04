@@ -1,6 +1,6 @@
-const Router = require("@koa/router")
-const controller = require("../../controllers/global/sessions")
-const adminOnly = require("../../../middleware/adminOnly")
+import Router from "@koa/router"
+import controller from "../../controllers/global/sessions"
+import adminOnly from "../../../middleware/adminOnly"
 
 const router = Router()
 
@@ -11,4 +11,4 @@ router
   .delete("/api/global/sessions/:userId", adminOnly, controller.invalidateUser)
   .delete("/api/global/sessions/self/:sessionId", controller.invalidateSession)
 
-module.exports = router
+export default router

@@ -1,8 +1,8 @@
-const Router = require("@koa/router")
-const controller = require("../controllers/app")
+import Router from "@koa/router"
+import controller from "../controllers/app"
 
 const router = Router()
 
 router.get("/api/apps", controller.getApps)
 
-module.exports = router
+export default router

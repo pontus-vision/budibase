@@ -1,9 +1,9 @@
-const CouchDB = require("../../../db")
-const { StaticDatabases } = require("@budibase/auth/db")
-const { getTenantId } = require("@budibase/auth/tenancy")
-const { deleteTenant } = require("@budibase/auth/deprovision")
+import CouchDB from "../../../db"
+import { StaticDatabases } from "@budibase/auth/db"
+import { getTenantId } from "@budibase/auth/tenancy"
+import { deleteTenant } from "@budibase/auth/deprovision"
 
-exports.exists = async ctx => {
+export const exists = async ctx => {
   const tenantId = ctx.request.params
   const db = new CouchDB(StaticDatabases.PLATFORM_INFO.name)
   let exists = false
@@ -20,7 +20,7 @@ exports.exists = async ctx => {
   }
 }
 
-exports.fetch = async ctx => {
+export const fetch = async ctx => {
   const db = new CouchDB(StaticDatabases.PLATFORM_INFO.name)
   let tenants = []
   try {
@@ -34,7 +34,7 @@ exports.fetch = async ctx => {
   ctx.body = tenants
 }
 
-exports.delete = async ctx => {
+export const del = async ctx => {
   const tenantId = getTenantId()
 
   if (ctx.params.tenantId !== tenantId) {

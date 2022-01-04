@@ -1,30 +1,34 @@
-const CouchDB = require("../../../db")
-const linkRows = require("../../../db/linkedRows")
-const {
+import CouchDB from "../../../db"
+import {
+  updateLinks,
+  EventType,
+  getLinkDocuments,
+} from "../../../db/linkedRows"
+import {
   getRowParams,
   generateRowID,
   DocumentTypes,
   InternalTables,
-} = require("../../../db/utils")
-const userController = require("../user")
-const {
+} from "../../../db/utils"
+import { fetchMetadata, updateMetadata, destroyMetadata } from "../user"
+import {
   inputProcessing,
   outputProcessing,
   processAutoColumn,
-} = require("../../../utilities/rowProcessor")
-const { FieldTypes } = require("../../../constants")
-const { isEqual } = require("lodash")
-const { validate, findRow } = require("./utils")
-const { fullSearch, paginatedSearch } = require("./internalSearch")
-const { getGlobalUsersFromMetadata } = require("../../../utilities/global")
-const inMemoryViews = require("../../../db/inMemoryView")
-const env = require("../../../environment")
-const {
+} from "../../../utilities/rowProcessor"
+import { FieldTypes } from "../../../constants"
+import { isEqual } from "lodash"
+import { validate, findRow } from "./utils"
+import { fullSearch, paginatedSearch } from "./internalSearch"
+import { getGlobalUsersFromMetadata } from "../../../utilities/global"
+import { runView } from "../../../db/inMemoryView"
+import { SELF_HOSTED, isCypress } from "../../../environment"
+import {
   migrateToInMemoryView,
   migrateToDesignView,
   getFromDesignDoc,
   getFromMemoryDoc,
-} = require("../view/utils")
+} from "../view/utils"
 
 const CALCULATION_TYPES = {
   SUM: "sum",
@@ -64,7 +68,7 @@ async function storeResponse(ctx, db, row, oldTable, table) {
 async function getRawTableData(ctx, db, tableId) {
   let rows
   if (tableId === InternalTables.USER_METADATA) {
-    await userController.fetchMetadata(ctx)
+    await fetchMetadata(ctx)
     rows = ctx.body
   } else {
     const response = await db.allDocs(
@@ -78,9 +82,9 @@ async function getRawTableData(ctx, db, tableId) {
 }
 
 async function getView(db, viewName) {
-  let mainGetter = env.SELF_HOSTED ? getFromDesignDoc : getFromMemoryDoc
-  let secondaryGetter = env.SELF_HOSTED ? getFromMemoryDoc : getFromDesignDoc
-  let migration = env.SELF_HOSTED ? migrateToDesignView : migrateToInMemoryView
+  let mainGetter = SELF_HOSTED ? getFromDesignDoc : getFromMemoryDoc
+  let secondaryGetter = SELF_HOSTED ? getFromMemoryDoc : getFromDesignDoc
+  let migration = SELF_HOSTED ? migrateToDesignView : migrateToInMemoryView
   let viewInfo,
     migrate = false
   try {
@@ -103,7 +107,7 @@ async function getView(db, viewName) {
   return viewInfo
 }
 
-exports.patch = async ctx => {
+export async function patch(ctx) {
   const appId = ctx.appId
   const db = new CouchDB(appId)
   const inputs = ctx.request.body
@@ -142,9 +146,9 @@ exports.patch = async ctx => {
   }
 
   // returned row is cleaned and prepared for writing to DB
-  row = await linkRows.updateLinks({
+  row = await updateLinks({
     appId,
-    eventType: linkRows.EventType.ROW_UPDATE,
+    eventType: EventType.ROW_UPDATE,
     row,
     tableId: row.tableId,
     table,
@@ -153,14 +157,14 @@ exports.patch = async ctx => {
   if (isUserTable) {
     // the row has been updated, need to put it into the ctx
     ctx.request.body = row
-    await userController.updateMetadata(ctx)
+    await updateMetadata(ctx)
     return { row: ctx.body, table }
   }
 
   return storeResponse(ctx, db, row, dbTable, table)
 }
 
-exports.save = async function (ctx) {
+export async function save(ctx) {
   const appId = ctx.appId
   const db = new CouchDB(appId)
   let inputs = ctx.request.body
@@ -183,9 +187,9 @@ exports.save = async function (ctx) {
   }
 
   // make sure link rows are up to date
-  row = await linkRows.updateLinks({
+  row = await updateLinks({
     appId,
-    eventType: linkRows.EventType.ROW_SAVE,
+    eventType: EventType.ROW_SAVE,
     row,
     tableId: row.tableId,
     table,
@@ -194,21 +198,21 @@ exports.save = async function (ctx) {
   return storeResponse(ctx, db, row, dbTable, table)
 }
 
-exports.fetchView = async ctx => {
+export async function fetchView(ctx) {
   const appId = ctx.appId
   const viewName = ctx.params.viewName
 
   // if this is a table view being looked for just transfer to that
   if (viewName.startsWith(DocumentTypes.TABLE)) {
     ctx.params.tableId = viewName
-    return exports.fetch(ctx)
+    return fetch(ctx)
   }
 
   const db = new CouchDB(appId)
   const { calculation, group, field } = ctx.query
   const viewInfo = await getView(db, viewName)
   let response
-  if (env.SELF_HOSTED) {
+  if (SELF_HOSTED) {
     response = await db.query(`database/${viewName}`, {
       include_docs: !calculation,
       group: !!group,
@@ -216,7 +220,7 @@ exports.fetchView = async ctx => {
   } else {
     const tableId = viewInfo.meta.tableId
     const data = await getRawTableData(ctx, db, tableId)
-    response = await inMemoryViews.runView(viewInfo, calculation, group, data)
+    response = await runView(viewInfo, calculation, group, data)
   }
 
   let rows
@@ -257,7 +261,7 @@ exports.fetchView = async ctx => {
   return rows
 }
 
-exports.fetch = async ctx => {
+export async function fetch(ctx) {
   const appId = ctx.appId
   const db = new CouchDB(appId)
 
@@ -267,7 +271,7 @@ exports.fetch = async ctx => {
   return outputProcessing(ctx, table, rows)
 }
 
-exports.find = async ctx => {
+export async function find(ctx) {
   const appId = ctx.appId
   const db = new CouchDB(appId)
   const table = await db.get(ctx.params.tableId)
@@ -276,7 +280,7 @@ exports.find = async ctx => {
   return row
 }
 
-exports.destroy = async function (ctx) {
+export async function destroy(ctx) {
   const appId = ctx.appId
   const db = new CouchDB(appId)
   const { _id, _rev } = ctx.request.body
@@ -289,9 +293,9 @@ exports.destroy = async function (ctx) {
   // update the row to include full relationships before deleting them
   row = await outputProcessing(ctx, table, row, { squash: false })
   // now remove the relationships
-  await linkRows.updateLinks({
+  await updateLinks({
     appId,
-    eventType: linkRows.EventType.ROW_DELETE,
+    eventType: EventType.ROW_DELETE,
     row,
     tableId: row.tableId,
   })
@@ -301,7 +305,7 @@ exports.destroy = async function (ctx) {
     ctx.params = {
       id: _id,
     }
-    await userController.destroyMetadata(ctx)
+    await destroyMetadata(ctx)
     response = ctx.body
   } else {
     response = await db.remove(_id, _rev)
@@ -309,7 +313,7 @@ exports.destroy = async function (ctx) {
   return { response, row }
 }
 
-exports.bulkDestroy = async ctx => {
+export async function bulkDestroy(ctx) {
   const appId = ctx.appId
   const db = new CouchDB(appId)
   const tableId = ctx.params.tableId
@@ -322,9 +326,9 @@ exports.bulkDestroy = async ctx => {
 
   // remove the relationships first
   let updates = rows.map(row =>
-    linkRows.updateLinks({
+    updateLinks({
       appId,
-      eventType: linkRows.EventType.ROW_DELETE,
+      eventType: EventType.ROW_DELETE,
       row,
       tableId: row.tableId,
     })
@@ -335,7 +339,7 @@ exports.bulkDestroy = async ctx => {
         ctx.params = {
           id: row._id,
         }
-        return userController.destroyMetadata(ctx)
+        return destroyMetadata(ctx)
       })
     )
   } else {
@@ -345,10 +349,10 @@ exports.bulkDestroy = async ctx => {
   return { response: { ok: true }, rows }
 }
 
-exports.search = async ctx => {
+export async function search(ctx) {
   // Fetch the whole table when running in cypress, as search doesn't work
-  if (env.isCypress()) {
-    return { rows: await exports.fetch(ctx) }
+  if (isCypress()) {
+    return { rows: await fetch(ctx) }
   }
 
   const appId = ctx.appId
@@ -378,15 +382,16 @@ exports.search = async ctx => {
   return response
 }
 
-exports.validate = async ctx => {
+const _validate = async ctx => {
   return validate({
     appId: ctx.appId,
     tableId: ctx.params.tableId,
     row: ctx.request.body,
   })
 }
+export { _validate as validate }
 
-exports.fetchEnrichedRow = async ctx => {
+export async function fetchEnrichedRow(ctx) {
   const appId = ctx.appId
   const db = new CouchDB(appId)
   const tableId = ctx.params.tableId
@@ -397,7 +402,7 @@ exports.fetchEnrichedRow = async ctx => {
     findRow(ctx, db, tableId, rowId),
   ])
   // get the link docs
-  const linkVals = await linkRows.getLinkDocuments({
+  const linkVals = await getLinkDocuments({
     appId,
     tableId,
     rowId,

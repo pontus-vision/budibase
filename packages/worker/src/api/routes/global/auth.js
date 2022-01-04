@@ -1,8 +1,8 @@
-const Router = require("@koa/router")
-const authController = require("../../controllers/global/auth")
-const joiValidator = require("../../../middleware/joi-validator")
-const Joi = require("joi")
-const { updateTenantId } = require("@budibase/auth/tenancy")
+import Router from "@koa/router"
+import authController from "../../controllers/global/auth"
+import joiValidator from "../../../middleware/joi-validator"
+import Joi from "joi"
+import { updateTenantId } from "@budibase/auth/tenancy"
 
 const router = Router()
 
@@ -88,4 +88,4 @@ router
   .get("/api/admin/auth/google/callback", authController.googleAuth)
   .get("/api/admin/auth/oidc/callback", authController.oidcAuth)
 
-module.exports = router
+export default router

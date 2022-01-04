@@ -1,18 +1,18 @@
-const jwt = require("jsonwebtoken")
-const { UserStatus } = require("../../constants")
-const { compare } = require("../../hashing")
-const env = require("../../environment")
-const { getGlobalUserByEmail } = require("../../utils")
-const { authError } = require("./utils")
-const { newid } = require("../../hashing")
-const { createASession } = require("../../security/sessions")
-const { getTenantId } = require("../../tenancy")
+import jwt from "jsonwebtoken"
+import { UserStatus } from "../../constants"
+import { compare } from "../../hashing"
+import env from "../../environment"
+import { getGlobalUserByEmail } from "../../utils"
+import { authError } from "./utils"
+import { newid } from "../../hashing"
+import { createASession } from "../../security/sessions"
+import { getTenantId } from "../../tenancy"
 
 const INVALID_ERR = "Invalid Credentials"
 const SSO_NO_PASSWORD = "SSO user does not have a password set"
 const EXPIRED = "This account has expired. Please reset your password"
 
-exports.options = {
+export const options = {
   passReqToCallback: true,
 }
 
@@ -24,7 +24,7 @@ exports.options = {
  * @param {*} done callback from passport to return user information and errors
  * @returns The authenticated user, or errors if they occur
  */
-exports.authenticate = async function (ctx, email, password, done) {
+export const authenticate = async function (ctx, email, password, done) {
   if (!email) return authError(done, "Email Required")
   if (!password) return authError(done, "Password Required")
 

@@ -1,4 +1,4 @@
-const newid = require("../../../db/newid")
+import newid from "../../../db/newid"
 
 /**
  * This is used to pass around information about the deployment that is occurring
@@ -56,4 +56,4 @@ class Deployment {
   }
 }
 
-module.exports = Deployment
+export default Deployment

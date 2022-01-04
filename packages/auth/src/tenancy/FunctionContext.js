@@ -1,5 +1,5 @@
-const cls = require("cls-hooked")
-const { newid } = require("../hashing")
+import cls from "cls-hooked"
+import { newid } from "../hashing"
 
 const REQUEST_ID_KEY = "requestId"
 
@@ -70,4 +70,4 @@ class FunctionContext {
   }
 }
 
-module.exports = FunctionContext
+export default FunctionContext

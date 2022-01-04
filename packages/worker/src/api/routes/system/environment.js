@@ -1,8 +1,8 @@
-const Router = require("@koa/router")
-const controller = require("../../controllers/system/environment")
+import Router from "@koa/router"
+import controller from "../../controllers/system/environment"
 
 const router = Router()
 
 router.get("/api/system/environment", controller.fetch)
 
-module.exports = router
+export default router

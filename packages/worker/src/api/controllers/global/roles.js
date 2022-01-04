@@ -1,12 +1,8 @@
-const { getAllRoles } = require("@budibase/auth/roles")
-const {
-  getAllApps,
-  getDeployedAppID,
-  DocumentTypes,
-} = require("@budibase/auth/db")
-const CouchDB = require("../../../db")
+import { getAllRoles } from "@budibase/auth/roles"
+import { getAllApps, getDeployedAppID, DocumentTypes } from "@budibase/auth/db"
+import CouchDB from "../../../db"
 
-exports.fetch = async ctx => {
+export const fetch = async ctx => {
   const tenantId = ctx.user.tenantId
   // always use the dev apps as they'll be most up to date (true)
   const apps = await getAllApps(CouchDB, { tenantId, all: true })
@@ -29,7 +25,7 @@ exports.fetch = async ctx => {
   ctx.body = response
 }
 
-exports.find = async ctx => {
+export const find = async ctx => {
   const appId = ctx.params.appId
   const db = new CouchDB(appId)
   const app = await db.get(DocumentTypes.APP_METADATA)

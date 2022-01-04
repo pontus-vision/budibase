@@ -1,13 +1,13 @@
-const TestConfig = require("./TestConfiguration")
+import TestConfig from "./TestConfiguration"
 
 let request, config
 
-exports.beforeAll = () => {
+export const beforeAll = () => {
   config = new TestConfig()
   request = config.getRequest()
 }
 
-exports.afterAll = async () => {
+export const afterAll = async () => {
   if (config) {
     await config.end()
   }
@@ -15,21 +15,21 @@ exports.afterAll = async () => {
   config = null
 }
 
-exports.getRequest = () => {
+export const getRequest = () => {
   if (!request) {
-    exports.beforeAll()
+    beforeAll()
   }
   return request
 }
 
-exports.getConfig = () => {
+export const getConfig = () => {
   if (!config) {
-    exports.beforeAll()
+    beforeAll()
   }
   return config
 }
 
-exports.emailMock = () => {
+export const emailMock = () => {
   // mock the email system
   const sendMailMock = jest.fn()
   const nodemailer = require("nodemailer")

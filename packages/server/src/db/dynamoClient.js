@@ -1,8 +1,8 @@
-let { merge } = require("lodash")
-let env = require("../environment")
+import { merge } from "lodash"
+import env from "../environment"
 
 const AWS_REGION = env.AWS_REGION ? env.AWS_REGION : "eu-west-1"
-exports.AWS_REGION = AWS_REGION
+export { AWS_REGION }
 
 const TableInfo = {
   API_KEYS: {
@@ -101,7 +101,7 @@ class Table {
   }
 }
 
-exports.init = endpoint => {
+export const init = endpoint => {
   let AWS = require("aws-sdk")
   AWS.config.update({
     region: AWS_REGION,
@@ -117,13 +117,13 @@ exports.init = endpoint => {
   docClient = new AWS.DynamoDB.DocumentClient(docClientParams)
 }
 
-exports.apiKeyTable = new Table(TableInfo.API_KEYS)
-exports.userTable = new Table(TableInfo.USERS)
+export const apiKeyTable = new Table(TableInfo.API_KEYS)
+export const userTable = new Table(TableInfo.USERS)
 
 if (env.isProd()) {
-  exports.init(`https://dynamodb.${AWS_REGION}.amazonaws.com`)
+  init(`https://dynamodb.${AWS_REGION}.amazonaws.com`)
 } else {
   env._set("AWS_ACCESS_KEY_ID", "KEY_ID")
   env._set("AWS_SECRET_ACCESS_KEY", "SECRET_KEY")
-  exports.init("http://localhost:8333")
+  init("http://localhost:8333")
 }

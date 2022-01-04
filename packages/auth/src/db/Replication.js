@@ -1,4 +1,4 @@
-const { getDB } = require(".")
+import { getDB } from "."
 
 class Replication {
   /**
@@ -60,4 +60,4 @@ class Replication {
   }
 }
 
-module.exports = Replication
+export default Replication

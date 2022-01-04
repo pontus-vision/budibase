@@ -1,18 +1,18 @@
-const CouchDB = require("../../../db")
-const viewTemplate = require("./viewBuilder")
-const { apiFileReturn } = require("../../../utilities/fileSystem")
-const exporters = require("./exporters")
-const { saveView, getView, getViews, deleteView } = require("./utils")
-const { fetchView } = require("../row")
-const { getTable } = require("../table/utils")
-const { FieldTypes } = require("../../../constants")
+import CouchDB from "../../../db"
+import viewTemplate from "./viewBuilder"
+import { apiFileReturn } from "../../../utilities/fileSystem"
+import exporters, { ExportFormats } from "./exporters"
+import { saveView, getView, getViews, deleteView } from "./utils"
+import { fetchView } from "../row"
+import { getTable } from "../table/utils"
+import { FieldTypes } from "../../../constants"
 
-exports.fetch = async ctx => {
+export async function fetch(ctx) {
   const db = new CouchDB(ctx.appId)
   ctx.body = await getViews(db)
 }
 
-exports.save = async ctx => {
+export async function save(ctx) {
   const db = new CouchDB(ctx.appId)
   const { originalName, ...viewToSave } = ctx.request.body
   const view = viewTemplate(viewToSave)
@@ -41,7 +41,7 @@ exports.save = async ctx => {
   }
 }
 
-exports.destroy = async ctx => {
+export async function destroy(ctx) {
   const db = new CouchDB(ctx.appId)
   const viewName = decodeURI(ctx.params.viewName)
   const view = await deleteView(db, viewName)
@@ -52,13 +52,13 @@ exports.destroy = async ctx => {
   ctx.body = view
 }
 
-exports.exportView = async ctx => {
+export async function exportView(ctx) {
   const db = new CouchDB(ctx.appId)
   const viewName = decodeURI(ctx.query.view)
   const view = await getView(db, viewName)
 
   const format = ctx.query.format
-  if (!format || !Object.values(exporters.ExportFormats).includes(format)) {
+  if (!format || !Object.values(ExportFormats).includes(format)) {
     ctx.throw(400, "Format must be specified, either csv or json")
   }
 
@@ -100,7 +100,7 @@ exports.exportView = async ctx => {
   })
 
   // make sure no "undefined" entries appear in the CSV
-  if (format === exporters.ExportFormats.CSV) {
+  if (format === ExportFormats.CSV) {
     const schemaKeys = Object.keys(schema)
     for (let key of schemaKeys) {
       for (let row of rows) {

@@ -1,15 +1,15 @@
-const { readStaticFile } = require("../../utilities/fileSystem")
-const {
+import { readStaticFile } from "../../utilities/fileSystem"
+import {
   EmailTemplatePurpose,
   TemplateTypes,
   TemplatePurpose,
   GLOBAL_OWNER,
-} = require("../index")
-const { join } = require("path")
-const { getTemplateParams } = require("@budibase/auth/db")
-const { getGlobalDB } = require("@budibase/auth/tenancy")
+} from "../index"
+import { join } from "path"
+import { getTemplateParams } from "@budibase/auth/db"
+import { getGlobalDB } from "@budibase/auth/tenancy"
 
-exports.EmailTemplates = {
+export const EmailTemplates = {
   [EmailTemplatePurpose.PASSWORD_RECOVERY]: readStaticFile(
     join(__dirname, "passwordRecovery.hbs")
   ),
@@ -23,7 +23,7 @@ exports.EmailTemplates = {
   [EmailTemplatePurpose.CUSTOM]: readStaticFile(join(__dirname, "custom.hbs")),
 }
 
-exports.addBaseTemplates = (templates, type = null) => {
+export const addBaseTemplates = (templates, type = null) => {
   let purposeList
   switch (type) {
     case TemplateTypes.EMAIL:
@@ -49,7 +49,7 @@ exports.addBaseTemplates = (templates, type = null) => {
   return templates
 }
 
-exports.getTemplates = async ({ ownerId, type, id } = {}) => {
+export const getTemplates = async ({ ownerId, type, id } = {}) => {
   const db = getGlobalDB()
   const response = await db.allDocs(
     getTemplateParams(ownerId || GLOBAL_OWNER, id, {
@@ -64,10 +64,10 @@ exports.getTemplates = async ({ ownerId, type, id } = {}) => {
   if (type) {
     templates = templates.filter(template => template.type === type)
   }
-  return exports.addBaseTemplates(templates, type)
+  return addBaseTemplates(templates, type)
 }
 
-exports.getTemplateByPurpose = async (type, purpose) => {
-  const templates = await exports.getTemplates({ type })
+export const getTemplateByPurpose = async (type, purpose) => {
+  const templates = await getTemplates({ type })
   return templates.find(template => template.purpose === purpose)
 }

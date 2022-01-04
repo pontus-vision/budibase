@@ -1,11 +1,11 @@
-const { isDevAppID, isProdAppID } = require("../db/utils")
+import { isDevAppID, isProdAppID } from "../db/utils"
 
-exports.AppType = {
+export const AppType = {
   DEV: "dev",
   PROD: "prod",
 }
 
-exports.middleware =
+export const middleware =
   ({ appType } = {}) =>
   (ctx, next) => {
     const appId = ctx.appId

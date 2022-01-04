@@ -1,5 +1,5 @@
-const { readFileSync } = require("fs")
+import { readFileSync } from "fs"
 
-exports.readStaticFile = path => {
+export const readStaticFile = path => {
   return readFileSync(path, "utf-8")
 }

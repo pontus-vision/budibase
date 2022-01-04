@@ -1,9 +1,9 @@
-const Router = require("@koa/router")
-const controller = require("../../controllers/global/users")
-const joiValidator = require("../../../middleware/joi-validator")
-const adminOnly = require("../../../middleware/adminOnly")
-const Joi = require("joi")
-const cloudRestricted = require("../../../middleware/cloudRestricted")
+import Router from "@koa/router"
+import controller from "../../controllers/global/users"
+import joiValidator from "../../../middleware/joi-validator"
+import adminOnly from "../../../middleware/adminOnly"
+import Joi from "joi"
+import cloudRestricted from "../../../middleware/cloudRestricted"
 
 const router = Router()
 
@@ -100,4 +100,4 @@ router
   // global endpoint but needs to come at end (blocks other endpoints otherwise)
   .get("/api/global/users/:id", adminOnly, controller.find)
 
-module.exports = router
+export default router

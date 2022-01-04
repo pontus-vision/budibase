@@ -1,17 +1,17 @@
-const CouchDB = require("../../db")
-const {
+import CouchDB from "../../db"
+import {
   generateUserMetadataID,
   getUserMetadataParams,
   generateUserFlagID,
-} = require("../../db/utils")
-const { InternalTables } = require("../../db/utils")
-const { getGlobalUsers, getRawGlobalUser } = require("../../utilities/global")
-const { getFullUser } = require("../../utilities/users")
-const { isEqual } = require("lodash")
-const { BUILTIN_ROLE_IDS } = require("@budibase/auth/roles")
-const { getDevelopmentAppID, getDeployedAppIDs } = require("@budibase/auth/db")
-const { doesDatabaseExist } = require("../../utilities")
-const { UserStatus } = require("@budibase/auth/constants")
+} from "../../db/utils"
+import { InternalTables } from "../../db/utils"
+import { getGlobalUsers, getRawGlobalUser } from "../../utilities/global"
+import { getFullUser } from "../../utilities/users"
+import { isEqual } from "lodash"
+import { BUILTIN_ROLE_IDS } from "@budibase/auth/roles"
+import { getDevelopmentAppID, getDeployedAppIDs } from "@budibase/auth/db"
+import { doesDatabaseExist } from "../../utilities"
+import { UserStatus } from "@budibase/auth/constants"
 
 async function rawMetadata(db) {
   return (
@@ -51,7 +51,7 @@ function combineMetadataAndUser(user, metadata) {
   return null
 }
 
-exports.syncGlobalUsers = async appId => {
+export async function syncGlobalUsers(appId) {
   // sync user metadata
   const db = new CouchDB(appId)
   const [users, metadata] = await Promise.all([
@@ -68,7 +68,7 @@ exports.syncGlobalUsers = async appId => {
   await db.bulkDocs(toWrite)
 }
 
-exports.syncUser = async function (ctx) {
+export async function syncUser(ctx) {
   let deleting = false,
     user
   const userId = ctx.params.id
@@ -139,7 +139,7 @@ exports.syncUser = async function (ctx) {
   }
 }
 
-exports.fetchMetadata = async function (ctx) {
+export async function fetchMetadata(ctx) {
   const database = new CouchDB(ctx.appId)
   const global = await getGlobalUsers(ctx.appId)
   const metadata = await rawMetadata(database)
@@ -159,15 +159,15 @@ exports.fetchMetadata = async function (ctx) {
   ctx.body = users
 }
 
-exports.updateSelfMetadata = async function (ctx) {
+export async function updateSelfMetadata(ctx) {
   // overwrite the ID with current users
   ctx.request.body._id = ctx.user._id
   // make sure no stale rev
   delete ctx.request.body._rev
-  await exports.updateMetadata(ctx)
+  await updateMetadata(ctx)
 }
 
-exports.updateMetadata = async function (ctx) {
+export async function updateMetadata(ctx) {
   const appId = ctx.appId
   const db = new CouchDB(appId)
   const user = ctx.request.body
@@ -180,7 +180,7 @@ exports.updateMetadata = async function (ctx) {
   ctx.body = await db.put(metadata)
 }
 
-exports.destroyMetadata = async function (ctx) {
+export async function destroyMetadata(ctx) {
   const db = new CouchDB(ctx.appId)
   try {
     const dbUser = await db.get(ctx.params.id)
@@ -193,11 +193,11 @@ exports.destroyMetadata = async function (ctx) {
   }
 }
 
-exports.findMetadata = async function (ctx) {
+export async function findMetadata(ctx) {
   ctx.body = await getFullUser(ctx, ctx.params.id)
 }
 
-exports.setFlag = async function (ctx) {
+export async function setFlag(ctx) {
   const userId = ctx.user._id
   const { flag, value } = ctx.request.body
   if (!flag) {
@@ -216,7 +216,7 @@ exports.setFlag = async function (ctx) {
   ctx.body = { message: "Flag set successfully" }
 }
 
-exports.getFlags = async function (ctx) {
+export async function getFlags(ctx) {
   const userId = ctx.user._id
   const docId = generateUserFlagID(userId)
   const db = new CouchDB(ctx.appId)

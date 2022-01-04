@@ -1,12 +1,9 @@
-const CouchDB = require("../../../db")
-const Deployment = require("./Deployment")
-const { Replication, getDeployedAppID } = require("@budibase/auth/db")
-const { DocumentTypes, getAutomationParams } = require("../../../db/utils")
-const {
-  disableAllCrons,
-  enableCronTrigger,
-} = require("../../../automations/utils")
-const { app: appCache } = require("@budibase/auth/cache")
+import CouchDB from "../../../db"
+import Deployment from "./Deployment"
+import { Replication, getDeployedAppID } from "@budibase/auth/db"
+import { DocumentTypes, getAutomationParams } from "../../../db/utils"
+import { disableAllCrons, enableCronTrigger } from "../../../automations/utils"
+import { app as appCache } from "@budibase/auth/cache"
 
 // the max time we can wait for an invalidation to complete before considering it failed
 const MAX_PENDING_TIME_MS = 30 * 60000
@@ -120,7 +117,7 @@ async function deployApp(deployment) {
   }
 }
 
-exports.fetchDeployments = async function (ctx) {
+export async function fetchDeployments(ctx) {
   try {
     const appId = ctx.appId
     const db = new CouchDB(appId)
@@ -138,7 +135,7 @@ exports.fetchDeployments = async function (ctx) {
   }
 }
 
-exports.deploymentProgress = async function (ctx) {
+export async function deploymentProgress(ctx) {
   try {
     const appId = ctx.appId
     const db = new CouchDB(appId)
@@ -152,7 +149,7 @@ exports.deploymentProgress = async function (ctx) {
   }
 }
 
-exports.deployApp = async function (ctx) {
+const _deployApp = async function (ctx) {
   let deployment = new Deployment(ctx.appId)
   console.log("Deployment object created")
   deployment.setStatus(DeploymentStatus.PENDING)
@@ -165,3 +162,4 @@ exports.deployApp = async function (ctx) {
 
   ctx.body = deployment
 }
+export { _deployApp as deployApp }

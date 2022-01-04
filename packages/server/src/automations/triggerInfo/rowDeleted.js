@@ -1,4 +1,4 @@
-exports.definition = {
+export const definition = {
   name: "Row Deleted",
   event: "row:delete",
   icon: "TableRowRemoveCenter",

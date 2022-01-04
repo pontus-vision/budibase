@@ -1,11 +1,11 @@
-const setup = require("./utilities")
-const fetch = require("node-fetch")
+import { getConfig, afterAll as _afterAll, runStep, actions } from "./utilities"
+import fetch from "node-fetch"
 
 jest.mock("node-fetch")
 
 describe("test the outgoing webhook action", () => {
   let inputs
-  let config = setup.getConfig()
+  let config = getConfig()
 
   beforeEach(async () => {
     await config.init()
@@ -18,10 +18,10 @@ describe("test the outgoing webhook action", () => {
     }
   })
 
-  afterAll(setup.afterAll)
+  afterAll(_afterAll)
 
   it("should be able to run the action", async () => {
-    const res = await setup.runStep(setup.actions.OUTGOING_WEBHOOK.stepId, inputs)
+    const res = await runStep(actions.OUTGOING_WEBHOOK.stepId, inputs)
     expect(res.success).toEqual(true)
     expect(res.response.url).toEqual("http://www.test.com")
     expect(res.response.method).toEqual("POST")
@@ -29,7 +29,7 @@ describe("test the outgoing webhook action", () => {
   })
 
   it("should return an error if something goes wrong in fetch", async () => {
-    const res = await setup.runStep(setup.actions.OUTGOING_WEBHOOK.stepId, {
+    const res = await runStep(actions.OUTGOING_WEBHOOK.stepId, {
       requestMethod: "GET",
       url: "www.invalid.com"
     })

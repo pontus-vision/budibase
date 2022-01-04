@@ -1,11 +1,11 @@
-const { checkBuilderEndpoint } = require("./utilities/TestFunctions")
-const setup = require("./utilities")
+import { checkBuilderEndpoint } from "./utilities/TestFunctions"
+import { getRequest, getConfig, afterAll as _afterAll } from "./utilities"
 
 describe("/component", () => {
-  let request = setup.getRequest()
-  let config = setup.getConfig()
+  let request = getRequest()
+  let config = getConfig()
 
-  afterAll(setup.afterAll)
+  afterAll(_afterAll)
 
   beforeEach(async () => {
     await config.init()

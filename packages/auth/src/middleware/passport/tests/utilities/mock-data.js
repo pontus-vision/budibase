@@ -44,7 +44,7 @@ const buildThirdPartyUser = (
   oauth2: oauth2,
 })
 
-exports.data = {
+export const data = {
   clientID: mockClientID,
   clientSecret: mockClientSecret,
   email: mockEmail,

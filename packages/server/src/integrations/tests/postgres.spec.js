@@ -1,5 +1,5 @@
-const pg = require("pg")
-const PostgresIntegration = require("../postgres")
+import pg from 'pg';
+import PostgresIntegration from '../postgres';
 jest.mock("pg")
 
 class TestConfiguration {

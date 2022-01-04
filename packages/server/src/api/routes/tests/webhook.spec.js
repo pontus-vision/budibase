@@ -1,13 +1,13 @@
-const setup = require("./utilities")
-const { checkBuilderEndpoint } = require("./utilities/TestFunctions")
-const { basicWebhook, basicAutomation } = setup.structures
+import { structures, getRequest, getConfig, afterAll as _afterAll } from "./utilities"
+import { checkBuilderEndpoint } from "./utilities/TestFunctions"
+const { basicWebhook, basicAutomation } = structures
 
 describe("/webhooks", () => {
-  let request = setup.getRequest()
-  let config = setup.getConfig()
+  let request = getRequest()
+  let config = getConfig()
   let webhook
 
-  afterAll(setup.afterAll)
+  afterAll(_afterAll)
 
   beforeEach(async () => {
     await config.init()

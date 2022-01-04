@@ -1,11 +1,11 @@
-const { DocumentTypes } = require("../db/constants")
-const { getGlobalDB } = require("../tenancy")
+import { DocumentTypes } from "../db/constants"
+import { getGlobalDB } from "../tenancy"
 
-exports.MIGRATION_DBS = {
+export const MIGRATION_DBS = {
   GLOBAL_DB: "GLOBAL_DB",
 }
 
-exports.MIGRATIONS = {
+export const MIGRATIONS = {
   USER_EMAIL_VIEW_CASING: "user_email_view_casing",
 }
 
@@ -15,7 +15,7 @@ const DB_LOOKUP = {
   ],
 }
 
-exports.getMigrationsDoc = async db => {
+export const getMigrationsDoc = async db => {
   // get the migrations doc
   try {
     return await db.get(DocumentTypes.MIGRATIONS)
@@ -26,7 +26,11 @@ exports.getMigrationsDoc = async db => {
   }
 }
 
-exports.migrateIfRequired = async (migrationDb, migrationName, migrateFn) => {
+export const migrateIfRequired = async (
+  migrationDb,
+  migrationName,
+  migrateFn
+) => {
   try {
     let db
     if (migrationDb === exports.MIGRATION_DBS.GLOBAL_DB) {
@@ -41,7 +45,7 @@ exports.migrateIfRequired = async (migrationDb, migrationName, migrateFn) => {
       )
     }
 
-    const doc = await exports.getMigrationsDoc(db)
+    const doc = await getMigrationsDoc(db)
     // exit if the migration has been performed
     if (doc[migrationName]) {
       return

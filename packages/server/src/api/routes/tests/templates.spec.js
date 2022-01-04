@@ -1,10 +1,10 @@
-const setup = require("./utilities")
+import { getRequest, getConfig, afterAll as _afterAll } from "./utilities"
 
 describe("/templates", () => {
-  let request = setup.getRequest()
-  let config = setup.getConfig()
+  let request = getRequest()
+  let config = getConfig()
 
-  afterAll(setup.afterAll)
+  afterAll(_afterAll)
 
   beforeEach(async () => {
     await config.init()

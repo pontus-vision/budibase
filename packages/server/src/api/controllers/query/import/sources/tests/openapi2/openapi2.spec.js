@@ -1,9 +1,9 @@
-const { OpenAPI2 } = require("../../openapi2")
-const fs = require("fs")
-const path = require('path')
+import { OpenAPI2 } from "../../openapi2"
+import { readFileSync } from "fs"
+import { join } from 'path'
 
 const getData = (file, extension) => {
-  return fs.readFileSync(path.join(__dirname, `./data/${file}/${file}.${extension}`), "utf8")
+  return readFileSync(join(__dirname, `./data/${file}/${file}.${extension}`), "utf8")
 }
 
 describe("OpenAPI2 Import", () => {

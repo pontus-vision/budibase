@@ -1,9 +1,9 @@
-const Router = require("@koa/router")
-const controller = require("../controllers/webhook")
-const authorized = require("../../middleware/authorized")
-const joiValidator = require("../../middleware/joi-validator")
-const { BUILDER } = require("@budibase/auth/permissions")
-const Joi = require("joi")
+import Router from "@koa/router"
+import controller from "../controllers/webhook"
+import authorized from "../../middleware/authorized"
+import joiValidator from "../../middleware/joi-validator"
+import { BUILDER } from "@budibase/auth/permissions"
+import Joi from "joi"
 
 const router = Router()
 
@@ -39,4 +39,4 @@ router
   // this shouldn't have authorisation, right now its always public
   .post("/api/webhooks/trigger/:instance/:id", controller.trigger)
 
-module.exports = router
+export default router

@@ -1,7 +1,7 @@
-const setup = require("./utilities")
-const { EmailTemplatePurpose } = require("../../../constants")
-const nodemailer = require("nodemailer")
-const fetch = require("node-fetch")
+import setup from './utilities';
+import { EmailTemplatePurpose } from '../../../constants';
+import nodemailer from 'nodemailer';
+import fetch from 'node-fetch';
 
 describe("/api/global/email", () => {
   let request = setup.getRequest()

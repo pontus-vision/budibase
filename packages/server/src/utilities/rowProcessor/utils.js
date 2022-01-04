@@ -1,10 +1,10 @@
-const { FieldTypes } = require("../../constants")
-const { processStringSync } = require("@budibase/string-templates")
+import { FieldTypes } from "../../constants"
+import { processStringSync } from "@budibase/string-templates"
 
 /**
  * Looks through the rows provided and finds formulas - which it then processes.
  */
-exports.processFormulas = (table, rows) => {
+export const processFormulas = (table, rows) => {
   const single = !Array.isArray(rows)
   if (single) {
     rows = [rows]

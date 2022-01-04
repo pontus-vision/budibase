@@ -1,25 +1,27 @@
-const { budibaseTempDir } = require("../budibaseDir")
-const { isDev } = require("../index")
-const fs = require("fs")
-const { join } = require("path")
-const uuid = require("uuid/v4")
-const CouchDB = require("../../db")
-const { ObjectStoreBuckets } = require("../../constants")
-const {
+import { budibaseTempDir } from "../budibaseDir"
+import { isDev } from "../index"
+// const fs = require("fs")
+import fs from "fs"
+// const { join } = require("path")
+import { join } from "path"
+// const uuid = require("uuid/v4")
+// import { uuid } from "uuid/v4"
+import { v4 as uuid } from "uuid"
+
+import CouchDB from "../../db"
+import { ObjectStoreBuckets } from "../../constants"
+import {
   upload,
   retrieve,
   retrieveToTmp,
   streamUpload,
   deleteFolder,
   downloadTarball,
-} = require("./utilities")
-const { updateClientLibrary } = require("./clientLibrary")
-const env = require("../../environment")
-const {
-  USER_METDATA_PREFIX,
-  LINK_USER_METADATA_PREFIX,
-} = require("../../db/utils")
-const MemoryStream = require("memorystream")
+} from "./utilities"
+import { updateClientLibrary } from "./clientLibrary"
+import env from "../../environment"
+import { USER_METDATA_PREFIX, LINK_USER_METADATA_PREFIX } from "../../db/utils"
+import MemoryStream from "memorystream"
 
 const TOP_LEVEL_PATH = join(__dirname, "..", "..", "..")
 const NODE_MODULES_PATH = join(TOP_LEVEL_PATH, "node_modules")
@@ -35,8 +37,9 @@ const NODE_MODULES_PATH = join(TOP_LEVEL_PATH, "node_modules")
 /**
  * Upon first startup of instance there may not be everything we need in tmp directory, set it up.
  */
-exports.init = () => {
+export const init = () => {
   const tempDir = budibaseTempDir()
+  console.log(`TempDir is ${tempDir}`)
   if (!fs.existsSync(tempDir)) {
     fs.mkdirSync(tempDir)
   }
@@ -50,7 +53,7 @@ exports.init = () => {
  * Checks if the system is currently in development mode and if it is makes sure
  * everything required to function is ready.
  */
-exports.checkDevelopmentEnvironment = () => {
+export const checkDevelopmentEnvironment = () => {
   if (!isDev()) {
     return
   }
@@ -72,12 +75,12 @@ exports.checkDevelopmentEnvironment = () => {
  * @param {Object} template The template object retrieved from the Koa context object.
  * @returns {Object} Returns an fs read stream which can be loaded into the database.
  */
-exports.getTemplateStream = async template => {
+export const getTemplateStream = async template => {
   if (template.file) {
     return fs.createReadStream(template.file.path)
   } else {
     const [type, name] = template.key.split("/")
-    const tmpPath = await exports.downloadTemplate(type, name)
+    const tmpPath = await downloadTemplate(type, name)
     return fs.createReadStream(join(tmpPath, name, "db", "dump.txt"))
   }
 }
@@ -89,7 +92,7 @@ exports.getTemplateStream = async template => {
  * @param {string} path The path to the handlebars file which is to be loaded.
  * @returns {string} The loaded handlebars file as a string - loaded as utf8.
  */
-exports.loadHandlebarsFile = path => {
+export const loadHandlebarsFile = path => {
   return fs.readFileSync(path, "utf8")
 }
 
@@ -99,7 +102,7 @@ exports.loadHandlebarsFile = path => {
  * @param {string} contents the contents of the file which is to be returned from the API.
  * @return {Object} the read stream which can be put into the koa context body.
  */
-exports.apiFileReturn = contents => {
+export const apiFileReturn = contents => {
   const path = join(budibaseTempDir(), uuid())
   fs.writeFileSync(path, contents)
   return fs.createReadStream(path)
@@ -113,7 +116,7 @@ exports.apiFileReturn = contents => {
  * @returns {*} either a string or a stream of the backup
  */
 const backupAppData = async (appId, config) => {
-  return await exports.exportDB(appId, {
+  return await exportDB(appId, {
     ...config,
     filter: doc =>
       !(
@@ -129,7 +132,7 @@ const backupAppData = async (appId, config) => {
  * @param {string} backupName The name of the backup located in the object store.
  * @return {*} a readable stream to the completed backup file
  */
-exports.performBackup = async (appId, backupName) => {
+export const performBackup = async (appId, backupName) => {
   return await backupAppData(appId, { exportName: backupName })
 }
 
@@ -138,7 +141,7 @@ exports.performBackup = async (appId, backupName) => {
  * @param {string} appId The ID of the app which is to be backed up.
  * @returns {*} a readable stream of the backup which is written in real time
  */
-exports.streamBackup = async appId => {
+export const streamBackup = async appId => {
   return await backupAppData(appId, { stream: true })
 }
 
@@ -150,7 +153,7 @@ exports.streamBackup = async appId => {
  * @param {function} filter optional - a filter function to clear out any un-wanted docs.
  * @return {*} either a readable stream or a string
  */
-exports.exportDB = async (dbName, { stream, filter, exportName } = {}) => {
+export const exportDB = async (dbName, { stream, filter, exportName } = {}) => {
   const instanceDb = new CouchDB(dbName)
 
   // Stream the dump if required
@@ -193,7 +196,7 @@ exports.exportDB = async (dbName, { stream, filter, exportName } = {}) => {
  * @param {string} fileContents contents which will be written to a temp file.
  * @return {string} the path to the temp file.
  */
-exports.storeTempFile = fileContents => {
+export const storeTempFile = fileContents => {
   const path = join(budibaseTempDir(), uuid())
   fs.writeFileSync(path, fileContents)
   return path
@@ -203,8 +206,8 @@ exports.storeTempFile = fileContents => {
  * Utility function for getting a file read stream - a simple in memory buffered read
  * stream doesn't work for pouchdb.
  */
-exports.stringToFileStream = contents => {
-  const path = exports.storeTempFile(contents)
+export const stringToFileStream = contents => {
+  const path = storeTempFile(contents)
   return fs.createReadStream(path)
 }
 
@@ -212,8 +215,8 @@ exports.stringToFileStream = contents => {
  * Creates a temp file and returns it from the API.
  * @param {string} fileContents the contents to be returned in file.
  */
-exports.sendTempFile = fileContents => {
-  const path = exports.storeTempFile(fileContents)
+export const sendTempFile = fileContents => {
+  const path = storeTempFile(fileContents)
   return fs.createReadStream(path)
 }
 
@@ -222,7 +225,7 @@ exports.sendTempFile = fileContents => {
  * @param {string} appId The ID of the app which is being created.
  * @return {Promise<void>} once promise completes app resources should be ready in object store.
  */
-exports.createApp = async appId => {
+export const createApp = async appId => {
   await updateClientLibrary(appId)
 }
 
@@ -231,7 +234,7 @@ exports.createApp = async appId => {
  * @param {string} appId The ID of the app which is being deleted.
  * @return {Promise<void>} once promise completes the app resources will be removed from object store.
  */
-exports.deleteApp = async appId => {
+export const deleteApp = async appId => {
   await deleteFolder(ObjectStoreBuckets.APPS, `${appId}/`)
 }
 
@@ -241,7 +244,7 @@ exports.deleteApp = async appId => {
  * @param name
  * @return {Promise<*>}
  */
-exports.downloadTemplate = async (type, name) => {
+export const downloadTemplate = async (type, name) => {
   const DEFAULT_TEMPLATES_BUCKET =
     "prod-budi-templates.s3-eu-west-1.amazonaws.com"
   const templateUrl = `https://${DEFAULT_TEMPLATES_BUCKET}/templates/${type}/${name}.tar.gz`
@@ -251,7 +254,7 @@ exports.downloadTemplate = async (type, name) => {
 /**
  * Retrieves component libraries from object store (or tmp symlink if in local)
  */
-exports.getComponentLibraryManifest = async (appId, library) => {
+export const getComponentLibraryManifest = async (appId, library) => {
   const filename = "manifest.json"
   /* istanbul ignore next */
   // when testing in cypress and so on we need to get the package
@@ -288,14 +291,14 @@ exports.getComponentLibraryManifest = async (appId, library) => {
  * All file reads come through here just to make sure all of them make sense
  * allows a centralised location to check logic is all good.
  */
-exports.readFileSync = (filepath, options = "utf8") => {
+export const readFileSync = (filepath, options = "utf8") => {
   return fs.readFileSync(filepath, options)
 }
 
 /**
  * Given a set of app IDs makes sure file system is cleared of any of their temp info.
  */
-exports.cleanup = appIds => {
+export const cleanup = appIds => {
   for (let appId of appIds) {
     const path = join(budibaseTempDir(), appId)
     if (fs.existsSync(path)) {
@@ -304,11 +307,4 @@ exports.cleanup = appIds => {
   }
 }
 
-/**
- * Full function definition for below can be found in the utilities.
- */
-exports.upload = upload
-exports.retrieve = retrieve
-exports.retrieveToTmp = retrieveToTmp
-exports.TOP_LEVEL_PATH = TOP_LEVEL_PATH
-exports.NODE_MODULES_PATH = NODE_MODULES_PATH
+export { upload, retrieve, retrieveToTmp, TOP_LEVEL_PATH, NODE_MODULES_PATH }

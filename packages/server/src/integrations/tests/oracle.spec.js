@@ -1,5 +1,5 @@
-const oracledb = require("oracledb")
-const OracleIntegration = require("../oracle")
+import oracledb from 'oracledb';
+import OracleIntegration from '../oracle';
 jest.mock("oracledb")
 
 class TestConfiguration {

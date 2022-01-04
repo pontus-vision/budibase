@@ -1,4 +1,4 @@
-exports.definition = {
+export const definition = {
   name: "Row Updated",
   event: "row:update",
   icon: "Refresh",

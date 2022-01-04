@@ -1,8 +1,8 @@
-const Router = require("@koa/router")
-const controller = require("../../controllers/global/workspaces")
-const joiValidator = require("../../../middleware/joi-validator")
-const adminOnly = require("../../../middleware/adminOnly")
-const Joi = require("joi")
+import Router from "@koa/router"
+import controller from "../../controllers/global/workspaces"
+import joiValidator from "../../../middleware/joi-validator"
+import adminOnly from "../../../middleware/adminOnly"
+import Joi from "joi"
 
 const router = Router()
 
@@ -35,4 +35,4 @@ router
   .get("/api/global/workspaces", controller.fetch)
   .get("/api/global/workspaces/:id", controller.find)
 
-module.exports = router
+export default router

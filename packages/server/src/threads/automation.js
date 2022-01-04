@@ -1,15 +1,16 @@
-require("./utils").threadSetup()
-const env = require("../environment")
-const actions = require("../automations/actions")
-const automationUtils = require("../automations/automationUtils")
-const AutomationEmitter = require("../events/AutomationEmitter")
-const { processObject } = require("@budibase/string-templates")
-const { DEFAULT_TENANT_ID } = require("@budibase/auth").constants
-const CouchDB = require("../db")
-const { DocumentTypes, isDevAppID } = require("../db/utils")
-const { doInTenant } = require("@budibase/auth/tenancy")
-const usage = require("../utilities/usageQuota")
-const { definitions: triggerDefs } = require("../automations/triggerInfo")
+import { threadSetup } from "./utils"
+threadSetup()
+import env from "../environment"
+import actions from "../automations/actions"
+import automationUtils from "../automations/automationUtils"
+import AutomationEmitter from "../events/AutomationEmitter"
+import { processObject } from "@budibase/string-templates"
+import { DEFAULT_TENANT_ID } from "@budibase/auth/constants"
+import CouchDB from "../db"
+import { DocumentTypes, isDevAppID } from "../db/utils"
+import { doInTenant } from "@budibase/auth/tenancy"
+import usage from "../utilities/usageQuota"
+import { definitions as triggerDefs } from "../automations/triggerInfo"
 
 const FILTER_STEP_ID = actions.ACTION_DEFINITIONS.FILTER.stepId
 const CRON_STEP_ID = triggerDefs.CRON.stepId
@@ -130,7 +131,7 @@ class Orchestrator {
   }
 }
 
-module.exports = (input, callback) => {
+export default (input, callback) => {
   const automationOrchestrator = new Orchestrator(
     input.data.automation,
     input.data.event

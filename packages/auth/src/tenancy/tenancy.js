@@ -1,12 +1,12 @@
-const { getDB } = require("../db")
-const { SEPARATOR, StaticDatabases, DocumentTypes } = require("../db/constants")
-const { getTenantId, DEFAULT_TENANT_ID, isMultiTenant } = require("./context")
-const env = require("../environment")
+import { getDB } from "../db"
+import { SEPARATOR, StaticDatabases, DocumentTypes } from "../db/constants"
+import { getTenantId, DEFAULT_TENANT_ID, isMultiTenant } from "./context"
+import env from "../environment"
 
 const TENANT_DOC = StaticDatabases.PLATFORM_INFO.docs.tenants
 const PLATFORM_INFO_DB = StaticDatabases.PLATFORM_INFO.name
 
-exports.addTenantToUrl = url => {
+export const addTenantToUrl = url => {
   const tenantId = getTenantId()
 
   if (isMultiTenant()) {
@@ -17,7 +17,7 @@ exports.addTenantToUrl = url => {
   return url
 }
 
-exports.doesTenantExist = async tenantId => {
+export const doesTenantExist = async tenantId => {
   const db = getDB(PLATFORM_INFO_DB)
   let tenants
   try {
@@ -33,7 +33,7 @@ exports.doesTenantExist = async tenantId => {
   )
 }
 
-exports.tryAddTenant = async (tenantId, userId, email) => {
+export const tryAddTenant = async (tenantId, userId, email) => {
   const db = getDB(PLATFORM_INFO_DB)
   const getDoc = async id => {
     if (!id) {
@@ -73,7 +73,7 @@ exports.tryAddTenant = async (tenantId, userId, email) => {
   await Promise.all(promises)
 }
 
-exports.getGlobalDBName = (tenantId = null) => {
+export const getGlobalDBName = (tenantId = null) => {
   // tenant ID can be set externally, for example user API where
   // new tenants are being created, this may be the case
   if (!tenantId) {
@@ -89,12 +89,12 @@ exports.getGlobalDBName = (tenantId = null) => {
   return dbName
 }
 
-exports.getGlobalDB = (tenantId = null) => {
-  const dbName = exports.getGlobalDBName(tenantId)
+export const getGlobalDB = (tenantId = null) => {
+  const dbName = getGlobalDBName(tenantId)
   return getDB(dbName)
 }
 
-exports.lookupTenantId = async userId => {
+export const lookupTenantId = async userId => {
   const db = getDB(StaticDatabases.PLATFORM_INFO.name)
   let tenantId = env.MULTI_TENANCY ? DEFAULT_TENANT_ID : null
   try {
@@ -109,7 +109,7 @@ exports.lookupTenantId = async userId => {
 }
 
 // lookup, could be email or userId, either will return a doc
-exports.getTenantUser = async identifier => {
+export const getTenantUser = async identifier => {
   const db = getDB(PLATFORM_INFO_DB)
   try {
     return await db.get(identifier)
@@ -122,7 +122,7 @@ exports.getTenantUser = async identifier => {
  * Given an app ID this will attempt to retrieve the tenant ID from it.
  * @return {null|string} The tenant ID found within the app ID.
  */
-exports.getTenantIDFromAppID = appId => {
+export const getTenantIDFromAppID = appId => {
   if (!appId) {
     return null
   }
@@ -138,13 +138,13 @@ exports.getTenantIDFromAppID = appId => {
   }
 }
 
-exports.isUserInAppTenant = (appId, user = null) => {
+export const isUserInAppTenant = (appId, user = null) => {
   let userTenantId
   if (user) {
     userTenantId = user.tenantId || DEFAULT_TENANT_ID
   } else {
     userTenantId = getTenantId()
   }
-  const tenantId = exports.getTenantIDFromAppID(appId) || DEFAULT_TENANT_ID
+  const tenantId = getTenantIDFromAppID(appId) || DEFAULT_TENANT_ID
   return tenantId === userTenantId
 }

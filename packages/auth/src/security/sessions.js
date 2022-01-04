@@ -1,4 +1,4 @@
-const redis = require("../redis/authRedis")
+import redis from "../redis/authRedis"
 
 // a week in seconds
 const EXPIRY_SECONDS = 86400 * 7
@@ -13,7 +13,7 @@ function makeSessionID(userId, sessionId) {
   return `${userId}/${sessionId}`
 }
 
-exports.createASession = async (userId, session) => {
+export const createASession = async (userId, session) => {
   const client = await redis.getSessionClient()
   const sessionId = session.sessionId
   session = {
@@ -25,7 +25,7 @@ exports.createASession = async (userId, session) => {
   await client.store(makeSessionID(userId, sessionId), session, EXPIRY_SECONDS)
 }
 
-exports.invalidateSessions = async (userId, sessionIds = null) => {
+export const invalidateSessions = async (userId, sessionIds = null) => {
   let sessions = []
 
   // If no sessionIds, get all the sessions for the user
@@ -51,21 +51,21 @@ exports.invalidateSessions = async (userId, sessionIds = null) => {
   await Promise.all(promises)
 }
 
-exports.updateSessionTTL = async session => {
+export const updateSessionTTL = async session => {
   const client = await redis.getSessionClient()
   const key = makeSessionID(session.userId, session.sessionId)
   session.lastAccessedAt = new Date().toISOString()
   await client.store(key, session, EXPIRY_SECONDS)
 }
 
-exports.endSession = async (userId, sessionId) => {
+export const endSession = async (userId, sessionId) => {
   const client = await redis.getSessionClient()
   await client.delete(makeSessionID(userId, sessionId))
 }
 
-exports.getUserSessions = getSessionsForUser
+export const getUserSessions = getSessionsForUser
 
-exports.getSession = async (userId, sessionId) => {
+export const getSession = async (userId, sessionId) => {
   try {
     const client = await redis.getSessionClient()
     return client.get(makeSessionID(userId, sessionId))
@@ -75,7 +75,7 @@ exports.getSession = async (userId, sessionId) => {
   }
 }
 
-exports.getAllSessions = async () => {
+export const getAllSessions = async () => {
   const client = await redis.getSessionClient()
   const sessions = await client.scan()
   return sessions.map(session => session.value)

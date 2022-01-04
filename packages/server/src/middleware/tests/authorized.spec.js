@@ -7,9 +7,9 @@ jest.mock("../../environment", () => ({
     }
   })
 )
-const authorizedMiddleware = require("../authorized")
-const env = require("../../environment")
-const { PermissionTypes, PermissionLevels } = require("@budibase/auth/permissions")
+import authorizedMiddleware from '../authorized';
+import env from '../../environment';
+import { PermissionTypes, PermissionLevels } from '@budibase/auth/permissions';
 require("@budibase/auth").init(require("../../db"))
 
 class TestConfiguration {

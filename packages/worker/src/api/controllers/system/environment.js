@@ -1,6 +1,6 @@
-const env = require("../../../environment")
+import env from "../../../environment"
 
-exports.fetch = async ctx => {
+export const fetch = async ctx => {
   ctx.body = {
     multiTenancy: !!env.MULTI_TENANCY,
     cloud: !env.SELF_HOSTED,

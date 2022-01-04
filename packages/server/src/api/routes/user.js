@@ -1,10 +1,7 @@
-const Router = require("@koa/router")
-const controller = require("../controllers/user")
-const authorized = require("../../middleware/authorized")
-const {
-  PermissionLevels,
-  PermissionTypes,
-} = require("@budibase/auth/permissions")
+import Router from "@koa/router"
+import controller from "../controllers/user"
+import authorized from "../../middleware/authorized"
+import { PermissionLevels, PermissionTypes } from "@budibase/auth/permissions"
 
 const router = Router()
 
@@ -50,4 +47,4 @@ router
     controller.getFlags
   )
 
-module.exports = router
+export default router

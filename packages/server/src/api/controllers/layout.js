@@ -1,11 +1,8 @@
-const {
-  EMPTY_LAYOUT,
-  BASE_LAYOUT_PROP_IDS,
-} = require("../../constants/layouts")
-const CouchDB = require("../../db")
-const { generateLayoutID, getScreenParams } = require("../../db/utils")
+import { EMPTY_LAYOUT, BASE_LAYOUT_PROP_IDS } from "../../constants/layouts"
+import CouchDB from "../../db"
+import { generateLayoutID, getScreenParams } from "../../db/utils"
 
-exports.save = async function (ctx) {
+export async function save(ctx) {
   const db = new CouchDB(ctx.appId)
   let layout = ctx.request.body
 
@@ -25,7 +22,7 @@ exports.save = async function (ctx) {
   ctx.status = 200
 }
 
-exports.destroy = async function (ctx) {
+export async function destroy(ctx) {
   const db = new CouchDB(ctx.appId)
   const layoutId = ctx.params.layoutId,
     layoutRev = ctx.params.layoutRev

@@ -1,12 +1,12 @@
-const nodemailer = require("nodemailer")
-const env = require("../environment")
-const { getScopedConfig } = require("@budibase/auth/db")
-const { EmailTemplatePurpose, TemplateTypes, Configs } = require("../constants")
-const { getTemplateByPurpose } = require("../constants/templates")
-const { getSettingsTemplateContext } = require("./templates")
-const { processString } = require("@budibase/string-templates")
-const { getResetPasswordCode, getInviteCode } = require("../utilities/redis")
-const { getGlobalDB } = require("@budibase/auth/tenancy")
+import nodemailer from "nodemailer"
+import env from "../environment"
+import { getScopedConfig } from "@budibase/auth/db"
+import { EmailTemplatePurpose, TemplateTypes, Configs } from "../constants"
+import { getTemplateByPurpose } from "../constants/templates"
+import { getSettingsTemplateContext } from "./templates"
+import { processString } from "@budibase/string-templates"
+import { getResetPasswordCode, getInviteCode } from "../utilities/redis"
+import { getGlobalDB } from "@budibase/auth/tenancy"
 
 const TEST_MODE = false
 const TYPE = TemplateTypes.EMAIL
@@ -146,7 +146,7 @@ async function getSmtpConfiguration(db, workspaceId = null, automation) {
  * Checks if a SMTP config exists based on passed in parameters.
  * @return {Promise<boolean>} returns true if there is a configuration that can be used.
  */
-exports.isEmailConfigured = async (workspaceId = null) => {
+export const isEmailConfigured = async (workspaceId = null) => {
   // when "testing" or smtp fallback is enabled simply return true
   if (TEST_MODE || env.SMTP_FALLBACK_ENABLED) {
     return true
@@ -171,7 +171,7 @@ exports.isEmailConfigured = async (workspaceId = null) => {
  * @return {Promise<object>} returns details about the attempt to send email, e.g. if it is successful; based on
  * nodemailer response.
  */
-exports.sendEmail = async (
+export const sendEmail = async (
   email,
   purpose,
   { workspaceId, user, from, contents, subject, info, automation } = {}
@@ -208,7 +208,7 @@ exports.sendEmail = async (
  * @param {object} config an SMTP configuration - this is based on the nodemailer API.
  * @return {Promise<boolean>} returns true if the configuration is valid.
  */
-exports.verifyConfig = async config => {
+export const verifyConfig = async config => {
   const transport = createSMTPTransport(config)
   await transport.verify()
 }

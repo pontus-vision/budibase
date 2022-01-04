@@ -1,13 +1,13 @@
-const { testAutomation } = require("./utilities/TestFunctions")
-const setup = require("./utilities")
-const { MetadataTypes } = require("../../../constants")
+import { testAutomation } from "./utilities/TestFunctions"
+import { getRequest, getConfig, afterAll as _afterAll } from "./utilities"
+import { MetadataTypes } from "../../../constants"
 
 describe("/metadata", () => {
-  let request = setup.getRequest()
-  let config = setup.getConfig()
+  let request = getRequest()
+  let config = getConfig()
   let automation
 
-  afterAll(setup.afterAll)
+  afterAll(_afterAll)
 
   beforeEach(async () => {
     await config.init()

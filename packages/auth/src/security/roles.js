@@ -1,12 +1,12 @@
-const { getDB } = require("../db")
-const { cloneDeep } = require("lodash/fp")
-const { BUILTIN_PERMISSION_IDS } = require("./permissions")
-const {
+import { getDB } from "../db"
+import { cloneDeep } from "lodash/fp"
+import { BUILTIN_PERMISSION_IDS } from "./permissions"
+import {
   generateRoleID,
   getRoleParams,
   DocumentTypes,
   SEPARATOR,
-} = require("../db/utils")
+} from "../db/utils"
 
 const BUILTIN_IDS = {
   ADMIN: "ADMIN",
@@ -56,15 +56,15 @@ const BUILTIN_ROLES = {
   ),
 }
 
-exports.getBuiltinRoles = () => {
+export const getBuiltinRoles = () => {
   return cloneDeep(BUILTIN_ROLES)
 }
 
-exports.BUILTIN_ROLE_ID_ARRAY = Object.values(BUILTIN_ROLES).map(
+export const BUILTIN_ROLE_ID_ARRAY = Object.values(BUILTIN_ROLES).map(
   role => role._id
 )
 
-exports.BUILTIN_ROLE_NAME_ARRAY = Object.values(BUILTIN_ROLES).map(
+export const BUILTIN_ROLE_NAME_ARRAY = Object.values(BUILTIN_ROLES).map(
   role => role.name
 )
 
@@ -76,7 +76,7 @@ function isBuiltin(role) {
  * Works through the inheritance ranks to see how far up the builtin stack this ID is.
  */
 function builtinRoleToNumber(id) {
-  const builtins = exports.getBuiltinRoles()
+  const builtins = getBuiltinRoles()
   const MAX = Object.values(BUILTIN_IDS).length + 1
   if (id === BUILTIN_IDS.ADMIN || id === BUILTIN_IDS.BUILDER) {
     return MAX
@@ -96,7 +96,7 @@ function builtinRoleToNumber(id) {
 /**
  * Returns whichever builtin roleID is lower.
  */
-exports.lowerBuiltinRoleID = (roleId1, roleId2) => {
+export const lowerBuiltinRoleID = (roleId1, roleId2) => {
   if (!roleId1) {
     return roleId2
   }
@@ -115,7 +115,7 @@ exports.lowerBuiltinRoleID = (roleId1, roleId2) => {
  * @param {string|null} roleId The level ID to lookup.
  * @returns {Promise<Role|object|null>} The role object, which may contain an "inherits" property.
  */
-exports.getRole = async (appId, roleId) => {
+export const getRole = async (appId, roleId) => {
   if (!roleId) {
     return null
   }
@@ -129,10 +129,10 @@ exports.getRole = async (appId, roleId) => {
   }
   try {
     const db = getDB(appId)
-    const dbRole = await db.get(exports.getDBRoleID(roleId))
+    const dbRole = await db.get(getDBRoleID(roleId))
     role = Object.assign(role, dbRole)
     // finalise the ID
-    role._id = exports.getExternalRoleID(role._id)
+    role._id = getExternalRoleID(role._id)
   } catch (err) {
     // only throw an error if there is no role at all
     if (Object.keys(role).length === 0) {
@@ -149,7 +149,7 @@ async function getAllUserRoles(appId, userRoleId) {
   if (!userRoleId) {
     return [BUILTIN_IDS.BASIC]
   }
-  let currentRole = await exports.getRole(appId, userRoleId)
+  let currentRole = await getRole(appId, userRoleId)
   let roles = currentRole ? [currentRole] : []
   let roleIds = [userRoleId]
   // get all the inherited roles
@@ -159,7 +159,7 @@ async function getAllUserRoles(appId, userRoleId) {
     roleIds.indexOf(currentRole.inherits) === -1
   ) {
     roleIds.push(currentRole.inherits)
-    currentRole = await exports.getRole(appId, currentRole.inherits)
+    currentRole = await getRole(appId, currentRole.inherits)
     roles.push(currentRole)
   }
   return roles
@@ -174,7 +174,7 @@ async function getAllUserRoles(appId, userRoleId) {
  * @returns {Promise<string[]>} returns an ordered array of the roles, with the first being their
  * highest level of access and the last being the lowest level.
  */
-exports.getUserRoleHierarchy = async (
+export const getUserRoleHierarchy = async (
   appId,
   userRoleId,
   opts = { idOnly: true }
@@ -189,7 +189,7 @@ exports.getUserRoleHierarchy = async (
  * @param {string} appId The ID of the app to retrieve the roles from.
  * @return {Promise<object[]>} An array of the role objects that were found.
  */
-exports.getAllRoles = async appId => {
+export const getAllRoles = async appId => {
   const db = getDB(appId)
   const body = await db.allDocs(
     getRoleParams(null, {
@@ -197,20 +197,20 @@ exports.getAllRoles = async appId => {
     })
   )
   let roles = body.rows.map(row => row.doc)
-  const builtinRoles = exports.getBuiltinRoles()
+  const builtinRoles = getBuiltinRoles()
 
   // need to combine builtin with any DB record of them (for sake of permissions)
   for (let builtinRoleId of EXTERNAL_BUILTIN_ROLE_IDS) {
     const builtinRole = builtinRoles[builtinRoleId]
     const dbBuiltin = roles.filter(
-      dbRole => exports.getExternalRoleID(dbRole._id) === builtinRoleId
+      dbRole => getExternalRoleID(dbRole._id) === builtinRoleId
     )[0]
     if (dbBuiltin == null) {
       roles.push(builtinRole || builtinRoles.BASIC)
     } else {
       // remove role and all back after combining with the builtin
       roles = roles.filter(role => role._id !== dbBuiltin._id)
-      dbBuiltin._id = exports.getExternalRoleID(dbBuiltin._id)
+      dbBuiltin._id = getExternalRoleID(dbBuiltin._id)
       roles.push(Object.assign(builtinRole, dbBuiltin))
     }
   }
@@ -225,12 +225,12 @@ exports.getAllRoles = async appId => {
  * @param subResourceId
  * @return {Promise<{permissions}|Object>}
  */
-exports.getRequiredResourceRole = async (
+export const getRequiredResourceRole = async (
   appId,
   permLevel,
   { resourceId, subResourceId }
 ) => {
-  const roles = await exports.getAllRoles(appId)
+  const roles = await getAllRoles(appId)
   let main = [],
     sub = []
   for (let role of roles) {
@@ -270,7 +270,7 @@ class AccessController {
     }
     let roleIds = this.userHierarchies[userRoleId]
     if (!roleIds) {
-      roleIds = await exports.getUserRoleHierarchy(this.appId, userRoleId)
+      roleIds = await getUserRoleHierarchy(this.appId, userRoleId)
       this.userHierarchies[userRoleId] = roleIds
     }
 
@@ -303,7 +303,7 @@ class AccessController {
 /**
  * Adds the "role_" for builtin role IDs which are to be written to the DB (for permissions).
  */
-exports.getDBRoleID = roleId => {
+export const getDBRoleID = roleId => {
   if (roleId.startsWith(DocumentTypes.ROLE)) {
     return roleId
   }
@@ -313,7 +313,7 @@ exports.getDBRoleID = roleId => {
 /**
  * Remove the "role_" from builtin role IDs that have been written to the DB (for permissions).
  */
-exports.getExternalRoleID = roleId => {
+export const getExternalRoleID = roleId => {
   // for built in roles we want to remove the DB role ID element (role_)
   if (roleId.startsWith(DocumentTypes.ROLE) && isBuiltin(roleId)) {
     return roleId.split(`${DocumentTypes.ROLE}${SEPARATOR}`)[1]
@@ -321,7 +321,5 @@ exports.getExternalRoleID = roleId => {
   return roleId
 }
 
-exports.AccessController = AccessController
-exports.BUILTIN_ROLE_IDS = BUILTIN_IDS
-exports.isBuiltin = isBuiltin
-exports.Role = Role
+export const BUILTIN_ROLE_IDS = BUILTIN_IDS
+export { AccessController, isBuiltin, Role }

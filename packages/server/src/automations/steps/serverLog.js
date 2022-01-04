@@ -4,7 +4,7 @@
  * GET/DELETE requests cannot handle body elements so they will not be sent if configured.
  */
 
-exports.definition = {
+export const definition = {
   name: "Backend log",
   tagline: "Console log a value in the backend",
   icon: "Monitoring",
@@ -37,7 +37,7 @@ exports.definition = {
   },
 }
 
-exports.run = async function ({ inputs, appId }) {
+export const run = async function ({ inputs, appId }) {
   console.log(`App ${appId} - ${inputs.text}`)
   return {
     success: true,

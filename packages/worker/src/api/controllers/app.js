@@ -1,9 +1,9 @@
-const { getAllApps } = require("@budibase/auth/db")
-const CouchDB = require("../../db")
+import { getAllApps } from "@budibase/auth/db"
+import CouchDB from "../../db"
 
 const URL_REGEX_SLASH = /\/|\\/g
 
-exports.getApps = async ctx => {
+export const getApps = async ctx => {
   const apps = await getAllApps(CouchDB, { dev: true })
   const body = {}
   for (let app of apps) {

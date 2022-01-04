@@ -1,5 +1,5 @@
-const { Client, utils } = require("@budibase/auth/redis")
-const { getGlobalIDFromUserMetadataID } = require("../db/utils")
+import { Client, utils } from "@budibase/auth/redis"
+import { getGlobalIDFromUserMetadataID } from "../db/utils"
 
 const APP_DEV_LOCK_SECONDS = 600
 const AUTOMATION_TEST_FLAG_SECONDS = 60
@@ -7,7 +7,7 @@ let devAppClient, debounceClient, flagClient
 
 // we init this as we want to keep the connection open all the time
 // reduces the performance hit
-exports.init = async () => {
+export const init = async () => {
   devAppClient = new Client(utils.Databases.DEV_LOCKS)
   debounceClient = new Client(utils.Databases.DEBOUNCE)
   flagClient = new Client(utils.Databases.FLAGS)
@@ -16,13 +16,13 @@ exports.init = async () => {
   await flagClient.init()
 }
 
-exports.shutdown = async () => {
+export const shutdown = async () => {
   if (devAppClient) await devAppClient.finish()
   if (debounceClient) await debounceClient.finish()
   if (flagClient) await flagClient.finish()
 }
 
-exports.doesUserHaveLock = async (devAppId, user) => {
+export const doesUserHaveLock = async (devAppId, user) => {
   const value = await devAppClient.get(devAppId)
   if (!value) {
     return true
@@ -33,7 +33,7 @@ exports.doesUserHaveLock = async (devAppId, user) => {
   return expected === userId
 }
 
-exports.getAllLocks = async () => {
+export const getAllLocks = async () => {
   const locks = await devAppClient.scan()
   return locks.map(lock => ({
     appId: lock.key,
@@ -41,7 +41,7 @@ exports.getAllLocks = async () => {
   }))
 }
 
-exports.updateLock = async (devAppId, user) => {
+export const updateLock = async (devAppId, user) => {
   // make sure always global user ID
   const globalId = getGlobalIDFromUserMetadataID(user._id)
   const inputUser = {
@@ -52,7 +52,7 @@ exports.updateLock = async (devAppId, user) => {
   await devAppClient.store(devAppId, inputUser, APP_DEV_LOCK_SECONDS)
 }
 
-exports.clearLock = async (devAppId, user) => {
+export const clearLock = async (devAppId, user) => {
   const value = await devAppClient.get(devAppId)
   if (!value) {
     return
@@ -64,23 +64,23 @@ exports.clearLock = async (devAppId, user) => {
   await devAppClient.delete(devAppId)
 }
 
-exports.checkDebounce = async id => {
+export const checkDebounce = async id => {
   return debounceClient.get(id)
 }
 
-exports.setDebounce = async (id, seconds) => {
+export const setDebounce = async (id, seconds) => {
   await debounceClient.store(id, "debouncing", seconds)
 }
 
-exports.setTestFlag = async id => {
+export const setTestFlag = async id => {
   await flagClient.store(id, { testing: true }, AUTOMATION_TEST_FLAG_SECONDS)
 }
 
-exports.checkTestFlag = async id => {
+export const checkTestFlag = async id => {
   const flag = await flagClient.get(id)
   return !!(flag && flag.testing)
 }
 
-exports.clearTestFlag = async id => {
+export const clearTestFlag = async id => {
   await devAppClient.delete(id)
 }

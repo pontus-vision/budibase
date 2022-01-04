@@ -1,9 +1,9 @@
-const passport = require("koa-passport")
-const LocalStrategy = require("passport-local").Strategy
-const JwtStrategy = require("passport-jwt").Strategy
-const { StaticDatabases } = require("./db/utils")
-const { getGlobalDB } = require("./tenancy")
-const {
+import passport from "koa-passport"
+import { Strategy as LocalStrategy } from "passport-local"
+import { Strategy as JwtStrategy } from "passport-jwt"
+import { StaticDatabases } from "./db/utils"
+import { getGlobalDB } from "./tenancy"
+import {
   jwt,
   local,
   authenticated,
@@ -13,10 +13,13 @@ const {
   tenancy,
   appTenancy,
   authError,
-} = require("./middleware")
-const { setDB } = require("./db")
-const userCache = require("./cache/user")
-
+} from "./middleware"
+import { setDB } from "./db"
+import userCache from "./cache/user"
+import constants from "./constants"
+import * as dbUtils from "./db/utils"
+import Client from "./redis"
+import * as redisUtils from "./redis/utils"
 // Strategies
 passport.use(new LocalStrategy(local.options, local.authenticate))
 passport.use(new JwtStrategy(jwt.options, jwt.authenticate))
@@ -35,14 +38,14 @@ passport.deserializeUser(async (user, done) => {
   }
 })
 
-module.exports = {
+export default {
   init(pouch) {
     setDB(pouch)
   },
-  db: require("./db/utils"),
+  db: dbUtils,
   redis: {
-    Client: require("./redis"),
-    utils: require("./redis/utils"),
+    Client,
+    utils: redisUtils,
   },
   objectStore: {
     ...require("./objectStore"),
@@ -67,5 +70,5 @@ module.exports = {
     user: userCache,
   },
   StaticDatabases,
-  constants: require("./constants"),
+  constants,
 }

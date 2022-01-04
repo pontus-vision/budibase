@@ -1,17 +1,17 @@
-const { getBuiltinPermissions } = require("@budibase/auth/permissions")
-const {
+import { getBuiltinPermissions } from "@budibase/auth/permissions"
+import {
   isBuiltin,
   getDBRoleID,
   getExternalRoleID,
   getBuiltinRoles,
-} = require("@budibase/auth/roles")
-const { getRoleParams } = require("../../db/utils")
-const CouchDB = require("../../db")
-const {
+} from "@budibase/auth/roles"
+import { getRoleParams } from "../../db/utils"
+import CouchDB from "../../db"
+import {
   CURRENTLY_SUPPORTED_LEVELS,
   getBasePermissions,
-} = require("../../utilities/security")
-const { removeFromArray } = require("../../utilities")
+} from "../../utilities/security"
+import { removeFromArray } from "../../utilities"
 
 const PermissionUpdateType = {
   REMOVE: "remove",
@@ -96,16 +96,16 @@ async function updatePermissionOnRole(
   })
 }
 
-exports.fetchBuiltin = function (ctx) {
+export function fetchBuiltin(ctx) {
   ctx.body = Object.values(getBuiltinPermissions())
 }
 
-exports.fetchLevels = function (ctx) {
+export function fetchLevels(ctx) {
   // for now only provide the read/write perms externally
   ctx.body = SUPPORTED_LEVELS
 }
 
-exports.fetch = async function (ctx) {
+export async function fetch(ctx) {
   const db = new CouchDB(ctx.appId)
   const roles = await getAllDBRoles(db)
   let permissions = {}
@@ -131,7 +131,7 @@ exports.fetch = async function (ctx) {
   ctx.body = finalPermissions
 }
 
-exports.getResourcePerms = async function (ctx) {
+export async function getResourcePerms(ctx) {
   const resourceId = ctx.params.resourceId
   const db = new CouchDB(ctx.appId)
   const body = await db.allDocs(
@@ -158,7 +158,7 @@ exports.getResourcePerms = async function (ctx) {
   ctx.body = Object.assign(getBasePermissions(resourceId), permissions)
 }
 
-exports.addPermission = async function (ctx) {
+export async function addPermission(ctx) {
   ctx.body = await updatePermissionOnRole(
     ctx.appId,
     ctx.params,
@@ -166,7 +166,7 @@ exports.addPermission = async function (ctx) {
   )
 }
 
-exports.removePermission = async function (ctx) {
+export async function removePermission(ctx) {
   ctx.body = await updatePermissionOnRole(
     ctx.appId,
     ctx.params,

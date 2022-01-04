@@ -1,10 +1,12 @@
-const { join } = require("./centralPath")
-const { homedir } = require("os")
-const env = require("../environment")
-const { budibaseTempDir } = require("@budibase/auth").objectStore
+import { join } from "./centralPath"
+import { homedir } from "os"
+import { BUDIBASE_DIR } from "../environment"
+import { objectStore } from "@budibase/auth"
+const { budibaseTempDir } = objectStore
 
-module.exports.budibaseAppsDir = function () {
-  return env.BUDIBASE_DIR || join(homedir(), ".budibase")
+export function budibaseAppsDir() {
+  return BUDIBASE_DIR || join(homedir(), ".budibase")
 }
 
-module.exports.budibaseTempDir = budibaseTempDir
+const _budibaseTempDir = budibaseTempDir
+export { _budibaseTempDir as budibaseTempDir }

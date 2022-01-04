@@ -1,9 +1,9 @@
-const PouchDB = require("pouchdb")
-const { getCouchUrl } = require("@budibase/auth/db")
-const replicationStream = require("pouchdb-replication-stream")
-const allDbs = require("pouchdb-all-dbs")
-const find = require("pouchdb-find")
-const env = require("../environment")
+import PouchDB from "pouchdb"
+import { getCouchUrl } from "@budibase/auth/db"
+import replicationStream from "pouchdb-replication-stream"
+import allDbs from "pouchdb-all-dbs"
+import find from "pouchdb-find"
+import env from "../environment"
 
 const COUCH_DB_URL = getCouchUrl() || "http://localhost:10000/db/"
 
@@ -28,4 +28,4 @@ const Pouch = PouchDB.defaults(POUCH_DB_DEFAULTS)
 // have to still have pouch alldbs for testing
 allDbs(Pouch)
 
-module.exports = Pouch
+export default Pouch

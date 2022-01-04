@@ -1,13 +1,13 @@
-const Router = require("@koa/router")
-const viewController = require("../controllers/view")
-const rowController = require("../controllers/row")
-const authorized = require("../../middleware/authorized")
-const { paramResource } = require("../../middleware/resourceId")
-const {
+import Router from "@koa/router"
+import viewController from "../controllers/view"
+import rowController from "../controllers/row"
+import authorized from "../../middleware/authorized"
+import { paramResource } from "../../middleware/resourceId"
+import {
   BUILDER,
   PermissionTypes,
   PermissionLevels,
-} = require("@budibase/auth/permissions")
+} from "@budibase/auth/permissions"
 
 const router = Router()
 
@@ -28,4 +28,4 @@ router
   )
   .post("/api/views", authorized(BUILDER), viewController.save)
 
-module.exports = router
+export default router

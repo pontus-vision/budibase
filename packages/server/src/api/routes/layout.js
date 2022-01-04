@@ -1,7 +1,7 @@
-const Router = require("@koa/router")
-const authorized = require("../../middleware/authorized")
-const { BUILDER } = require("@budibase/auth/permissions")
-const controller = require("../controllers/layout")
+import Router from "@koa/router"
+import authorized from "../../middleware/authorized"
+import { BUILDER } from "@budibase/auth/permissions"
+import controller from "../controllers/layout"
 
 const router = Router()
 
@@ -13,4 +13,4 @@ router
     controller.destroy
   )
 
-module.exports = router
+export default router

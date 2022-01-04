@@ -1,10 +1,11 @@
-const CouchDB = require("../../db")
-const { getDeployedApps } = require("../../utilities/workerRequests")
-const { getScopedConfig } = require("@budibase/auth/db")
-const { Configs } = require("@budibase/auth").constants
-const { checkSlashesInUrl } = require("../../utilities")
+import CouchDB from "../../db"
+import { getDeployedApps } from "../../utilities/workerRequests"
+import { getScopedConfig } from "@budibase/auth/db"
+import { constants } from "@budibase/auth"
+const { Configs } = constants
+import { checkSlashesInUrl } from "../../utilities"
 
-exports.fetchUrls = async ctx => {
+export async function fetchUrls(ctx) {
   const appId = ctx.appId
   const db = new CouchDB(appId)
   const settings = await getScopedConfig(db, { type: Configs.SETTINGS })
@@ -17,6 +18,7 @@ exports.fetchUrls = async ctx => {
   }
 }
 
-exports.getDeployedApps = async ctx => {
+const _getDeployedApps = async ctx => {
   ctx.body = await getDeployedApps()
 }
+export { _getDeployedApps as getDeployedApps }

@@ -1,14 +1,14 @@
-const Router = require("@koa/router")
-const datasourceController = require("../controllers/datasource")
-const authorized = require("../../middleware/authorized")
-const joiValidator = require("../../middleware/joi-validator")
-const {
+import Router from "@koa/router"
+import datasourceController from "../controllers/datasource"
+import authorized from "../../middleware/authorized"
+import joiValidator from "../../middleware/joi-validator"
+import {
   BUILDER,
   PermissionLevels,
   PermissionTypes,
-} = require("@budibase/auth/permissions")
-const Joi = require("joi")
-const { DataSourceOperation } = require("../../constants")
+} from "@budibase/auth/permissions"
+import Joi from "joi"
+import { DataSourceOperation } from "../../constants"
 
 const router = Router()
 
@@ -94,4 +94,4 @@ router
     datasourceController.destroy
   )
 
-module.exports = router
+export default router

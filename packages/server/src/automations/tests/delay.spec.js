@@ -1,4 +1,4 @@
-const setup = require("./utilities")
+import setup from './utilities';
 
 describe("test the delay logic", () => {
   it("should be able to run the delay", async () => {

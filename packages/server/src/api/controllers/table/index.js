@@ -1,14 +1,14 @@
-const CouchDB = require("../../../db")
-const internal = require("./internal")
-const external = require("./external")
-const csvParser = require("../../../utilities/csvParser")
-const { isExternalTable } = require("../../../integrations/utils")
-const {
+import CouchDB from "../../../db"
+import internal from "./internal"
+import external from "./external"
+import { parse, updateSchema } from "../../../utilities/csvParser"
+import { isExternalTable } from "../../../integrations/utils"
+import {
   getTableParams,
   getDatasourceParams,
   BudibaseInternalDB,
-} = require("../../../db/utils")
-const { getTable } = require("./utils")
+} from "../../../db/utils"
+import { getTable } from "./utils"
 
 function pickApi({ tableId, table }) {
   if (table && !tableId) {
@@ -23,7 +23,7 @@ function pickApi({ tableId, table }) {
 }
 
 // covers both internal and external
-exports.fetch = async function (ctx) {
+export async function fetch(ctx) {
   const db = new CouchDB(ctx.appId)
 
   const internalTables = await db.allDocs(
@@ -55,12 +55,12 @@ exports.fetch = async function (ctx) {
   ctx.body = [...internal, ...external]
 }
 
-exports.find = async function (ctx) {
+export async function find(ctx) {
   const tableId = ctx.params.id
   ctx.body = await getTable(ctx.appId, tableId)
 }
 
-exports.save = async function (ctx) {
+export async function save(ctx) {
   const appId = ctx.appId
   const table = ctx.request.body
   const savedTable = await pickApi({ table }).save(ctx)
@@ -71,7 +71,7 @@ exports.save = async function (ctx) {
   ctx.body = savedTable
 }
 
-exports.destroy = async function (ctx) {
+export async function destroy(ctx) {
   const appId = ctx.appId
   const tableId = ctx.params.tableId
   const deletedTable = await pickApi({ tableId }).destroy(ctx)
@@ -81,7 +81,7 @@ exports.destroy = async function (ctx) {
   ctx.body = { message: `Table ${tableId} deleted.` }
 }
 
-exports.bulkImport = async function (ctx) {
+export async function bulkImport(ctx) {
   const tableId = ctx.params.tableId
   await pickApi({ tableId }).bulkImport(ctx)
   // right now we don't trigger anything for bulk import because it
@@ -91,16 +91,16 @@ exports.bulkImport = async function (ctx) {
   ctx.body = { message: `Bulk rows created.` }
 }
 
-exports.validateCSVSchema = async function (ctx) {
+export async function validateCSVSchema(ctx) {
   // tableId being specified means its an import to an existing table
   const { csvString, schema = {}, tableId } = ctx.request.body
   let existingTable
   if (tableId) {
     existingTable = await getTable(ctx.appId, tableId)
   }
-  let result = await csvParser.parse(csvString, schema)
+  let result = await parse(csvString, schema)
   if (existingTable) {
-    result = csvParser.updateSchema({ schema: result, existingTable })
+    result = updateSchema({ schema: result, existingTable })
   }
   ctx.body = { schema: result }
 }

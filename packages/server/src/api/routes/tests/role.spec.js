@@ -1,15 +1,13 @@
-const { BUILTIN_ROLE_IDS } = require("@budibase/auth/roles")
-const {
-  BUILTIN_PERMISSION_IDS,
-} = require("@budibase/auth/permissions")
-const setup = require("./utilities")
-const { basicRole } = setup.structures
+import { BUILTIN_ROLE_IDS } from "@budibase/auth/roles"
+import { BUILTIN_PERMISSION_IDS } from "@budibase/auth/permissions"
+import { structures, getRequest, getConfig, afterAll as _afterAll } from "./utilities"
+const { basicRole } = structures
 
 describe("/roles", () => {
-  let request = setup.getRequest()
-  let config = setup.getConfig()
+  let request = getRequest()
+  let config = getConfig()
 
-  afterAll(setup.afterAll)
+  afterAll(_afterAll)
 
   beforeEach(async () => {
     await config.init()

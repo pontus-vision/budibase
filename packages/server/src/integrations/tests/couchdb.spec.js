@@ -6,7 +6,7 @@ jest.mock("pouchdb", () => function CouchDBMock() {
   this.plugin = jest.fn()
 })
 
-const CouchDBIntegration = require("../couchdb")
+import CouchDBIntegration from '../couchdb';
 
 class TestConfiguration {
   constructor(config = {}) {

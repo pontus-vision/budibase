@@ -1,13 +1,13 @@
-const { generateTemplateID } = require("@budibase/auth/db")
-const {
+import { generateTemplateID } from "@budibase/auth/db"
+import {
   TemplateMetadata,
   TemplateBindings,
   GLOBAL_OWNER,
-} = require("../../../constants")
-const { getTemplates } = require("../../../constants/templates")
-const { getGlobalDB } = require("@budibase/auth/tenancy")
+} from "../../../constants"
+import { getTemplates } from "../../../constants/templates"
+import { getGlobalDB } from "@budibase/auth/tenancy"
 
-exports.save = async ctx => {
+export const save = async ctx => {
   const db = getGlobalDB()
   let template = ctx.request.body
   if (!template.ownerId) {
@@ -24,7 +24,7 @@ exports.save = async ctx => {
   }
 }
 
-exports.definitions = async ctx => {
+export const definitions = async ctx => {
   const bindings = {}
   const info = {}
   for (let template of TemplateMetadata.email) {
@@ -45,29 +45,29 @@ exports.definitions = async ctx => {
   }
 }
 
-exports.fetch = async ctx => {
+export const fetch = async ctx => {
   ctx.body = await getTemplates()
 }
 
-exports.fetchByType = async ctx => {
+export const fetchByType = async ctx => {
   ctx.body = await getTemplates({
     type: ctx.params.type,
   })
 }
 
-exports.fetchByOwner = async ctx => {
+export const fetchByOwner = async ctx => {
   ctx.body = await getTemplates({
     ownerId: ctx.params.ownerId,
   })
 }
 
-exports.find = async ctx => {
+export const find = async ctx => {
   ctx.body = await getTemplates({
     id: ctx.params.id,
   })
 }
 
-exports.destroy = async ctx => {
+export const destroy = async ctx => {
   const db = getGlobalDB()
   await db.remove(ctx.params.id, ctx.params.rev)
   ctx.message = `Template ${ctx.params.id} deleted.`

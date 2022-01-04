@@ -1,10 +1,10 @@
-const rowController = require("../../api/controllers/row")
-const automationUtils = require("../automationUtils")
-const env = require("../../environment")
-const usage = require("../../utilities/usageQuota")
-const { buildCtx } = require("./utils")
+import rowController from "../../api/controllers/row"
+import automationUtils from "../automationUtils"
+import env from "../../environment"
+import usage from "../../utilities/usageQuota"
+import { buildCtx } from "./utils"
 
-exports.definition = {
+export const definition = {
   name: "Create Row",
   tagline: "Create a {{inputs.enriched.table.name}} row",
   icon: "TableRowAddBottom",
@@ -60,7 +60,7 @@ exports.definition = {
   },
 }
 
-exports.run = async function ({ inputs, appId, emitter }) {
+export const run = async function ({ inputs, appId, emitter }) {
   if (inputs.row == null || inputs.row.tableId == null) {
     return {
       success: false,

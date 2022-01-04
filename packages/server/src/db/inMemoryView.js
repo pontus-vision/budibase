@@ -1,6 +1,6 @@
-const PouchDB = require("pouchdb")
-const memory = require("pouchdb-adapter-memory")
-const newid = require("./newid")
+import PouchDB from "pouchdb"
+import memory from "pouchdb-adapter-memory"
+import newid from "./newid"
 
 PouchDB.plugin(memory)
 const Pouch = PouchDB.defaults({
@@ -8,7 +8,7 @@ const Pouch = PouchDB.defaults({
   adapter: "memory",
 })
 
-exports.runView = async (view, calculation, group, data) => {
+export const runView = async (view, calculation, group, data) => {
   // use a different ID each time for the DB, make sure they
   // are always unique for each query, don't want overlap
   // which could cause 409s

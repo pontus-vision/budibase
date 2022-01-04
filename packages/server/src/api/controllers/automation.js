@@ -1,18 +1,21 @@
-const CouchDB = require("../../db")
-const actions = require("../../automations/actions")
-const triggers = require("../../automations/triggers")
-const { getAutomationParams, generateAutomationID } = require("../../db/utils")
-const {
+import CouchDB from "../../db"
+import { ACTION_DEFINITIONS } from "../../automations/actions"
+import {
+  TRIGGER_DEFINITIONS,
+  externalTrigger,
+} from "../../automations/triggers"
+import { getAutomationParams, generateAutomationID } from "../../db/utils"
+import {
   checkForWebhooks,
   updateTestHistory,
   removeDeprecated,
-} = require("../../automations/utils")
-const { deleteEntityMetadata } = require("../../utilities")
-const { MetadataTypes } = require("../../constants")
-const { setTestFlag, clearTestFlag } = require("../../utilities/redis")
+} from "../../automations/utils"
+import { deleteEntityMetadata } from "../../utilities"
+import { MetadataTypes } from "../../constants"
+import { setTestFlag, clearTestFlag } from "../../utilities/redis"
 
-const ACTION_DEFS = removeDeprecated(actions.ACTION_DEFINITIONS)
-const TRIGGER_DEFS = removeDeprecated(triggers.TRIGGER_DEFINITIONS)
+const ACTION_DEFS = removeDeprecated(ACTION_DEFINITIONS)
+const TRIGGER_DEFS = removeDeprecated(TRIGGER_DEFINITIONS)
 
 /*************************
  *                       *
@@ -57,14 +60,14 @@ function cleanAutomationInputs(automation) {
   return automation
 }
 
-exports.create = async function (ctx) {
+export async function create(ctx) {
   const db = new CouchDB(ctx.appId)
   let automation = ctx.request.body
   automation.appId = ctx.appId
 
   // call through to update if already exists
   if (automation._id && automation._rev) {
-    return exports.update(ctx)
+    return update(ctx)
   }
 
   automation._id = generateAutomationID()
@@ -88,7 +91,7 @@ exports.create = async function (ctx) {
   }
 }
 
-exports.update = async function (ctx) {
+export async function update(ctx) {
   const db = new CouchDB(ctx.appId)
   let automation = ctx.request.body
   automation.appId = ctx.appId
@@ -130,7 +133,7 @@ exports.update = async function (ctx) {
   }
 }
 
-exports.fetch = async function (ctx) {
+export async function fetch(ctx) {
   const db = new CouchDB(ctx.appId)
   const response = await db.allDocs(
     getAutomationParams(null, {
@@ -140,12 +143,12 @@ exports.fetch = async function (ctx) {
   ctx.body = response.rows.map(row => row.doc)
 }
 
-exports.find = async function (ctx) {
+export async function find(ctx) {
   const db = new CouchDB(ctx.appId)
   ctx.body = await db.get(ctx.params.id)
 }
 
-exports.destroy = async function (ctx) {
+export async function destroy(ctx) {
   const db = new CouchDB(ctx.appId)
   const automationId = ctx.params.id
   const oldAutomation = await db.get(automationId)
@@ -158,15 +161,15 @@ exports.destroy = async function (ctx) {
   ctx.body = await db.remove(automationId, ctx.params.rev)
 }
 
-exports.getActionList = async function (ctx) {
+export async function getActionList(ctx) {
   ctx.body = ACTION_DEFS
 }
 
-exports.getTriggerList = async function (ctx) {
+export async function getTriggerList(ctx) {
   ctx.body = TRIGGER_DEFS
 }
 
-module.exports.getDefinitionList = async function (ctx) {
+export async function getDefinitionList(ctx) {
   ctx.body = {
     trigger: TRIGGER_DEFS,
     action: ACTION_DEFS,
@@ -179,11 +182,11 @@ module.exports.getDefinitionList = async function (ctx) {
  *                   *
  *********************/
 
-exports.trigger = async function (ctx) {
+export async function trigger(ctx) {
   const appId = ctx.appId
   const db = new CouchDB(appId)
   let automation = await db.get(ctx.params.id)
-  await triggers.externalTrigger(automation, {
+  await externalTrigger(automation, {
     ...ctx.request.body,
     appId,
   })
@@ -204,13 +207,13 @@ function prepareTestInput(input) {
   return input
 }
 
-exports.test = async function (ctx) {
+export async function test(ctx) {
   const appId = ctx.appId
   const db = new CouchDB(appId)
   let automation = await db.get(ctx.params.id)
   await setTestFlag(automation._id)
   const testInput = prepareTestInput(ctx.request.body)
-  const response = await triggers.externalTrigger(
+  const response = await externalTrigger(
     automation,
     {
       ...testInput,

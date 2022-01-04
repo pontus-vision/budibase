@@ -1,15 +1,12 @@
-const {
-  getMultiIDParams,
-  getGlobalIDFromUserMetadataID,
-} = require("../db/utils")
-const { BUILTIN_ROLE_IDS } = require("@budibase/auth/roles")
-const { getDeployedAppID } = require("@budibase/auth/db")
-const { getGlobalUserParams } = require("@budibase/auth/db")
-const { user: userCache } = require("@budibase/auth/cache")
-const { getGlobalDB, isUserInAppTenant } = require("@budibase/auth/tenancy")
-const env = require("../environment")
+import { getMultiIDParams, getGlobalIDFromUserMetadataID } from "../db/utils"
+import { BUILTIN_ROLE_IDS } from "@budibase/auth/roles"
+import { getDeployedAppID } from "@budibase/auth/db"
+import { getGlobalUserParams } from "@budibase/auth/db"
+import { user as userCache } from "@budibase/auth/cache"
+import { getGlobalDB, isUserInAppTenant } from "@budibase/auth/tenancy"
+import env from "../environment"
 
-exports.updateAppRole = (appId, user) => {
+export const updateAppRole = (appId, user) => {
   if (!user || !user.roles) {
     return user
   }
@@ -36,27 +33,27 @@ function processUser(appId, user) {
   if (user) {
     delete user.password
   }
-  return exports.updateAppRole(appId, user)
+  return updateAppRole(appId, user)
 }
 
-exports.getCachedSelf = async (ctx, appId) => {
+export const getCachedSelf = async (ctx, appId) => {
   // this has to be tenant aware, can't depend on the context to find it out
   // running some middlewares before the tenancy causes context to break
   const user = await userCache.getUser(ctx.user._id)
   return processUser(appId, user)
 }
 
-exports.getRawGlobalUser = async userId => {
+export const getRawGlobalUser = async userId => {
   const db = getGlobalDB()
   return db.get(getGlobalIDFromUserMetadataID(userId))
 }
 
-exports.getGlobalUser = async (appId, userId) => {
-  let user = await exports.getRawGlobalUser(userId)
+export const getGlobalUser = async (appId, userId) => {
+  let user = await getRawGlobalUser(userId)
   return processUser(appId, user)
 }
 
-exports.getGlobalUsers = async (appId = null, users = null) => {
+export const getGlobalUsers = async (appId = null, users = null) => {
   const db = getGlobalDB()
   let globalUsers
   if (users) {
@@ -83,11 +80,11 @@ exports.getGlobalUsers = async (appId = null, users = null) => {
   if (!appId) {
     return globalUsers
   }
-  return globalUsers.map(user => exports.updateAppRole(appId, user))
+  return globalUsers.map(user => updateAppRole(appId, user))
 }
 
-exports.getGlobalUsersFromMetadata = async (appId, users) => {
-  const globalUsers = await exports.getGlobalUsers(appId, users)
+export const getGlobalUsersFromMetadata = async (appId, users) => {
+  const globalUsers = await getGlobalUsers(appId, users)
   return users.map(user => {
     const globalUser = globalUsers.find(
       globalUser => globalUser && user._id.includes(globalUser._id)

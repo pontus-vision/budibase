@@ -1,15 +1,15 @@
-const { getScopedConfig } = require("@budibase/auth/db")
-const {
+import { getScopedConfig } from "@budibase/auth/db"
+import {
   Configs,
   InternalTemplateBindings,
   LOGO_URL,
   EmailTemplatePurpose,
-} = require("../constants")
-const { checkSlashesInUrl } = require("./index")
-const { getGlobalDB, addTenantToUrl } = require("@budibase/auth/tenancy")
+} from "../constants"
+import { checkSlashesInUrl } from "./index"
+import { getGlobalDB, addTenantToUrl } from "@budibase/auth/tenancy"
 const BASE_COMPANY = "Budibase"
 
-exports.getSettingsTemplateContext = async (purpose, code = null) => {
+export const getSettingsTemplateContext = async (purpose, code = null) => {
   const db = getGlobalDB()
   // TODO: use more granular settings in the future if required
   let settings = (await getScopedConfig(db, { type: Configs.SETTINGS })) || {}

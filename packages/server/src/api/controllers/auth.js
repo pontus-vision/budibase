@@ -1,10 +1,10 @@
-const CouchDB = require("../../db")
-const { outputProcessing } = require("../../utilities/rowProcessor")
-const { InternalTables } = require("../../db/utils")
-const { getFullUser } = require("../../utilities/users")
-const { BUILTIN_ROLE_IDS } = require("@budibase/auth/roles")
+import CouchDB from "../../db"
+import { outputProcessing } from "../../utilities/rowProcessor"
+import { InternalTables } from "../../db/utils"
+import { getFullUser } from "../../utilities/users"
+import { BUILTIN_ROLE_IDS } from "@budibase/auth/roles"
 
-exports.fetchSelf = async ctx => {
+export async function fetchSelf(ctx) {
   const appId = ctx.appId
   let userId = ctx.user.userId || ctx.user._id
   /* istanbul ignore next */

@@ -8,7 +8,7 @@ jest.mock("../../api/controllers/row/internalSearch", () => ({
   }),
   paginatedSearch: jest.fn(),
 }))
-const setup = require("./utilities")
+import setup from './utilities';
 
 const NAME = "Test"
 

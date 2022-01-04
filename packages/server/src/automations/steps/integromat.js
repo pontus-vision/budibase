@@ -1,7 +1,7 @@
-const fetch = require("node-fetch")
-const { getFetchResponse } = require("./utils")
+import fetch from "node-fetch"
+import { getFetchResponse } from "./utils"
 
-exports.definition = {
+export const definition = {
   name: "Integromat Integration",
   tagline: "Trigger an Integromat scenario",
   description:
@@ -61,7 +61,7 @@ exports.definition = {
   },
 }
 
-exports.run = async function ({ inputs }) {
+export async function run({ inputs }) {
   const { url, value1, value2, value3, value4, value5 } = inputs
 
   const response = await fetch(url, {

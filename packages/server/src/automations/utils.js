@@ -1,19 +1,19 @@
-const { Thread, ThreadType } = require("../threads")
-const { definitions } = require("./triggerInfo")
-const webhooks = require("../api/controllers/webhook")
-const CouchDB = require("../db")
-const { queue } = require("./bullboard")
-const newid = require("../db/newid")
-const { updateEntityMetadata } = require("../utilities")
-const { MetadataTypes } = require("../constants")
-const { getDeployedAppID } = require("@budibase/auth/db")
-const { cloneDeep } = require("lodash/fp")
+import { Thread, ThreadType } from "../threads"
+import { definitions } from "./triggerInfo"
+import webhooks from "../api/controllers/webhook"
+import CouchDB from "../db"
+import { queue } from "./bullboard"
+import newid from "../db/newid"
+import { updateEntityMetadata } from "../utilities"
+import { MetadataTypes } from "../constants"
+import { getDeployedAppID } from "@budibase/auth/db"
+import { cloneDeep } from "lodash/fp"
 
 const WH_STEP_ID = definitions.WEBHOOK.stepId
 const CRON_STEP_ID = definitions.CRON.stepId
 const Runner = new Thread(ThreadType.AUTOMATION)
 
-exports.processEvent = async job => {
+export const processEvent = async job => {
   try {
     // need to actually await these so that an error can be captured properly
     return await Runner.run(job)
@@ -25,7 +25,7 @@ exports.processEvent = async job => {
   }
 }
 
-exports.updateTestHistory = async (appId, automation, history) => {
+export const updateTestHistory = async (appId, automation, history) => {
   return updateEntityMetadata(
     appId,
     MetadataTypes.AUTOMATION_TEST_HISTORY,
@@ -43,7 +43,7 @@ exports.updateTestHistory = async (appId, automation, history) => {
   )
 }
 
-exports.removeDeprecated = definitions => {
+export const removeDeprecated = definitions => {
   const base = cloneDeep(definitions)
   for (let key of Object.keys(base)) {
     if (base[key].deprecated) {
@@ -54,7 +54,7 @@ exports.removeDeprecated = definitions => {
 }
 
 // end the repetition and the job itself
-exports.disableAllCrons = async appId => {
+export const disableAllCrons = async appId => {
   const promises = []
   const jobs = await queue.getRepeatableJobs()
   for (let job of jobs) {
@@ -71,7 +71,7 @@ exports.disableAllCrons = async appId => {
  * @param {string} appId The ID of the app in which we are checking for webhooks
  * @param {object|undefined} automation The automation object to be updated.
  */
-exports.enableCronTrigger = async (appId, automation) => {
+export const enableCronTrigger = async (appId, automation) => {
   const trigger = automation ? automation.definition.trigger : null
   function isCronTrigger(auto) {
     return (
@@ -109,7 +109,7 @@ exports.enableCronTrigger = async (appId, automation) => {
  * @returns {Promise<object|undefined>} After this is complete the new automation object may have been updated and should be
  * written to DB (this does not write to DB as it would be wasteful to repeat).
  */
-exports.checkForWebhooks = async ({ appId, oldAuto, newAuto }) => {
+export const checkForWebhooks = async ({ appId, oldAuto, newAuto }) => {
   const oldTrigger = oldAuto ? oldAuto.definition.trigger : null
   const newTrigger = newAuto ? newAuto.definition.trigger : null
   const triggerChanged =
@@ -180,6 +180,6 @@ exports.checkForWebhooks = async ({ appId, oldAuto, newAuto }) => {
  * @param appId {string} the app that is being removed.
  * @return {Promise<void>} clean is complete if this succeeds.
  */
-exports.cleanupAutomations = async appId => {
-  await exports.disableAllCrons(appId)
+export const cleanupAutomations = async appId => {
+  await disableAllCrons(appId)
 }

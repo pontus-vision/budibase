@@ -1,4 +1,4 @@
-const setup = require("./utilities")
+import setup from './utilities';
 
 const TENANT_ID = "default"
 

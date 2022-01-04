@@ -1,4 +1,4 @@
-const env = require("../src/environment")
+import env from "../src/environment"
 
 env._set("SELF_HOSTED", "1")
 env._set("NODE_ENV", "jest")

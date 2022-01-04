@@ -1,4 +1,11 @@
-exports.rowEmission = ({ emitter, eventName, appId, row, table, metadata }) => {
+export const rowEmission = ({
+  emitter,
+  eventName,
+  appId,
+  row,
+  table,
+  metadata,
+}) => {
   let event = {
     row,
     appId,
@@ -17,7 +24,13 @@ exports.rowEmission = ({ emitter, eventName, appId, row, table, metadata }) => {
   emitter.emit(eventName, event)
 }
 
-exports.tableEmission = ({ emitter, eventName, appId, table, metadata }) => {
+export const tableEmission = ({
+  emitter,
+  eventName,
+  appId,
+  table,
+  metadata,
+}) => {
   const tableId = table._id
   let event = {
     table: {

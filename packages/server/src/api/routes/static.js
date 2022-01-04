@@ -1,14 +1,14 @@
-const Router = require("@koa/router")
-const controller = require("../controllers/static")
-const { budibaseTempDir } = require("../../utilities/budibaseDir")
-const authorized = require("../../middleware/authorized")
-const {
+import Router from "@koa/router"
+import controller from "../controllers/static"
+import { budibaseTempDir } from "../../utilities/budibaseDir"
+import authorized from "../../middleware/authorized"
+import {
   BUILDER,
   PermissionTypes,
   PermissionLevels,
-} = require("@budibase/auth/permissions")
-const env = require("../../environment")
-const { paramResource } = require("../../middleware/resourceId")
+} from "@budibase/auth/permissions"
+import env from "../../environment"
+import { paramResource } from "../../middleware/resourceId"
 
 const router = Router()
 
@@ -47,4 +47,4 @@ router
   // TODO: this likely needs to be secured in some way
   .get("/:appId/:path*", controller.serveApp)
 
-module.exports = router
+export default router

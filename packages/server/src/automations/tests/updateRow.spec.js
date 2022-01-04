@@ -1,5 +1,5 @@
-const env = require("../../environment")
-const setup = require("./utilities")
+import env from '../../environment';
+import setup from './utilities';
 
 describe("test the update row action", () => {
   let table, row, inputs

@@ -1,6 +1,6 @@
-const fetch = require("node-fetch")
-const OIDCStrategy = require("@techpass/passport-openidconnect").Strategy
-const { authenticateThirdParty } = require("./third-party-common")
+import fetch from "node-fetch"
+import { Strategy as OIDCStrategy } from "@techpass/passport-openidconnect"
+import { authenticateThirdParty } from "./third-party-common"
 
 /**
  * @param {*} issuer The identity provider base URL
@@ -86,7 +86,7 @@ function validEmail(value) {
  * from couchDB rather than environment variables, using this factory is necessary for dynamically configuring passport.
  * @returns Dynamically configured Passport OIDC Strategy
  */
-exports.strategyFactory = async function (config, callbackUrl) {
+export const strategyFactory = async function (config, callbackUrl) {
   try {
     const { clientID, clientSecret, configUrl } = config
 
@@ -124,5 +124,4 @@ exports.strategyFactory = async function (config, callbackUrl) {
   }
 }
 
-// expose for testing
-exports.authenticate = authenticate
+export { authenticate }

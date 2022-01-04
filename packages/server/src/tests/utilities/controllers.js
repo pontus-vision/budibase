@@ -1,4 +1,4 @@
-module.exports = {
+export default {
   table: require("../../api/controllers/table"),
   row: require("../../api/controllers/row"),
   role: require("../../api/controllers/role"),

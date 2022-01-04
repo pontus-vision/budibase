@@ -1,7 +1,7 @@
-const { getGlobalUserParams, getAllApps } = require("../db/utils")
-const { getDB, getCouch } = require("../db")
-const { getGlobalDB } = require("./tenancy")
-const { StaticDatabases } = require("../db/constants")
+import { getGlobalUserParams, getAllApps } from "../db/utils"
+import { getDB, getCouch } from "../db"
+import { getGlobalDB } from "./tenancy"
+import { StaticDatabases } from "../db/constants"
 
 const TENANT_DOC = StaticDatabases.PLATFORM_INFO.docs.tenants
 const PLATFORM_INFO_DB = StaticDatabases.PLATFORM_INFO.name
@@ -19,7 +19,7 @@ const removeTenantFromInfoDB = async tenantId => {
   }
 }
 
-exports.removeUserFromInfoDB = async dbUser => {
+export const removeUserFromInfoDB = async dbUser => {
   const infoDb = getDB(PLATFORM_INFO_DB)
   const keys = [dbUser._id, dbUser.email]
   const userDocs = await infoDb.allDocs({
@@ -89,7 +89,7 @@ const removeTenantApps = async tenantId => {
 }
 
 // can't live in tenancy package due to circular dependency on db/utils
-exports.deleteTenant = async tenantId => {
+export const deleteTenant = async tenantId => {
   await removeTenantFromInfoDB(tenantId)
   await removeUsersFromInfoDB(tenantId)
   await removeGlobalDB(tenantId)

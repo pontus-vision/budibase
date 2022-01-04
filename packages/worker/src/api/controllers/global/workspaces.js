@@ -1,7 +1,7 @@
-const { getWorkspaceParams, generateWorkspaceID } = require("@budibase/auth/db")
-const { getGlobalDB } = require("@budibase/auth/tenancy")
+import { getWorkspaceParams, generateWorkspaceID } from "@budibase/auth/db"
+import { getGlobalDB } from "@budibase/auth/tenancy"
 
-exports.save = async function (ctx) {
+export const save = async function (ctx) {
   const db = getGlobalDB()
   const workspaceDoc = ctx.request.body
 
@@ -21,7 +21,7 @@ exports.save = async function (ctx) {
   }
 }
 
-exports.fetch = async function (ctx) {
+export const fetch = async function (ctx) {
   const db = getGlobalDB()
   const response = await db.allDocs(
     getWorkspaceParams(undefined, {
@@ -31,7 +31,7 @@ exports.fetch = async function (ctx) {
   ctx.body = response.rows.map(row => row.doc)
 }
 
-exports.find = async function (ctx) {
+export const find = async function (ctx) {
   const db = getGlobalDB()
   try {
     ctx.body = await db.get(ctx.params.id)
@@ -40,7 +40,7 @@ exports.find = async function (ctx) {
   }
 }
 
-exports.destroy = async function (ctx) {
+export const destroy = async function (ctx) {
   const db = getGlobalDB()
   const { id, rev } = ctx.params
 

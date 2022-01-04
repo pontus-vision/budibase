@@ -1,11 +1,6 @@
-const {
-  checkBuilderEndpoint,
-  getAllTableRows,
-  clearAllAutomations,
-  testAutomation,
-} = require("./utilities/TestFunctions")
-const setup = require("./utilities")
-const { basicAutomation } = setup.structures
+import { checkBuilderEndpoint, getAllTableRows, clearAllAutomations, testAutomation } from "./utilities/TestFunctions"
+import { structures, getRequest, getConfig, afterAll as _afterAll, delay } from "./utilities"
+const { basicAutomation } = structures
 
 const MAX_RETRIES = 4
 
@@ -13,11 +8,11 @@ let ACTION_DEFINITIONS = {}
 let TRIGGER_DEFINITIONS = {}
 
 describe("/automations", () => {
-  let request = setup.getRequest()
-  let config = setup.getConfig()
+  let request = getRequest()
+  let config = getConfig()
   let automation
 
-  afterAll(setup.afterAll)
+  afterAll(_afterAll)
 
   beforeEach(async () => {
     await config.init()
@@ -146,7 +141,7 @@ describe("/automations", () => {
       automation.definition.trigger.inputs.tableId = table._id
       automation.definition.steps[0].inputs.row.tableId = table._id
       automation = await config.createAutomation(automation)
-      await setup.delay(500)
+      await delay(500)
       const res = await testAutomation(config, automation)
       // this looks a bit mad but we don't actually have a way to wait for a response from the automation to
       // know that it has finished all of its actions - this is currently the best way
@@ -154,7 +149,7 @@ describe("/automations", () => {
       // TODO: update when workflow logs are a thing
       for (let tries = 0; tries < MAX_RETRIES; tries++) {
         expect(res.body).toBeDefined()
-        await setup.delay(500)
+        await delay(500)
         let elements = await getAllTableRows(config)
         // don't test it unless there are values to test
         if (elements.length > 1) {

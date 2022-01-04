@@ -1,22 +1,18 @@
-const CouchDB = require("../../../db")
-const csvParser = require("../../../utilities/csvParser")
-const {
-  getRowParams,
-  generateRowID,
-  InternalTables,
-} = require("../../../db/utils")
-const { isEqual } = require("lodash/fp")
-const { AutoFieldSubTypes, FieldTypes } = require("../../../constants")
-const { inputProcessing } = require("../../../utilities/rowProcessor")
-const { USERS_TABLE_SCHEMA, SwitchableTypes } = require("../../../constants")
-const {
+import CouchDB from "../../../db"
+import { transform } from "../../../utilities/csvParser"
+import { getRowParams, generateRowID, InternalTables } from "../../../db/utils"
+import { isEqual } from "lodash/fp"
+import { AutoFieldSubTypes, FieldTypes } from "../../../constants"
+import { inputProcessing } from "../../../utilities/rowProcessor"
+import { USERS_TABLE_SCHEMA, SwitchableTypes } from "../../../constants"
+import {
   isExternalTable,
   breakExternalTableId,
-} = require("../../../integrations/utils")
-const { getViews, saveView } = require("../view/utils")
-const viewTemplate = require("../view/viewBuilder")
+} from "../../../integrations/utils"
+import { getViews, saveView } from "../view/utils"
+import viewTemplate from "../view/viewBuilder"
 
-exports.checkForColumnUpdates = async (db, oldTable, updatedTable) => {
+export async function checkForColumnUpdates(db, oldTable, updatedTable) {
   let updatedRows = []
   const rename = updatedTable._rename
   let deletedColumns = []
@@ -44,14 +40,14 @@ exports.checkForColumnUpdates = async (db, oldTable, updatedTable) => {
     })
 
     // Update views
-    await exports.checkForViewUpdates(db, updatedTable, rename, deletedColumns)
+    await checkForViewUpdates(db, updatedTable, rename, deletedColumns)
     delete updatedTable._rename
   }
   return { rows: updatedRows, table: updatedTable }
 }
 
 // makes sure the passed in table isn't going to reset the auto ID
-exports.makeSureTableUpToDate = (table, tableToSave) => {
+export function makeSureTableUpToDate(table, tableToSave) {
   if (!table) {
     return tableToSave
   }
@@ -71,14 +67,14 @@ exports.makeSureTableUpToDate = (table, tableToSave) => {
   return tableToSave
 }
 
-exports.handleDataImport = async (appId, user, table, dataImport) => {
+export async function handleDataImport(appId, user, table, dataImport) {
   if (!dataImport || !dataImport.csvString) {
     return table
   }
 
   const db = new CouchDB(appId)
   // Populate the table with rows imported from CSV in a bulk update
-  const data = await csvParser.transform({
+  const data = await transform({
     ...dataImport,
     existingTable: table,
   })
@@ -117,7 +113,7 @@ exports.handleDataImport = async (appId, user, table, dataImport) => {
   return table
 }
 
-exports.handleSearchIndexes = async (appId, table) => {
+export async function handleSearchIndexes(appId, table) {
   const db = new CouchDB(appId)
   // create relevant search indexes
   if (table.indexes && table.indexes.length > 0) {
@@ -161,7 +157,7 @@ exports.handleSearchIndexes = async (appId, table) => {
   return table
 }
 
-exports.checkStaticTables = table => {
+export function checkStaticTables(table) {
   // check user schema has all required elements
   if (table._id === InternalTables.USER_METADATA) {
     for (let [key, schema] of Object.entries(USERS_TABLE_SCHEMA.schema)) {
@@ -190,27 +186,23 @@ class TableSaveFunctions {
   // before anything is done
   async before(table) {
     if (this.oldTable) {
-      table = exports.makeSureTableUpToDate(this.oldTable, table)
+      table = makeSureTableUpToDate(this.oldTable, table)
     }
-    table = exports.checkStaticTables(table)
+    table = checkStaticTables(table)
     return table
   }
 
   // when confirmed valid
   async mid(table) {
-    let response = await exports.checkForColumnUpdates(
-      this.db,
-      this.oldTable,
-      table
-    )
+    let response = await checkForColumnUpdates(this.db, this.oldTable, table)
     this.rows = this.rows.concat(response.rows)
     return table
   }
 
   // after saving
   async after(table) {
-    table = await exports.handleSearchIndexes(this.appId, table)
-    table = await exports.handleDataImport(
+    table = await handleSearchIndexes(this.appId, table)
+    table = await handleDataImport(
       this.appId,
       this.ctx.user,
       table,
@@ -224,7 +216,7 @@ class TableSaveFunctions {
   }
 }
 
-exports.getAllExternalTables = async (appId, datasourceId) => {
+export async function getAllExternalTables(appId, datasourceId) {
   const db = new CouchDB(appId)
   const datasource = await db.get(datasourceId)
   if (!datasource || !datasource.entities) {
@@ -233,22 +225,22 @@ exports.getAllExternalTables = async (appId, datasourceId) => {
   return datasource.entities
 }
 
-exports.getExternalTable = async (appId, datasourceId, tableName) => {
-  const entities = await exports.getAllExternalTables(appId, datasourceId)
+export async function getExternalTable(appId, datasourceId, tableName) {
+  const entities = await getAllExternalTables(appId, datasourceId)
   return entities[tableName]
 }
 
-exports.getTable = async (appId, tableId) => {
+export async function getTable(appId, tableId) {
   const db = new CouchDB(appId)
   if (isExternalTable(tableId)) {
     let { datasourceId, tableName } = breakExternalTableId(tableId)
-    return exports.getExternalTable(appId, datasourceId, tableName)
+    return getExternalTable(appId, datasourceId, tableName)
   } else {
     return db.get(tableId)
   }
 }
 
-exports.checkForViewUpdates = async (db, table, rename, deletedColumns) => {
+export async function checkForViewUpdates(db, table, rename, deletedColumns) {
   const views = await getViews(db)
   const tableViews = views.filter(view => view.meta.tableId === table._id)
 
@@ -320,15 +312,15 @@ exports.checkForViewUpdates = async (db, table, rename, deletedColumns) => {
   }
 }
 
-exports.generateForeignKey = (column, relatedTable) => {
+export function generateForeignKey(column, relatedTable) {
   return `fk_${relatedTable.name}_${column.fieldName}`
 }
 
-exports.generateJunctionTableName = (column, table, relatedTable) => {
+export function generateJunctionTableName(column, table, relatedTable) {
   return `jt_${table.name}_${relatedTable.name}_${column.name}_${column.fieldName}`
 }
 
-exports.foreignKeyStructure = (keyName, meta = null) => {
+export function foreignKeyStructure(keyName, meta = null) {
   const structure = {
     type: FieldTypes.NUMBER,
     constraints: {},
@@ -340,7 +332,7 @@ exports.foreignKeyStructure = (keyName, meta = null) => {
   return structure
 }
 
-exports.hasTypeChanged = (table, oldTable) => {
+export function hasTypeChanged(table, oldTable) {
   if (!oldTable) {
     return false
   }
@@ -357,4 +349,5 @@ exports.hasTypeChanged = (table, oldTable) => {
   return false
 }
 
-exports.TableSaveFunctions = TableSaveFunctions
+const _TableSaveFunctions = TableSaveFunctions
+export { _TableSaveFunctions as TableSaveFunctions }

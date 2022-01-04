@@ -159,4 +159,4 @@ function viewTemplate({ field, tableId, groupBy, filters = [], calculation }) {
   }
 }
 
-module.exports = viewTemplate
+export default viewTemplate

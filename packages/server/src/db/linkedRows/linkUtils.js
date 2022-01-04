@@ -1,19 +1,19 @@
-const CouchDB = require("../index")
-const Sentry = require("@sentry/node")
-const { ViewNames, getQueryIndex } = require("../utils")
-const { FieldTypes } = require("../../constants")
-const { createLinkView } = require("../views/staticViews")
+import CouchDB from "../index"
+import Sentry from "@sentry/node"
+import { ViewNames, getQueryIndex } from "../utils"
+import { FieldTypes } from "../../constants"
+import { createLinkView } from "../views/staticViews"
 
 /**
  * Only needed so that boolean parameters are being used for includeDocs
  * @type {{EXCLUDE: boolean, INCLUDE: boolean}}
  */
-exports.IncludeDocs = {
+export const IncludeDocs = {
   INCLUDE: true,
   EXCLUDE: false,
 }
 
-exports.createLinkView = createLinkView
+export { createLinkView }
 
 /**
  * Gets the linking documents, not the linked documents themselves.
@@ -29,7 +29,7 @@ exports.createLinkView = createLinkView
  * @returns {Promise<object[]>} This will return an array of the linking documents that were found
  * (if any).
  */
-exports.getLinkDocuments = async function (args) {
+export const getLinkDocuments = async function (args) {
   const { appId, tableId, rowId, includeDocs } = args
   const db = new CouchDB(appId)
   let params
@@ -68,8 +68,8 @@ exports.getLinkDocuments = async function (args) {
   } catch (err) {
     // check if the view doesn't exist, it should for all new instances
     if (err != null && err.name === "not_found") {
-      await exports.createLinkView(appId)
-      return exports.getLinkDocuments(arguments[0])
+      await createLinkView(appId)
+      return getLinkDocuments(arguments[0])
     } else {
       /* istanbul ignore next */
       Sentry.captureException(err)
@@ -77,19 +77,19 @@ exports.getLinkDocuments = async function (args) {
   }
 }
 
-exports.getUniqueByProp = (array, prop) => {
+export const getUniqueByProp = (array, prop) => {
   return array.filter((obj, pos, arr) => {
     return arr.map(mapObj => mapObj[prop]).indexOf(obj[prop]) === pos
   })
 }
 
-exports.getLinkedTableIDs = table => {
+export const getLinkedTableIDs = table => {
   return Object.values(table.schema)
     .filter(column => column.type === FieldTypes.LINK)
     .map(column => column.tableId)
 }
 
-exports.getLinkedTable = async (db, id, tables) => {
+export const getLinkedTable = async (db, id, tables) => {
   let linkedTable = tables.find(table => table._id === id)
   if (linkedTable) {
     return linkedTable
@@ -101,7 +101,7 @@ exports.getLinkedTable = async (db, id, tables) => {
   return linkedTable
 }
 
-exports.getRelatedTableForField = (table, fieldName) => {
+export const getRelatedTableForField = (table, fieldName) => {
   // look to see if its on the table, straight in the schema
   const field = table.schema[fieldName]
   if (field != null) {

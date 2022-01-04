@@ -1,15 +1,15 @@
-const {
+import {
   DataSourceOperation,
   SortDirection,
   FieldTypes,
   NoEmptyFilterStrings,
-} = require("../../../constants")
-const {
+} from "../../../constants"
+import {
   breakExternalTableId,
   breakRowIdField,
-} = require("../../../integrations/utils")
-const ExternalRequest = require("./ExternalRequest")
-const CouchDB = require("../../../db")
+} from "../../../integrations/utils"
+import ExternalRequest from "./ExternalRequest"
+import CouchDB from "../../../db"
 
 async function handleRequest(appId, operation, tableId, opts = {}) {
   // make sure the filters are cleaned up, no empty strings for equals, fuzzy or string
@@ -30,9 +30,10 @@ async function handleRequest(appId, operation, tableId, opts = {}) {
   )
 }
 
-exports.handleRequest = handleRequest
+const _handleRequest = handleRequest
+export { _handleRequest as handleRequest }
 
-exports.patch = async ctx => {
+export async function patch(ctx) {
   const appId = ctx.appId
   const inputs = ctx.request.body
   const tableId = ctx.params.tableId
@@ -45,7 +46,7 @@ exports.patch = async ctx => {
   })
 }
 
-exports.save = async ctx => {
+export async function save(ctx) {
   const appId = ctx.appId
   const inputs = ctx.request.body
   const tableId = ctx.params.tableId
@@ -54,21 +55,21 @@ exports.save = async ctx => {
   })
 }
 
-exports.fetchView = async ctx => {
+export async function fetchView(ctx) {
   // there are no views in external data sources, shouldn't ever be called
   // for now just fetch
   const split = ctx.params.viewName.split("all_")
   ctx.params.tableId = split[1] ? split[1] : split[0]
-  return exports.fetch(ctx)
+  return fetch(ctx)
 }
 
-exports.fetch = async ctx => {
+export async function fetch(ctx) {
   const appId = ctx.appId
   const tableId = ctx.params.tableId
   return handleRequest(appId, DataSourceOperation.READ, tableId)
 }
 
-exports.find = async ctx => {
+export async function find(ctx) {
   const appId = ctx.appId
   const id = ctx.params.rowId
   const tableId = ctx.params.tableId
@@ -83,7 +84,7 @@ exports.find = async ctx => {
   return response ? response[0] : response
 }
 
-exports.destroy = async ctx => {
+export async function destroy(ctx) {
   const appId = ctx.appId
   const tableId = ctx.params.tableId
   const id = ctx.request.body._id
@@ -98,7 +99,7 @@ exports.destroy = async ctx => {
   return { response: { ok: true }, row }
 }
 
-exports.bulkDestroy = async ctx => {
+export async function bulkDestroy(ctx) {
   const appId = ctx.appId
   const { rows } = ctx.request.body
   const tableId = ctx.params.tableId
@@ -114,7 +115,7 @@ exports.bulkDestroy = async ctx => {
   return { response: { ok: true }, rows: responses.map(resp => resp.row) }
 }
 
-exports.search = async ctx => {
+export async function search(ctx) {
   const appId = ctx.appId
   const tableId = ctx.params.tableId
   const { paginate, query, ...params } = ctx.request.body
@@ -171,12 +172,12 @@ exports.search = async ctx => {
   return { rows, hasNextPage, bookmark: bookmark + 1 }
 }
 
-exports.validate = async () => {
+export async function validate() {
   // can't validate external right now - maybe in future
   return { valid: true }
 }
 
-exports.fetchEnrichedRow = async ctx => {
+export async function fetchEnrichedRow(ctx) {
   const appId = ctx.appId
   const id = ctx.params.rowId
   const tableId = ctx.params.tableId

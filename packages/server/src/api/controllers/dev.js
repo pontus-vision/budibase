@@ -1,20 +1,19 @@
-const fetch = require("node-fetch")
-const CouchDB = require("../../db")
-const env = require("../../environment")
-const { checkSlashesInUrl } = require("../../utilities")
-const { request } = require("../../utilities/workerRequests")
-const { clearLock } = require("../../utilities/redis")
-const { Replication } = require("@budibase/auth").db
-const { DocumentTypes } = require("../../db/utils")
-const { app: appCache } = require("@budibase/auth/cache")
+import fetch from "node-fetch"
+import CouchDB from "../../db"
+import { WORKER_URL } from "../../environment"
+import { checkSlashesInUrl } from "../../utilities"
+import { request } from "../../utilities/workerRequests"
+import { clearLock } from "../../utilities/redis"
+import { db as _db } from "@budibase/auth"
+const { Replication } = _db
+import { DocumentTypes } from "../../db/utils"
+import { app as appCache } from "@budibase/auth/cache"
 
 async function redirect(ctx, method, path = "global") {
   const { devPath } = ctx.params
   const queryString = ctx.originalUrl.split("?")[1] || ""
   const response = await fetch(
-    checkSlashesInUrl(
-      `${env.WORKER_URL}/api/${path}/${devPath}?${queryString}`
-    ),
+    checkSlashesInUrl(`${WORKER_URL}/api/${path}/${devPath}?${queryString}`),
     request(
       ctx,
       {
@@ -45,25 +44,25 @@ async function redirect(ctx, method, path = "global") {
   ctx.cookies
 }
 
-exports.buildRedirectGet = path => {
+export function buildRedirectGet(path) {
   return async ctx => {
     await redirect(ctx, "GET", path)
   }
 }
 
-exports.buildRedirectPost = path => {
+export function buildRedirectPost(path) {
   return async ctx => {
     await redirect(ctx, "POST", path)
   }
 }
 
-exports.buildRedirectDelete = path => {
+export function buildRedirectDelete(path) {
   return async ctx => {
     await redirect(ctx, "DELETE", path)
   }
 }
 
-exports.clearLock = async ctx => {
+const _clearLock = async ctx => {
   const { appId } = ctx.params
   try {
     await clearLock(appId, ctx.user)
@@ -74,8 +73,9 @@ exports.clearLock = async ctx => {
     message: "Lock released successfully.",
   }
 }
+export { _clearLock as clearLock }
 
-exports.revert = async ctx => {
+export async function revert(ctx) {
   const { appId } = ctx.params
   const productionAppId = appId.replace("_dev", "")
 
@@ -117,6 +117,6 @@ exports.revert = async ctx => {
   }
 }
 
-exports.getBudibaseVersion = async ctx => {
+export async function getBudibaseVersion(ctx) {
   ctx.body = require("../../../package.json").version
 }

@@ -1,8 +1,8 @@
-const CouchDB = require("../../db")
-const { DocumentTypes } = require("../../db/utils")
-const { getComponentLibraryManifest } = require("../../utilities/fileSystem")
+import CouchDB from "../../db"
+import { DocumentTypes } from "../../db/utils"
+import { getComponentLibraryManifest } from "../../utilities/fileSystem"
 
-exports.fetchAppComponentDefinitions = async function (ctx) {
+export async function fetchAppComponentDefinitions(ctx) {
   const appId = ctx.params.appId || ctx.appId
   const db = new CouchDB(appId)
   const app = await db.get(DocumentTypes.APP_METADATA)

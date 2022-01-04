@@ -1,6 +1,9 @@
 // Mock data
 
-const { data } = require("./utilities/mock-data")
+import { data } from './utilities/mock-data';
+import google from '../google';
+import { OAuth2Strategy as mockStrategy } from 'passport-google-oauth';
+import { authenticateThirdParty } from '../third-party-common';
 
 const TENANT_ID = "default"
 
@@ -23,10 +26,8 @@ describe("google", () => {
   describe("strategyFactory", () => {  
     // mock passport strategy factory
     jest.mock("passport-google-oauth")
-    const mockStrategy = require("passport-google-oauth").OAuth2Strategy
   
     it("should create successfully create a google strategy", async () => {
-      const google = require("../google")
 
       const callbackUrl = `/api/global/auth/${TENANT_ID}/google/callback`
       await google.strategyFactory(googleConfig, callbackUrl)
@@ -51,13 +52,11 @@ describe("google", () => {
 
     // mock third party common authentication
     jest.mock("../third-party-common")
-    const authenticateThirdParty = require("../third-party-common").authenticateThirdParty
 
     // mock the passport callback
     const mockDone = jest.fn()
 
     it("delegates authentication to third party common", async () => {
-      const google = require("../google")
 
       await google.authenticate(
         data.accessToken,

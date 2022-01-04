@@ -12,10 +12,9 @@ const PrettyFilterConditions = {
   [FilterConditions.LESS_THAN]: "Less than",
 }
 
-exports.FilterConditions = FilterConditions
-exports.PrettyFilterConditions = PrettyFilterConditions
+export { FilterConditions, PrettyFilterConditions }
 
-exports.definition = {
+export const definition = {
   name: "Filter",
   tagline: "{{inputs.field}} {{inputs.condition}} {{inputs.value}}",
   icon: "Branch2",
@@ -58,7 +57,7 @@ exports.definition = {
   },
 }
 
-exports.run = async function filter({ inputs }) {
+export const run = async function filter({ inputs }) {
   let { field, condition, value } = inputs
   // coerce types so that we can use them
   if (!isNaN(value) && !isNaN(field)) {

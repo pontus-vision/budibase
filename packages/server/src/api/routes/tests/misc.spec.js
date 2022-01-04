@@ -1,11 +1,11 @@
-const setup = require("./utilities")
-const tableUtils = require("../../controllers/table/utils")
+import { getRequest, getConfig, afterAll as _afterAll } from "./utilities"
+import { handleDataImport } from "../../controllers/table/utils"
 
 describe("run misc tests", () => {
-  let request = setup.getRequest()
-  let config = setup.getConfig()
+  let request = getRequest()
+  let config = getConfig()
 
-  afterAll(setup.afterAll)
+  afterAll(_afterAll)
 
   beforeEach(async () => {
     await config.init()
@@ -81,7 +81,7 @@ describe("run misc tests", () => {
       for (let col of ["a", "b", "c", "d"]) {
         dataImport.schema[col] = { type: "string" }
       }
-      await tableUtils.handleDataImport(
+      await handleDataImport(
         config.getAppId(),
         { userId: "test" },
         table,

@@ -1,8 +1,8 @@
-const Router = require("@koa/router")
-const controller = require("../controllers/auth")
+import Router from "@koa/router"
+import controller from "../controllers/auth"
 
 const router = Router()
 
 router.get("/api/self", controller.fetchSelf)
 
-module.exports = router
+export default router

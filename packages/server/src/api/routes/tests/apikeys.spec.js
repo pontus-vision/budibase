@@ -1,11 +1,11 @@
-const setup = require("./utilities")
-const { checkBuilderEndpoint } = require("./utilities/TestFunctions")
+import { getRequest, getConfig, afterAll as _afterAll, switchToSelfHosted } from "./utilities"
+import { checkBuilderEndpoint } from "./utilities/TestFunctions"
 
 describe("/api/keys", () => {
-  let request = setup.getRequest()
-  let config = setup.getConfig()
+  let request = getRequest()
+  let config = getConfig()
 
-  afterAll(setup.afterAll)
+  afterAll(_afterAll)
 
   beforeEach(async () => {
     await config.init()
@@ -13,7 +13,7 @@ describe("/api/keys", () => {
 
   describe("fetch", () => {
     it("should allow fetching", async () => {
-      await setup.switchToSelfHosted(async () => {
+      await switchToSelfHosted(async () => {
         const res = await request
           .get(`/api/keys`)
           .set(config.defaultHeaders())
@@ -34,7 +34,7 @@ describe("/api/keys", () => {
 
   describe("update", () => {
     it("should allow updating a value", async () => {
-      await setup.switchToSelfHosted(async () => {
+      await switchToSelfHosted(async () => {
         const res = await request
           .put(`/api/keys/TEST`)
           .send({

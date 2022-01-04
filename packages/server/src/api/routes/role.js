@@ -1,13 +1,13 @@
-const Router = require("@koa/router")
-const controller = require("../controllers/role")
-const authorized = require("../../middleware/authorized")
-const Joi = require("joi")
-const joiValidator = require("../../middleware/joi-validator")
-const {
+import Router from "@koa/router"
+import controller from "../controllers/role"
+import authorized from "../../middleware/authorized"
+import Joi from "joi"
+import joiValidator from "../../middleware/joi-validator"
+import {
   BUILTIN_PERMISSION_IDS,
   BUILDER,
   PermissionLevels,
-} = require("@budibase/auth/permissions")
+} from "@budibase/auth/permissions"
 
 const router = Router()
 
@@ -33,4 +33,4 @@ router
   .get("/api/roles/:roleId", authorized(BUILDER), controller.find)
   .delete("/api/roles/:roleId/:rev", authorized(BUILDER), controller.destroy)
 
-module.exports = router
+export default router

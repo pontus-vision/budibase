@@ -1,3 +1,3 @@
-const packageConfiguration = require("../../index")
-const CouchDB = require("./db")
+import packageConfiguration from "../../index"
+import CouchDB from "./db"
 packageConfiguration.init(CouchDB)

@@ -1,7 +1,7 @@
-const PouchDB = require("pouchdb")
-const allDbs = require("pouchdb-all-dbs")
-const env = require("../environment")
-const { getCouchUrl } = require("@budibase/auth/db")
+import PouchDB from "pouchdb"
+import allDbs from "pouchdb-all-dbs"
+import env from "../environment"
+import { getCouchUrl } from "@budibase/auth/db"
 
 // level option is purely for testing (development)
 const COUCH_DB_URL = getCouchUrl() || "http://localhost:10000/db/"
@@ -23,4 +23,4 @@ const Pouch = PouchDB.defaults(POUCH_DB_DEFAULTS)
 // have to still have pouch alldbs for testing
 allDbs(Pouch)
 
-module.exports = Pouch
+export default Pouch

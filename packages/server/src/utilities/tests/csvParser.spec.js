@@ -1,5 +1,5 @@
-const { readFileSync } = require("../fileSystem")
-const csvParser = require("../csvParser")
+import { readFileSync } from '../fileSystem';
+import csvParser from '../csvParser';
 
 const CSV_PATH = __dirname + "/test.csv"
 

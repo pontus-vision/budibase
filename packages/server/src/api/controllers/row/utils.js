@@ -1,13 +1,13 @@
-const validateJs = require("validate.js")
-const { cloneDeep } = require("lodash/fp")
-const CouchDB = require("../../../db")
-const { InternalTables } = require("../../../db/utils")
-const userController = require("../user")
-const { FieldTypes } = require("../../../constants")
-const { processStringSync } = require("@budibase/string-templates")
-const { makeExternalQuery } = require("../../../integrations/base/utils")
+import { extend, validators, single } from "validate.js"
+import { cloneDeep } from "lodash/fp"
+import CouchDB from "../../../db"
+import { InternalTables } from "../../../db/utils"
+import { findMetadata } from "../user"
+import { FieldTypes } from "../../../constants"
+import { processStringSync } from "@budibase/string-templates"
+import { makeExternalQuery } from "../../../integrations/base/utils"
 
-validateJs.extend(validateJs.validators.datetime, {
+extend(validators.datetime, {
   parse: function (value) {
     return new Date(value).getTime()
   },
@@ -17,21 +17,21 @@ validateJs.extend(validateJs.validators.datetime, {
   },
 })
 
-exports.getDatasourceAndQuery = async (appId, json) => {
+export async function getDatasourceAndQuery(appId, json) {
   const datasourceId = json.endpoint.datasourceId
   const db = new CouchDB(appId)
   const datasource = await db.get(datasourceId)
   return makeExternalQuery(datasource, json)
 }
 
-exports.findRow = async (ctx, db, tableId, rowId) => {
+export async function findRow(ctx, db, tableId, rowId) {
   let row
   // TODO remove special user case in future
   if (tableId === InternalTables.USER_METADATA) {
     ctx.params = {
       id: rowId,
     }
-    await userController.findMetadata(ctx)
+    await findMetadata(ctx)
     row = ctx.body
   } else {
     row = await db.get(rowId)
@@ -42,7 +42,7 @@ exports.findRow = async (ctx, db, tableId, rowId) => {
   return row
 }
 
-exports.validate = async ({ appId, tableId, row, table }) => {
+export async function validate({ appId, tableId, row, table }) {
   if (!table) {
     const db = new CouchDB(appId)
     table = await db.get(tableId)
@@ -72,12 +72,12 @@ exports.validate = async ({ appId, tableId, row, table }) => {
         }
       })
     } else if (table.schema[fieldName].type === FieldTypes.FORMULA) {
-      res = validateJs.single(
+      res = single(
         processStringSync(table.schema[fieldName].formula, row),
         constraints
       )
     } else {
-      res = validateJs.single(row[fieldName], constraints)
+      res = single(row[fieldName], constraints)
     }
     if (res) errors[fieldName] = res
   }

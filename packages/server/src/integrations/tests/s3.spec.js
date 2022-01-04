@@ -1,5 +1,5 @@
-const AWS = require("aws-sdk")
-const S3Integration = require("../s3")
+import AWS from 'aws-sdk';
+import S3Integration from '../s3';
 jest.mock("aws-sdk")
 
 class TestConfiguration {

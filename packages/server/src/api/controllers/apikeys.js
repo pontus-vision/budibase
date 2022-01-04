@@ -1,5 +1,5 @@
-const { StaticDatabases } = require("@budibase/auth/db")
-const { getGlobalDB } = require("@budibase/auth/tenancy")
+import { StaticDatabases } from "@budibase/auth/db"
+import { getGlobalDB } from "@budibase/auth/tenancy"
 
 const KEYS_DOC = StaticDatabases.GLOBAL.docs.apiKeys
 
@@ -22,7 +22,7 @@ async function setBuilderMainDoc(doc) {
   return db.put(doc)
 }
 
-exports.fetch = async function (ctx) {
+export async function fetch(ctx) {
   try {
     const mainDoc = await getBuilderMainDoc()
     ctx.body = mainDoc.apiKeys ? mainDoc.apiKeys : {}
@@ -32,7 +32,7 @@ exports.fetch = async function (ctx) {
   }
 }
 
-exports.update = async function (ctx) {
+export async function update(ctx) {
   const key = ctx.params.key
   const value = ctx.request.body.value
 

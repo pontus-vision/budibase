@@ -1,5 +1,5 @@
-const fetch = require("node-fetch")
-const { VM, VMScript } = require("vm2")
+import fetch from "node-fetch"
+import { VM, VMScript } from "vm2"
 const JS_TIMEOUT_MS = 1000
 
 class ScriptRunner {
@@ -21,4 +21,4 @@ class ScriptRunner {
   }
 }
 
-module.exports = ScriptRunner
+export default ScriptRunner

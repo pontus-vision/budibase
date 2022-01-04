@@ -1,28 +1,28 @@
-const {
+import {
   DocumentTypes,
   SEPARATOR,
   ViewNames,
   generateGlobalUserID,
-} = require("./db/utils")
-const jwt = require("jsonwebtoken")
-const { options } = require("./middleware/passport/jwt")
-const { createUserEmailView } = require("./db/views")
-const { Headers, UserStatus, Cookies, MAX_VALID_DATE } = require("./constants")
-const {
+} from "./db/utils"
+import jwt from "jsonwebtoken"
+import { options } from "./middleware/passport/jwt"
+import { createUserEmailView } from "./db/views"
+import { Headers, UserStatus, Cookies, MAX_VALID_DATE } from "./constants"
+import {
   getGlobalDB,
   updateTenantId,
   getTenantUser,
   tryAddTenant,
-} = require("./tenancy")
-const environment = require("./environment")
-const accounts = require("./cloud/accounts")
-const { hash } = require("./hashing")
-const userCache = require("./cache/user")
-const env = require("./environment")
-const { getUserSessions, invalidateSessions } = require("./security/sessions")
-const { migrateIfRequired } = require("./migrations")
-const { USER_EMAIL_VIEW_CASING } = require("./migrations").MIGRATIONS
-const { GLOBAL_DB } = require("./migrations").MIGRATION_DBS
+} from "./tenancy"
+import environment from "./environment"
+import accounts from "./cloud/accounts"
+import { hash } from "./hashing"
+import userCache from "./cache/user"
+import env from "./environment"
+import { getUserSessions, invalidateSessions } from "./security/sessions"
+import { migrateIfRequired } from "./migrations"
+import { MIGRATION_DBS, MIGRATIONS } from "./migrations"
+// import './migrations';
 
 const APP_PREFIX = DocumentTypes.APP + SEPARATOR
 
@@ -37,7 +37,7 @@ function confirmAppId(possibleAppId) {
  * @param {object} ctx The main request body to look through.
  * @returns {string|undefined} If an appId was found it will be returned.
  */
-exports.getAppId = ctx => {
+export const getAppId = ctx => {
   const options = [ctx.headers[Headers.APP_ID], ctx.params.appId]
   if (ctx.subdomains) {
     options.push(ctx.subdomains[1])
@@ -68,7 +68,7 @@ exports.getAppId = ctx => {
  * @param {object} ctx The request which is to be manipulated.
  * @param {string} name The name of the cookie to get.
  */
-exports.getCookie = (ctx, name) => {
+export const getCookie = (ctx, name) => {
   const cookie = ctx.cookies.get(name)
 
   if (!cookie) {
@@ -85,7 +85,12 @@ exports.getCookie = (ctx, name) => {
  * @param {string|object} value The value of cookie which will be set.
  * @param {object} opts options like whether to sign.
  */
-exports.setCookie = (ctx, value, name = "builder", opts = { sign: true }) => {
+export const setCookie = (
+  ctx,
+  value,
+  name = "builder",
+  opts = { sign: true }
+) => {
   if (value && opts && opts.sign) {
     value = jwt.sign(value, options.secretOrKey)
   }
@@ -107,8 +112,8 @@ exports.setCookie = (ctx, value, name = "builder", opts = { sign: true }) => {
 /**
  * Utility function, simply calls setCookie with an empty string for value
  */
-exports.clearCookie = (ctx, name) => {
-  exports.setCookie(ctx, null, name)
+export const clearCookie = (ctx, name) => {
+  setCookie(ctx, null, name)
 }
 
 /**
@@ -117,7 +122,7 @@ exports.clearCookie = (ctx, name) => {
  * @param {object} ctx The koa context object to be tested.
  * @return {boolean} returns true if the call is from the client lib (a built app rather than the builder).
  */
-exports.isClient = ctx => {
+export const isClient = ctx => {
   return ctx.headers[Headers.TYPE] === "client"
 }
 
@@ -127,16 +132,20 @@ exports.isClient = ctx => {
  * @param {string} email the email to lookup the user by.
  * @return {Promise<object|null>}
  */
-exports.getGlobalUserByEmail = async email => {
+export const getGlobalUserByEmail = async email => {
   if (email == null) {
     throw "Must supply an email address to view"
   }
   const db = getGlobalDB()
 
-  await migrateIfRequired(GLOBAL_DB, USER_EMAIL_VIEW_CASING, async () => {
-    // re-create the view with latest changes
-    await createUserEmailView(db)
-  })
+  await migrateIfRequired(
+    MIGRATION_DBS.GLOBAL_DB,
+    MIGRATIONS.USER_EMAIL_VIEW_CASING,
+    async () => {
+      // re-create the view with latest changes
+      await createUserEmailView(db)
+    }
+  )
 
   try {
     let users = (
@@ -150,14 +159,14 @@ exports.getGlobalUserByEmail = async email => {
   } catch (err) {
     if (err != null && err.name === "not_found") {
       await createUserEmailView(db)
-      return exports.getGlobalUserByEmail(email)
+      return getGlobalUserByEmail(email)
     } else {
       throw err
     }
   }
 }
 
-exports.saveUser = async (
+export const saveUser = async (
   user,
   tenantId,
   hashPassword = true,
@@ -175,7 +184,7 @@ exports.saveUser = async (
   let dbUser
   if (email) {
     // check budibase users inside the tenant
-    dbUser = await exports.getGlobalUserByEmail(email)
+    dbUser = await getGlobalUserByEmail(email)
     if (dbUser != null && (dbUser._id !== _id || Array.isArray(dbUser))) {
       throw `Email address ${email} already in use.`
     }
@@ -250,7 +259,7 @@ exports.saveUser = async (
 /**
  * Logs a user out from budibase. Re-used across account portal and builder.
  */
-exports.platformLogout = async ({ ctx, userId, keepActiveSession }) => {
+export const platformLogout = async ({ ctx, userId, keepActiveSession }) => {
   if (!ctx) throw new Error("Koa context must be supplied to logout.")
 
   const currentSession = this.getCookie(ctx, Cookies.Auth)

@@ -1,10 +1,10 @@
-const rowController = require("../../api/controllers/row")
-const env = require("../../environment")
-const usage = require("../../utilities/usageQuota")
-const { buildCtx } = require("./utils")
-const automationUtils = require("../automationUtils")
+import rowController from "../../api/controllers/row"
+import env from "../../environment"
+import usage from "../../utilities/usageQuota"
+import { buildCtx } from "./utils"
+import automationUtils from "../automationUtils"
 
-exports.definition = {
+export const definition = {
   description: "Delete a row from your database",
   icon: "TableRowRemoveCenter",
   name: "Delete Row",
@@ -53,7 +53,7 @@ exports.definition = {
   },
 }
 
-exports.run = async function ({ inputs, appId, emitter }) {
+export const run = async function ({ inputs, appId, emitter }) {
   if (inputs.id == null || inputs.revision == null) {
     return {
       success: false,

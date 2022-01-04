@@ -1,9 +1,9 @@
-const authPkg = require("@budibase/auth")
-const { getScopedConfig } = require("@budibase/auth/db")
-const { google } = require("@budibase/auth/src/middleware")
-const { oidc } = require("@budibase/auth/src/middleware")
-const { Configs, EmailTemplatePurpose } = require("../../../constants")
-const { sendEmail, isEmailConfigured } = require("../../../utilities/email")
+import authPkg from "@budibase/auth"
+import { getScopedConfig } from "@budibase/auth/db"
+import { google } from "@budibase/auth/src/middleware"
+import { oidc } from "@budibase/auth/src/middleware"
+import { Configs, EmailTemplatePurpose } from "../../../constants"
+import { sendEmail, isEmailConfigured } from "../../../utilities/email"
 const {
   setCookie,
   getCookie,
@@ -14,13 +14,9 @@ const {
 } = authPkg.utils
 const { Cookies } = authPkg.constants
 const { passport } = authPkg.auth
-const { checkResetPasswordCode } = require("../../../utilities/redis")
-const {
-  getGlobalDB,
-  getTenantId,
-  isMultiTenant,
-} = require("@budibase/auth/tenancy")
-const env = require("../../../environment")
+import { checkResetPasswordCode } from "../../../utilities/redis"
+import { getGlobalDB, getTenantId, isMultiTenant } from "@budibase/auth/tenancy"
+import env from "../../../environment"
 
 const ssoCallbackUrl = async (config, type) => {
   // incase there is a callback URL from before
@@ -42,11 +38,11 @@ const ssoCallbackUrl = async (config, type) => {
   return `${publicConfig.platformUrl}${callbackUrl}`
 }
 
-exports.googleCallbackUrl = async config => {
+export const googleCallbackUrl = async config => {
   return ssoCallbackUrl(config, "google")
 }
 
-exports.oidcCallbackUrl = async config => {
+export const oidcCallbackUrl = async config => {
   return ssoCallbackUrl(config, "oidc")
 }
 
@@ -68,7 +64,7 @@ async function authInternal(ctx, user, err = null, info = null) {
   }
 }
 
-exports.authenticate = async (ctx, next) => {
+export const authenticate = async (ctx, next) => {
   return passport.authenticate("local", async (err, user, info) => {
     await authInternal(ctx, user, err, info)
 
@@ -78,20 +74,20 @@ exports.authenticate = async (ctx, next) => {
   })(ctx, next)
 }
 
-exports.setInitInfo = ctx => {
+export const setInitInfo = ctx => {
   const initInfo = ctx.request.body
   setCookie(ctx, initInfo, Cookies.Init)
   ctx.status = 200
 }
 
-exports.getInitInfo = ctx => {
+export const getInitInfo = ctx => {
   ctx.body = getCookie(ctx, Cookies.Init) || {}
 }
 
 /**
  * Reset the user password, used as part of a forgotten password flow.
  */
-exports.reset = async ctx => {
+export const reset = async ctx => {
   const { email } = ctx.request.body
   const configured = await isEmailConfigured()
   if (!configured) {
@@ -121,7 +117,7 @@ exports.reset = async ctx => {
 /**
  * Perform the user password update if the provided reset code is valid.
  */
-exports.resetUpdate = async ctx => {
+export const resetUpdate = async ctx => {
   const { resetCode, password } = ctx.request.body
   try {
     const { userId } = await checkResetPasswordCode(resetCode)
@@ -137,7 +133,7 @@ exports.resetUpdate = async ctx => {
   }
 }
 
-exports.logout = async ctx => {
+export const logout = async ctx => {
   await platformLogout({ ctx, userId: ctx.user._id })
   ctx.body = { message: "User logged out." }
 }
@@ -146,14 +142,14 @@ exports.logout = async ctx => {
  * The initial call that google authentication makes to take you to the google login screen.
  * On a successful login, you will be redirected to the googleAuth callback route.
  */
-exports.googlePreAuth = async (ctx, next) => {
+export const googlePreAuth = async (ctx, next) => {
   const db = getGlobalDB()
 
   const config = await authPkg.db.getScopedConfig(db, {
     type: Configs.GOOGLE,
     workspace: ctx.query.workspace,
   })
-  let callbackUrl = await exports.googleCallbackUrl(config)
+  let callbackUrl = await googleCallbackUrl(config)
   const strategy = await google.strategyFactory(config, callbackUrl)
 
   return passport.authenticate(strategy, {
@@ -161,14 +157,14 @@ exports.googlePreAuth = async (ctx, next) => {
   })(ctx, next)
 }
 
-exports.googleAuth = async (ctx, next) => {
+export const googleAuth = async (ctx, next) => {
   const db = getGlobalDB()
 
   const config = await authPkg.db.getScopedConfig(db, {
     type: Configs.GOOGLE,
     workspace: ctx.query.workspace,
   })
-  const callbackUrl = await exports.googleCallbackUrl(config)
+  const callbackUrl = await googleCallbackUrl(config)
   const strategy = await google.strategyFactory(config, callbackUrl)
 
   return passport.authenticate(
@@ -190,7 +186,7 @@ async function oidcStrategyFactory(ctx, configId) {
   })
 
   const chosenConfig = config.configs.filter(c => c.uuid === configId)[0]
-  let callbackUrl = await exports.oidcCallbackUrl(chosenConfig)
+  let callbackUrl = await oidcCallbackUrl(chosenConfig)
 
   return oidc.strategyFactory(chosenConfig, callbackUrl)
 }
@@ -199,7 +195,7 @@ async function oidcStrategyFactory(ctx, configId) {
  * The initial call that OIDC authentication makes to take you to the configured OIDC login screen.
  * On a successful login, you will be redirected to the oidcAuth callback route.
  */
-exports.oidcPreAuth = async (ctx, next) => {
+export const oidcPreAuth = async (ctx, next) => {
   const { configId } = ctx.params
   const strategy = await oidcStrategyFactory(ctx, configId)
 
@@ -211,7 +207,7 @@ exports.oidcPreAuth = async (ctx, next) => {
   })(ctx, next)
 }
 
-exports.oidcAuth = async (ctx, next) => {
+export const oidcAuth = async (ctx, next) => {
   const configId = getCookie(ctx, Cookies.OIDC_CONFIG)
   const strategy = await oidcStrategyFactory(ctx, configId)
 

@@ -1,25 +1,29 @@
-const {
+import {
   getGlobalUserParams,
   StaticDatabases,
   generateNewUsageQuotaDoc,
-} = require("@budibase/auth/db")
-const { hash, getGlobalUserByEmail, saveUser, platformLogout } =
-  require("@budibase/auth").utils
-const { EmailTemplatePurpose } = require("../../../constants")
-const { checkInviteCode } = require("../../../utilities/redis")
-const { sendEmail } = require("../../../utilities/email")
-const { user: userCache } = require("@budibase/auth/cache")
-const { invalidateSessions } = require("@budibase/auth/sessions")
-const accounts = require("@budibase/auth/accounts")
-const {
+} from "@budibase/auth/db"
+import { EmailTemplatePurpose } from "../../../constants"
+import { checkInviteCode } from "../../../utilities/redis"
+import { sendEmail } from "../../../utilities/email"
+import { user as userCache } from "@budibase/auth/cache"
+import { invalidateSessions } from "@budibase/auth/sessions"
+import accounts from "@budibase/auth/accounts"
+import {
   getGlobalDB,
   getTenantId,
   getTenantUser,
   doesTenantExist,
-} = require("@budibase/auth/tenancy")
-const { removeUserFromInfoDB } = require("@budibase/auth/deprovision")
-const env = require("../../../environment")
-const { syncUserInApps } = require("../../../utilities/appService")
+} from "@budibase/auth/tenancy"
+import { removeUserFromInfoDB } from "@budibase/auth/deprovision"
+import env from "../../../environment"
+import { syncUserInApps } from "../../../utilities/appService"
+import {
+  getGlobalUserByEmail,
+  platformLogout,
+  saveUser,
+} from "@budibase/auth/src/utils"
+import { hash } from "@budibase/auth/src/hashing"
 
 async function allUsers() {
   const db = getGlobalDB()
@@ -31,7 +35,7 @@ async function allUsers() {
   return response.rows.map(row => row.doc)
 }
 
-exports.save = async ctx => {
+export const save = async ctx => {
   try {
     const user = await saveUser(ctx.request.body, getTenantId())
     // let server know to sync user
@@ -46,7 +50,7 @@ const parseBooleanParam = param => {
   return !(param && param === "false")
 }
 
-exports.adminUser = async ctx => {
+export const adminUser = async ctx => {
   const { email, password, tenantId } = ctx.request.body
 
   // account portal sends a pre-hashed password - honour param to prevent double hashing
@@ -108,7 +112,7 @@ exports.adminUser = async ctx => {
   }
 }
 
-exports.destroy = async ctx => {
+export const destroy = async ctx => {
   const db = getGlobalDB()
   const dbUser = await db.get(ctx.params.id)
 
@@ -136,7 +140,7 @@ exports.destroy = async ctx => {
   }
 }
 
-exports.removeAppRole = async ctx => {
+export const removeAppRole = async ctx => {
   const { appId } = ctx.params
   const db = getGlobalDB()
   const users = await allUsers(ctx)
@@ -156,7 +160,7 @@ exports.removeAppRole = async ctx => {
   }
 }
 
-exports.getSelf = async ctx => {
+export const getSelf = async ctx => {
   if (!ctx.user) {
     ctx.throw(403, "User not logged in")
   }
@@ -164,7 +168,7 @@ exports.getSelf = async ctx => {
     id: ctx.user._id,
   }
   // this will set the body
-  await exports.find(ctx)
+  await find(ctx)
 
   // forward session information not found in db
   ctx.body.account = ctx.user.account
@@ -172,7 +176,7 @@ exports.getSelf = async ctx => {
   ctx.body.accountPortalAccess = ctx.user.accountPortalAccess
 }
 
-exports.updateSelf = async ctx => {
+export const updateSelf = async ctx => {
   const db = getGlobalDB()
   const user = await db.get(ctx.user._id)
   if (ctx.request.body.password) {
@@ -200,7 +204,7 @@ exports.updateSelf = async ctx => {
 }
 
 // called internally by app server user fetch
-exports.fetch = async ctx => {
+export const fetch = async ctx => {
   const users = await allUsers(ctx)
   // user hashed password shouldn't ever be returned
   for (let user of users) {
@@ -212,7 +216,7 @@ exports.fetch = async ctx => {
 }
 
 // called internally by app server user find
-exports.find = async ctx => {
+export const find = async ctx => {
   const db = getGlobalDB()
   let user
   try {
@@ -227,7 +231,7 @@ exports.find = async ctx => {
   ctx.body = user
 }
 
-exports.tenantUserLookup = async ctx => {
+export const tenantUserLookup = async ctx => {
   const id = ctx.params.id
   const user = await getTenantUser(id)
   if (user) {
@@ -237,7 +241,7 @@ exports.tenantUserLookup = async ctx => {
   }
 }
 
-exports.invite = async ctx => {
+export const invite = async ctx => {
   let { email, userInfo } = ctx.request.body
   const existing = await getGlobalUserByEmail(email)
   if (existing) {
@@ -256,7 +260,7 @@ exports.invite = async ctx => {
   }
 }
 
-exports.inviteAccept = async ctx => {
+export const inviteAccept = async ctx => {
   const { inviteCode, password, firstName, lastName } = ctx.request.body
   try {
     // info is an extension of the user object that was stored by global

@@ -1,5 +1,5 @@
-const Router = require("@koa/router")
-const controller = require("../controllers/analytics")
+import Router from "@koa/router"
+import controller from "../controllers/analytics"
 
 const router = Router()
 
@@ -7,4 +7,4 @@ router
   .get("/api/analytics", controller.isEnabled)
   .post("/api/analytics/ping", controller.endUserPing)
 
-module.exports = router
+export default router

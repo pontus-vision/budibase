@@ -1,16 +1,16 @@
-const setup = require("./utilities")
-const { basicScreen } = setup.structures
-const { checkBuilderEndpoint } = require("./utilities/TestFunctions")
-const { BUILTIN_ROLE_IDS } = require("@budibase/auth/roles")
+import { structures, getRequest, getConfig, afterAll as _afterAll } from "./utilities"
+const { basicScreen } = structures
+import { checkBuilderEndpoint } from "./utilities/TestFunctions"
+import { BUILTIN_ROLE_IDS } from "@budibase/auth/roles"
 
 const route = "/test"
 
 describe("/routing", () => {
-  let request = setup.getRequest()
-  let config = setup.getConfig()
+  let request = getRequest()
+  let config = getConfig()
   let screen, screen2
 
-  afterAll(setup.afterAll)
+  afterAll(_afterAll)
 
   beforeEach(async () => {
     await config.init()

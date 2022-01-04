@@ -1,9 +1,9 @@
-const rowController = require("../../../controllers/row")
-const appController = require("../../../controllers/application")
-const CouchDB = require("../../../../db")
-const { AppStatus } = require("../../../../db/utils")
-const { BUILTIN_ROLE_IDS } = require("@budibase/auth/roles")
-const { TENANT_ID } = require("../../../../tests/utilities/structures")
+import rowController from "../../../controllers/row"
+import appController from "../../../controllers/application"
+import CouchDB from "../../../../db"
+import { AppStatus } from "../../../../db/utils"
+import { BUILTIN_ROLE_IDS } from "@budibase/auth/roles"
+import { TENANT_ID } from "../../../../tests/utilities/structures"
 
 function Request(appId, params) {
   this.appId = appId
@@ -11,13 +11,13 @@ function Request(appId, params) {
   this.request = {}
 }
 
-exports.getAllTableRows = async config => {
+export const getAllTableRows = async config => {
   const req = new Request(config.appId, { tableId: config.table._id })
   await rowController.fetch(req)
   return req.body
 }
 
-exports.clearAllApps = async (tenantId = TENANT_ID) => {
+export const clearAllApps = async (tenantId = TENANT_ID) => {
   const req = { query: { status: AppStatus.DEV }, user: { tenantId } }
   await appController.fetch(req)
   const apps = req.body
@@ -30,14 +30,14 @@ exports.clearAllApps = async (tenantId = TENANT_ID) => {
   }
 }
 
-exports.clearAllAutomations = async config => {
+export const clearAllAutomations = async config => {
   const automations = await config.getAllAutomations()
   for (let auto of automations) {
     await config.deleteAutomation(auto)
   }
 }
 
-exports.createRequest = (request, method, url, body) => {
+export const createRequest = (request, method, url, body) => {
   let req
 
   if (method === "POST") req = request.post(url).send(body)
@@ -49,19 +49,18 @@ exports.createRequest = (request, method, url, body) => {
   return req
 }
 
-exports.checkBuilderEndpoint = async ({ config, method, url, body }) => {
+export const checkBuilderEndpoint = async ({ config, method, url, body }) => {
   const headers = await config.login({
     userId: "us_fail",
     builder: false,
     prodApp: true,
   })
-  await exports
-    .createRequest(config.request, method, url, body)
+  await createRequest(config.request, method, url, body)
     .set(headers)
     .expect(403)
 }
 
-exports.checkPermissionsEndpoint = async ({
+export const checkPermissionsEndpoint = async ({
   config,
   method,
   url,
@@ -74,8 +73,7 @@ exports.checkPermissionsEndpoint = async ({
     prodApp: true,
   })
 
-  await exports
-    .createRequest(config.request, method, url, body)
+  await createRequest(config.request, method, url, body)
     .set(passHeader)
     .expect(200)
 
@@ -90,17 +88,16 @@ exports.checkPermissionsEndpoint = async ({
     })
   }
 
-  await exports
-    .createRequest(config.request, method, url, body)
+  await createRequest(config.request, method, url, body)
     .set(failHeader)
     .expect(403)
 }
 
-exports.getDB = config => {
+export const getDB = config => {
   return new CouchDB(config.getAppId())
 }
 
-exports.testAutomation = async (config, automation) => {
+export const testAutomation = async (config, automation) => {
   return await config.request
     .post(`/api/automations/${automation._id}/test`)
     .send({

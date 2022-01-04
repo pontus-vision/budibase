@@ -36,24 +36,24 @@ class ResourceIdGetter {
   }
 }
 
-module.exports.ResourceIdGetter = ResourceIdGetter
+export { ResourceIdGetter }
 
-module.exports.paramResource = main => {
+export const paramResource = main => {
   return new ResourceIdGetter("params").mainResource(main).build()
 }
 
-module.exports.paramSubResource = (main, sub) => {
+export const paramSubResource = (main, sub) => {
   return new ResourceIdGetter("params")
     .mainResource(main)
     .subResource(sub)
     .build()
 }
 
-module.exports.bodyResource = main => {
+export const bodyResource = main => {
   return new ResourceIdGetter("body").mainResource(main).build()
 }
 
-module.exports.bodySubResource = (main, sub) => {
+export const bodySubResource = (main, sub) => {
   return new ResourceIdGetter("body")
     .mainResource(main)
     .subResource(sub)

@@ -1,5 +1,5 @@
-const arangodb = require("arangojs")
-const ArangoDBIntegration = require("../arangodb")
+import arangodb from 'arangojs';
+import ArangoDBIntegration from '../arangodb';
 jest.mock("arangojs")
 
 class TestConfiguration {

@@ -1,4 +1,4 @@
-exports.definition = {
+export const definition = {
   name: "Cron Trigger",
   event: "cron:trigger",
   icon: "Clock",
