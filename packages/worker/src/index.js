@@ -78,5 +78,3 @@ if (!process.env.IS_AWS_LAMBDA) {
     server.destroy()
   })
 }
-
-export { api as workerApi, redis as workerRedis }

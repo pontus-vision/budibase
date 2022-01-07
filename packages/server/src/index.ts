@@ -12,21 +12,3 @@ if (!process.env.IS_AWS_LAMBDA) {
 
   runServer()
 }
-const CouchDB = require("./db")
-const api = require("./api")
-const eventEmitter = require("./events")
-const automations = require("./automations/index")
-const fileSystem = require("./utilities/fileSystem")
-const bullboard = require("./automations/bullboard")
-const redis = require("./utilities/redis")
-
-export {
-  api,
-  eventEmitter,
-  automations,
-  fileSystem,
-  bullboard,
-  redis,
-  CouchDB
-
-}
