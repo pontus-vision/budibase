@@ -1,0 +1,7 @@
+node_modules
+**/node_modules
+hosting/aws/*.sh
+hosting/aws/Dockerfile*
+hosting/aws/Dockerfile/aws-lambda/dist
+hosting/aws/Dockerfile/aws-lambda/node_modules
+
