@@ -12,7 +12,7 @@ if (process.env.IS_AWS_LAMBDA) {
       const _opts = Object.assign(
         {
           db: db,
-          dynamodb: config.dynamodb,
+          dynamodb: {},
         },
         opts
       )
