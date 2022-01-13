@@ -3,7 +3,7 @@ const allDbs = require("pouchdb-all-dbs")
 const env = require("../environment")
 const { getCouchUrl } = require("@budibase/auth/db")
 
-if (process.env.IS_AWS_LAMBDA) {
+if (process.env.IS_AWS_LAMBDA_DIRECT_DYNAMO) {
   // @ts-ignore no-inner-declarations
   function customLevelAdapter(db) {
     // @ts-ignore no-inner-declarations
@@ -33,7 +33,7 @@ if (process.env.IS_AWS_LAMBDA) {
       PouchDB.adapter("custom-leveldb", CustomLevelPouch, true)
     }
   }
-  PouchDB.plugin(customLevelAdapter(require("dynamodb")))
+  PouchDB.plugin(customLevelAdapter(require("dynamodbdown")))
 }
 // level option is purely for testing (development)
 const COUCH_DB_URL = getCouchUrl() || "http://localhost:10000/db/"

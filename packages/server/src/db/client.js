@@ -5,7 +5,7 @@ const allDbs = require("pouchdb-all-dbs")
 const find = require("pouchdb-find")
 const env = require("../environment")
 
-if (process.env.IS_AWS_LAMBDA) {
+if (process.env.IS_AWS_LAMBDA_DIRECT_DYNAMO) {
   // @ts-ignore no-inner-declarations
   // eslint-ignore no-inner-declarations
   function customLevelAdapter(db) {
@@ -14,7 +14,7 @@ if (process.env.IS_AWS_LAMBDA) {
       const _opts = Object.assign(
         {
           db: db,
-          dynamodb: {},
+          dynamodb: { region: "eu-west-2" },
         },
         opts
       )

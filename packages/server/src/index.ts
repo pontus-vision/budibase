@@ -12,3 +12,6 @@ if (!process.env.IS_AWS_LAMBDA) {
 
   runServer()
 }
+
+// export * from './app'
+

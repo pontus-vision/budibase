@@ -77,4 +77,9 @@ if (!process.env.IS_AWS_LAMBDA) {
     server.close()
     server.destroy()
   })
+} else {
+  module.exports = {
+    workerRedis: redis,
+    workerApi: api,
+  }
 }

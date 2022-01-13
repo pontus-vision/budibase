@@ -68,7 +68,9 @@ router.use(async (ctx, next) => {
       validationErrors: err.validation,
     }
     if (env.NODE_ENV !== "jest") {
-      ctx.log.error(err)
+      if (!process.env.IS_AWS_LAMBDA) {
+        ctx.log.error(err)
+      }
       console.trace(err)
     }
   }

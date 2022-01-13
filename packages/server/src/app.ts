@@ -1,21 +1,22 @@
 // need to load environment first
 import { ExtendableContext } from "koa"
 
-const env = require("./environment")
+export const env = require("./environment")
 const CouchDB = require("./db")
 require("@budibase/auth").init(CouchDB)
+export {CouchDB};
 const Koa = require("koa")
 const destroyable = require("server-destroy")
 const koaBody = require("koa-body")
 const pino = require("koa-pino-logger")
 const http = require("http")
-const api = require("./api")
-const eventEmitter = require("./events")
-const automations = require("./automations/index")
+export const api = require("./api")
+export const eventEmitter = require("./events")
+export const automations = require("./automations/index")
 const Sentry = require("@sentry/node")
-const fileSystem = require("./utilities/fileSystem")
-const bullboard = require("./automations/bullboard")
-const redis = require("./utilities/redis")
+export const fileSystem = require("./utilities/fileSystem")
+export const bullboard = require("./automations/bullboard")
+export const redis = require("./utilities/redis")
 
 const app = new Koa()
 
@@ -27,7 +28,7 @@ app.use(
     jsonLimit: "10mb",
     textLimit: "10mb",
     enableTypes: ["json", "form", "text"],
-    parsedMethods: ["POST", "PUT", "PATCH", "DELETE"],
+    parsedMethods: ["POST", "PUT", "PATCH", "DELETE","GET"],
   })
 )
 
