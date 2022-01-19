@@ -3,7 +3,6 @@ const { isDev } = require("../index")
 const fs = require("fs")
 const { join } = require("path")
 const uuid = require("uuid/v4")
-// import {v4 as uuid} from 'uuid'
 const CouchDB = require("../../db")
 const { ObjectStoreBuckets } = require("../../constants")
 const {
