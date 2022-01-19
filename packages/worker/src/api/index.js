@@ -99,7 +99,10 @@ router.use(async (ctx, next) => {
   try {
     await next()
   } catch (err) {
-    ctx.log.error(err)
+    if (!process.env.IS_AWS_LAMBDA) {
+      ctx.log.error(err)
+    }
+    console.trace(err)
     ctx.status = err.status || err.statusCode || 500
     ctx.body = {
       message: err.message,

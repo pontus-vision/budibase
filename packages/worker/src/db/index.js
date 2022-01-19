@@ -3,38 +3,6 @@ const allDbs = require("pouchdb-all-dbs")
 const env = require("../environment")
 const { getCouchUrl } = require("@budibase/auth/db")
 
-if (process.env.IS_AWS_LAMBDA_DIRECT_DYNAMO) {
-  // @ts-ignore no-inner-declarations
-  function customLevelAdapter(db) {
-    // @ts-ignore no-inner-declarations
-
-    function CustomLevelPouch(opts, callback) {
-      const _opts = Object.assign(
-        {
-          db: db,
-          dynamodb: {},
-        },
-        opts
-      )
-
-      // @ts-ignore no-undef
-      CoreLevelPouch.call(this, _opts, callback)
-    }
-
-    // @ts-ignore no-inner-declarations
-    CustomLevelPouch.valid = function () {
-      return true
-    }
-
-    CustomLevelPouch.use_prefix = false
-
-    // @ts-ignore no-inner-declarations
-    return function (PouchDB) {
-      PouchDB.adapter("custom-leveldb", CustomLevelPouch, true)
-    }
-  }
-  PouchDB.plugin(customLevelAdapter(require("dynamodbdown")))
-}
 // level option is purely for testing (development)
 const COUCH_DB_URL = getCouchUrl() || "http://localhost:10000/db/"
 
@@ -49,7 +17,30 @@ if (env.isTest()) {
     adapter: "memory",
   }
 }
+if (process.env.IS_AWS_LAMBDA_DIRECT_DYNAMO) {
+  const { DynamoDB } = require("aws-sdk")
+  const { DynamoDbDown } = require("pv-dynamodb-leveldown")
 
+  const DynamoDbOptions = {
+    region: "eu-west-2",
+    // accessKeyId: 'abc',
+    // secretAccessKey: '123',
+    // paramValidation: false,
+    // endpoint: `http://localhost:${process.env.DYNAMODB_PORT}`,
+  }
+
+  const dynamoDb = new DynamoDB(DynamoDbOptions)
+  const dynamoDownFactory = DynamoDbDown.factory(dynamoDb)
+
+  const leveldownAdapter = location => {
+    const dynamoDown = dynamoDownFactory(location)
+    return dynamoDown
+  }
+  POUCH_DB_DEFAULTS = {
+    db: leveldownAdapter,
+    dynamodb: {},
+  }
+}
 const Pouch = PouchDB.defaults(POUCH_DB_DEFAULTS)
 
 // have to still have pouch alldbs for testing

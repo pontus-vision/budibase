@@ -70,9 +70,8 @@
   "license": "GPL-3.0",
   "dependencies": {
     "@apidevtools/swagger-parser": "^10.0.3",
-    "@budibase/auth": "^1.0.30",
-    "@budibase/client": "^1.0.30",
-    "@budibase/string-templates": "^1.0.30",
+    "@budibase/handlebars-helpers": "^0.11.7",
+    "@budibase/standard-components": "^0.9.139",
     "@bull-board/api": "^3.8.1",
     "@bull-board/koa": "^3.8.1",
     "@elastic/elasticsearch": "7.16.0",
@@ -122,6 +121,7 @@
     "pouchdb-all-dbs": "1.1.1",
     "pouchdb-find": "^7.2.2",
     "pouchdb-replication-stream": "1.2.9",
+    "pv-dynamodb-leveldown": "^3.2.7",
     "server-destroy": "1.0.1",
     "svelte": "^3.44.3",
     "to-json-schema": "0.2.5",
@@ -136,7 +136,6 @@
   "devDependencies": {
     "@babel/core": "^7.16.5",
     "@babel/preset-env": "^7.16.5",
-    "@budibase/standard-components": "^0.9.139",
     "@jest/test-sequencer": "^27.4.5",
     "@types/apidoc": "^0.50.0",
     "@types/bull": "^3.15.7",

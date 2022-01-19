@@ -64,5 +64,9 @@
     "mode:account": "yarn mode:cloud && yarn env:account:enable",
     "security:audit": "node scripts/audit.js",
     "postinstall": "husky install"
+  },
+  "dependencies": {
+    "@budibase/auth": "^1.0.35",
+    "@budibase/client": "^1.0.43"
   }
 }

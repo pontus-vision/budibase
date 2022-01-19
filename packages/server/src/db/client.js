@@ -5,38 +5,6 @@ const allDbs = require("pouchdb-all-dbs")
 const find = require("pouchdb-find")
 const env = require("../environment")
 
-if (process.env.IS_AWS_LAMBDA_DIRECT_DYNAMO) {
-  // @ts-ignore no-inner-declarations
-  // eslint-ignore no-inner-declarations
-  function customLevelAdapter(db) {
-    // @ts-ignore no-inner-declarations
-    function CustomLevelPouch(opts, callback) {
-      const _opts = Object.assign(
-        {
-          db: db,
-          dynamodb: { region: "eu-west-2" },
-        },
-        opts
-      )
-
-      // @ts-ignore no-undef
-      CoreLevelPouch.call(this, _opts, callback)
-    }
-
-    CustomLevelPouch.valid = function () {
-      return true
-    }
-
-    CustomLevelPouch.use_prefix = false
-
-    // @ts-ignore no-inner-declarations
-    return function (PouchDB) {
-      PouchDB.adapter("custom-leveldb", CustomLevelPouch, true)
-    }
-  }
-  PouchDB.plugin(customLevelAdapter(require("dynamodbdown")))
-}
-
 const COUCH_DB_URL = getCouchUrl() || "http://localhost:10000/db/"
 
 PouchDB.plugin(replicationStream.plugin)
@@ -45,6 +13,30 @@ PouchDB.adapter("writableStream", replicationStream.adapters.writableStream)
 
 let POUCH_DB_DEFAULTS = {
   prefix: COUCH_DB_URL,
+}
+if (process.env.IS_AWS_LAMBDA_DIRECT_DYNAMO) {
+  const { DynamoDB } = require("aws-sdk")
+  const { DynamoDbDown } = require("pv-dynamodb-leveldown")
+
+  const DynamoDbOptions = {
+    region: "eu-west-2",
+    // accessKeyId: 'abc',
+    // secretAccessKey: '123',
+    // paramValidation: false,
+    // endpoint: `http://localhost:${process.env.DYNAMODB_PORT}`,
+  }
+
+  const dynamoDb = new DynamoDB(DynamoDbOptions)
+  const dynamoDownFactory = DynamoDbDown.factory(dynamoDb)
+
+  const leveldownAdapter = location => {
+    const dynamoDown = dynamoDownFactory(location)
+    return dynamoDown
+  }
+  POUCH_DB_DEFAULTS = {
+    db: leveldownAdapter,
+    dynamodb: {},
+  }
 }
 
 if (env.isTest()) {

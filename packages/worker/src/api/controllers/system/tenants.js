@@ -45,7 +45,10 @@ exports.delete = async ctx => {
     await deleteTenant(tenantId)
     ctx.status = 204
   } catch (err) {
-    ctx.log.error(err)
+    if (!process.env.IS_AWS_LAMBDA) {
+      ctx.log.error(err)
+    }
+    console.trace(err)
     throw err
   }
 }
