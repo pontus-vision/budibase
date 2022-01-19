@@ -16,7 +16,7 @@ const redis = require("@budibase/server/dist/utilities/redis")
 // import {api,CouchDB,eventEmitter,automations,fileSystem, bullboard,redis} from '@budibase/server'
 
 // import {init as couchdbInit} from '@budibase/auth';
-require("@budibase/auth").init(CouchDB)
+require("@budibase/backend-core").init(CouchDB)
 import Koa from "koa";
 // import destroyable from "server-destroy";
 import koaBody from "koa-body";
@@ -25,7 +25,7 @@ import koaSession from "koa-session";
 // const pino = require ("koa-pino-logger");
 // import http from "http";
 // import api from "../../server/src/api";
-const { passport } = require("@budibase/auth").auth
+const { passport } = require("@budibase/backend-core").auth
 
 // const { workerApi, workerRedis } = require("@budibase/worker")
 

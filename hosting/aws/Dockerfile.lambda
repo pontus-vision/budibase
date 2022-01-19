@@ -47,7 +47,7 @@ COPY --from=budibase-lambda-build  /function/@budibase ${LAMBDA_TASK_ROOT}/node_
 RUN ln -s  ${LAMBDA_TASK_ROOT}/node_modules/@budibase/server/node_modules/@budibase/client ${LAMBDA_TASK_ROOT}/node_modules/@budibase/server/client  && \
     ls -altr /var/task/node_modules/@budibase/server/node_modules/@budibase && \
     ls -altr /var/task/node_modules/@budibase/server/ && \
-    cat /var/task/node_modules/@budibase/server/node_modules/@budibase/auth/src/db/index.js
+    cat /var/task/node_modules/@budibase/server/node_modules/@budibase/backend-core/src/db/index.js
 
 
 COPY --from=budibase-lambda-build  /function/package.json  ${LAMBDA_TASK_ROOT}

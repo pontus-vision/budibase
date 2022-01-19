@@ -27,8 +27,8 @@ WORKDIR /function/
 
 
 COPY lerna* /function/
-COPY packages/auth/package.* /function/packages/auth/
-COPY packages/auth/yarn.* /function/packages/auth/
+COPY packages/backend-core/package.* /function/packages/backend-core/
+COPY packages/backend-core/yarn.* /function/packages/backend-core/
 COPY packages/bbui/package.* /function/packages/bbui/
 COPY packages/bbui/yarn.* /function/packages/bbui/
 COPY packages/builder/package.* /function/packages/builder/
@@ -67,7 +67,12 @@ COPY hosting/aws/aws-lambda/package.* /function/hosting/aws/aws-lambda/
 COPY hosting/aws/aws-lambda/yarn.*    /function/hosting/aws/aws-lambda/
 
 RUN cd /function/hosting/aws/aws-lambda/ && \
-    yarn 
+    yarn && \
+    rm -rf /function/hosting/aws/aws-lambda/node_modules/@budibase/server && \
+    cp -a /function/packages/server /function/hosting/aws/aws-lambda/node_modules/@budibase/server && \
+    rm -rf /function/hosting/aws/aws-lambda/node_modules/@budibase/worker && \
+    cp -a /function/packages/worker /function/hosting/aws/aws-lambda/node_modules/@budibase/worker
+
 
 COPY ./hosting /function/hosting/
 

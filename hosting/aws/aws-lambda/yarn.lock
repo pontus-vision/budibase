@@ -7,10 +7,10 @@
   "resolved" "https://registry.npmjs.org/@adobe/spectrum-css-workflow-icons/-/spectrum-css-workflow-icons-1.2.1.tgz"
   "version" "1.2.1"
 
-"@budibase/auth@^1.0.35":
-  "integrity" "sha512-/HjwUw4PVAOtymqRfypm9XT2prFACqRI3rahE1F1YsMUCsw2pRQI+oHQbXtWgrzxgyed0AnEv6E5oXYHSrxTow=="
-  "resolved" "https://registry.npmjs.org/@budibase/auth/-/auth-1.0.35.tgz"
-  "version" "1.0.35"
+"@budibase/backend-core@^1.0.44":
+  "integrity" "sha512-sa9CJxMYkqMKPCwsfvhQMMz3s9vFPnNoWBOp221P8Y3D0vXN5MeH1+fWNrZAd0D7azwI1hqJdImCn7YEg0A81g=="
+  "resolved" "https://registry.npmjs.org/@budibase/backend-core/-/backend-core-1.0.44.tgz"
+  "version" "1.0.44"
   dependencies:
     "@techpass/passport-openidconnect" "^0.3.0"
     "aws-sdk" "^2.901.0"
@@ -172,22 +172,21 @@
 
 "@budibase/server@../../../packages/server":
   "resolved" "file:../../../packages/server"
-  "version" "1.0.29-alpha.0"
+  "version" "1.0.44"
   dependencies:
     "@apidevtools/swagger-parser" "^10.0.3"
-    "@budibase/auth" "^1.0.30"
-    "@budibase/client" "^1.0.30"
-    "@budibase/string-templates" "^1.0.30"
-    "@bull-board/api" "^3.8.1"
-    "@bull-board/koa" "^3.8.1"
-    "@elastic/elasticsearch" "7.16.0"
-    "@koa/router" "10.1.1"
-    "@sendgrid/mail" "7.6.0"
-    "@sentry/node" "^6.16.1"
-    "airtable" "0.11.1"
-    "arangojs" "7.6.1"
-    "aws-sdk" "^2.1048.0"
-    "aws-serverless-koa" "^1.0.2"
+    "@budibase/backend-core" "^1.0.44"
+    "@budibase/client" "^1.0.44"
+    "@budibase/string-templates" "^1.0.44"
+    "@bull-board/api" "^3.7.0"
+    "@bull-board/koa" "^3.7.0"
+    "@elastic/elasticsearch" "7.10.0"
+    "@koa/router" "8.0.0"
+    "@sendgrid/mail" "7.1.1"
+    "@sentry/node" "^6.0.0"
+    "airtable" "0.10.1"
+    "arangojs" "7.2.0"
+    "aws-sdk" "^2.767.0"
     "bcryptjs" "2.4.3"
     "bull" "^4.2.0"
     "chmodr" "1.2.0"
@@ -227,8 +226,10 @@
     "pouchdb-all-dbs" "1.1.1"
     "pouchdb-find" "^7.2.2"
     "pouchdb-replication-stream" "1.2.9"
+    "pv-dynamodb-leveldown" "^3.2.7"
     "server-destroy" "1.0.1"
     "svelte" "^3.44.3"
+    "swagger-parser" "^10.0.3"
     "to-json-schema" "0.2.5"
     "uuid" "3.3.2"
     "validate.js" "0.13.1"
@@ -272,14 +273,14 @@
 
 "@budibase/worker@../../../packages/worker":
   "resolved" "file:../../../packages/worker"
-  "version" "1.0.29-alpha.0"
+  "version" "1.0.44"
   dependencies:
-    "@budibase/auth" "^1.0.29-alpha.0"
-    "@budibase/string-templates" "^1.0.29-alpha.0"
+    "@budibase/backend-core" "^1.0.44"
+    "@budibase/string-templates" "^1.0.44"
     "@koa/router" "^8.0.0"
     "@sentry/node" "^6.0.0"
     "@techpass/passport-openidconnect" "^0.3.0"
-    "aws-sdk" "^2.811.0"
+    "aws-sdk" "^2.1057.0"
     "bcryptjs" "^2.4.3"
     "dotenv" "^8.2.0"
     "dynamodbdown" "^2.1.7"
@@ -301,6 +302,7 @@
     "pino-pretty" "^4.0.0"
     "pouchdb" "^7.2.1"
     "pouchdb-all-dbs" "^1.0.2"
+    "pv-dynamodb-leveldown" "^3.2.7"
     "server-destroy" "^1.0.1"
 
 "@cspotcode/source-map-consumer@0.8.0":
