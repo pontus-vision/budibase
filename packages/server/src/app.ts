@@ -3,8 +3,12 @@ import { ExtendableContext } from "koa"
 
 export const env = require("./environment")
 const CouchDB = require("./db")
+<<<<<<< HEAD
 require("@budibase/auth").init(CouchDB)
 export {CouchDB};
+=======
+require("@budibase/backend-core").init(CouchDB)
+>>>>>>> 2eb6bef9f5255148c820c0b3b5d8d92db7c86a50
 const Koa = require("koa")
 const destroyable = require("server-destroy")
 const koaBody = require("koa-body")
