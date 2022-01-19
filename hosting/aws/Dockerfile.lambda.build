@@ -1,0 +1,119 @@
+FROM budibase-lambda-base as build
+# this is budibase-lambda-build
+# Include global arg in this stage of the build
+ARG FUNCTION_DIR="/function"
+
+# Install aws-lambda-cpp build dependencies
+RUN apt-get update && \
+    apt-get install -y \
+    g++ \
+    make \
+    cmake \
+    unzip \
+    libcurl4-openssl-dev \
+    autoconf \
+    libtool \
+    smbclient \
+    libsmbclient-dev
+
+# RUN npm i -g npm@latest &&\
+#    npm i npm@latest yarn
+
+# Copy function code
+RUN mkdir -p /function/
+COPY package.* /function/
+WORKDIR /function/
+
+
+
+COPY lerna* /function/
+COPY packages/auth/package.* /function/packages/auth/
+COPY packages/auth/yarn.* /function/packages/auth/
+COPY packages/bbui/package.* /function/packages/bbui/
+COPY packages/bbui/yarn.* /function/packages/bbui/
+COPY packages/builder/package.* /function/packages/builder/
+COPY packages/builder/yarn.* /function/packages/builder/
+COPY packages/cli/package.* /function/packages/cli/
+COPY packages/cli/yarn.* /function/packages/cli/
+COPY packages/client/package.* /function/packages/client/
+COPY packages/client/yarn.* /function/packages/client/
+COPY packages/server/package.* /function/packages/server/
+COPY packages/server/yarn.* /function/packages/server/
+COPY packages/string-templates/package.* /function/packages/string-templates/
+COPY packages/string-templates/yarn.* /function/packages/string-templates/
+COPY packages/worker/package.* /function/packages/worker/
+COPY packages/worker/yarn.* /function/packages/worker/
+# COPY packages/aws-lambda/package.* /function/packages/aws-lambda/
+# COPY packages/aws-lambda/yarn.* /function/packages/aws-lambda/
+
+
+RUN yarn  && \
+    yarn run bootstrap 
+
+
+
+# RUN cd /function/hosting/aws/aws-lambda/ && \
+#     yarn add aws-lambda-ric 
+
+COPY ./packages /function/packages/
+
+
+
+# ENV NODE_ENV=production
+
+RUN yarn run build 
+
+COPY hosting/aws/aws-lambda/package.* /function/hosting/aws/aws-lambda/
+COPY hosting/aws/aws-lambda/yarn.*    /function/hosting/aws/aws-lambda/
+
+RUN cd /function/hosting/aws/aws-lambda/ && \
+    yarn 
+
+COPY ./hosting /function/hosting/
+
+WORKDIR /function/hosting/aws/aws-lambda
+
+# RUN yarn add ../../../packages/server ../../../packages/worker && \
+#     yarn install
+
+# RUN yarn run build && \
+#     yarn install --production --ignore-scripts --prefer-offline
+RUN yarn run  build 
+
+    # ls -altr /function/packages/server/node_modules/@budibase/ && \
+    # ls -altr /function/packages/worker/node_modules/@budibase/ 
+    # unlink /function/packages/worker/node_modules/@budibase/string-templates /function/packages/worker/node_modules/@budibase/auth && \
+    # cp -a  /function/packages/string-templates /function/packages/worker/node_modules/@budibase/  && \
+    # cp -a /function/packages/auth /function/packages/worker/node_modules/@budibase/ 
+RUN mv /function/hosting/aws/aws-lambda/node_modules/@budibase /function/@budibase
+
+FROM budibase-lambda-base  as  intermediary
+# USER 1000
+WORKDIR /function
+RUN mkdir -p /function/hosting/aws && \
+    ln -s  /function/ /function/hosting/aws
+
+COPY --from=build  /function/hosting/aws/aws-lambda/package.json /function/hosting/aws/aws-lambda/yarn.lock   /function/
+COPY --from=build  /function/hosting/aws/aws-lambda/dist /function/dist/
+
+FROM scratch 
+
+WORKDIR /function
+# COPY --from=intermediary  /function/node_modules/[^@budibase] /function/node_modules/
+# COPY --from=intermediary  /function/node_modules/@budibase /function/node_modules/@budibase
+COPY --from=build  /function/hosting/aws/aws-lambda/node_modules /function/node_modules
+COPY --from=build  /function/@budibase /function/@budibase
+
+
+COPY --from=intermediary  /function/package.json /function/yarn.lock  /function/
+COPY --from=intermediary  /function/hosting /function/hosting/
+
+COPY --from=intermediary  /function/dist /function/dist/
+
+
+
+# RUN npm prune --production  && \
+#     mkdir dist && \
+#     cp -a lib/* dist/ && \
+#     ls -altr dist
+

@@ -1,0 +1,16 @@
+service: budibase-lambda
+
+provider:
+  name: aws
+  region: eu-west-2
+  runtime: nodejs14.x
+  memorySize: 512
+  timeout: 30
+  lambdaHashingVersion: 20201221
+
+functions:
+  api:
+    handler: dist/lambda.handler
+    events:
+      - http: ANY /
+      - http: ANY /{proxy+}

@@ -1,0 +1,69 @@
+# FROM budibase-lambda-base
+FROM public.ecr.aws/lambda/nodejs:latest
+# USER 1000
+# RUN /usr/bin/npx aws-lambda-ric || true
+# RUN npm i -g yarn
+
+
+# COPY --chown=1000:1000 --from=budibase-lambda-build /function/charts /function/
+# COPY --chown=1000:1000 --from=budibase-lambda-build /function/packages/auth/package.* /function/packages/auth/
+# COPY --chown=1000:1000 --from=budibase-lambda-build /function/packages/bbui/package.* /function/packages/bbui/
+# COPY --chown=1000:1000 --from=budibase-lambda-build /function/packages/builder/package.* /function/packages/builder/
+# COPY --chown=1000:1000 --from=budibase-lambda-build /function/packages/cli/package.* /function/packages/cli/
+# COPY --chown=1000:1000 --from=budibase-lambda-build /function/packages/client/package.* /function/packages/client/
+# COPY --chown=1000:1000 --from=budibase-lambda-build /function/packages/server/package.* /function/packages/server/
+# COPY --chown=1000:1000 --from=budibase-lambda-build /function/packages/string-templates/package.* /function/packages/string-templates/
+# COPY --chown=1000:1000 --from=budibase-lambda-build /function/packages/worker/package.* /function/packages/worker/
+
+# COPY --chown=1000:1000 --from=budibase-lambda-build /function/packages/auth/node_modules /function/packages/auth/
+# COPY --chown=1000:1000 --from=budibase-lambda-build /function/packages/bbui/node_modules /function/packages/bbui/
+# COPY --chown=1000:1000 --from=budibase-lambda-build /function/packages/builder/node_modules /function/packages/builder/
+# COPY --chown=1000:1000 --from=budibase-lambda-build /function/packages/cli/node_modules /function/packages/cli/
+# COPY --chown=1000:1000 --from=budibase-lambda-build /function/packages/client/node_modules /function/packages/client/
+# COPY --chown=1000:1000 --from=budibase-lambda-build /function/packages/server/node_modules /function/packages/server/
+# COPY --chown=1000:1000 --from=budibase-lambda-build /function/packages/string-templates/node_modules /function/packages/string-templates/
+# COPY --chown=1000:1000 --from=budibase-lambda-build /function/packages/worker/node_modules /function/packages/worker/
+# COPY --chown=1000:1000 --from=budibase-lambda-build /function/node_modules /function/
+# COPY --chown=1000:1000 --from=budibase-lambda-build /function/package.* /function/
+# COPY --chown=1000:1000 --from=budibase-lambda-build /function/yarn.* /function/
+# COPY --chown=1000:1000 --from=budibase-lambda-build /function/packages/server/builder /function/packages/server/
+
+
+
+# COPY --chown=1000:1000 --from=budibase-lambda-build /function/packages/auth/src /function/packages/auth/
+# COPY --chown=1000:1000 --from=budibase-lambda-build /function/packages/auth/*.js /function/packages/auth/
+# COPY --chown=1000:1000 --from=budibase-lambda-build /function/packages/bbui/dist /function/packages/bbui/
+# COPY --chown=1000:1000 --from=budibase-lambda-build /function/packages/builder/src /function/packages/builder/
+# # COPY --chown=1000:1000 --from=budibase-lambda-build /function/packages/cli/dist /function/packages/cli/
+# COPY --chown=1000:1000 --from=budibase-lambda-build /function/packages/client/dist /function/packages/client/
+# COPY --chown=1000:1000 --from=budibase-lambda-build /function/packages/server/dist /function/packages/server/
+# COPY --chown=1000:1000 --from=budibase-lambda-build /function/packages/string-templates/dist /function/packages/string-templates/
+# COPY --chown=1000:1000 --from=budibase-lambda-build /function/packages/worker/src /function/packages/worker/
+
+COPY --from=budibase-lambda-build  /function/node_modules ${LAMBDA_TASK_ROOT}/node_modules
+ENV IS_AWS_LAMBDA=true
+ENV NODE_ENV=production
+COPY --from=budibase-lambda-build  /function/@budibase ${LAMBDA_TASK_ROOT}/node_modules/@budibase
+RUN ln -s  ${LAMBDA_TASK_ROOT}/node_modules/@budibase/server/node_modules/@budibase/client ${LAMBDA_TASK_ROOT}/node_modules/@budibase/server/client  && \
+    ls -altr /var/task/node_modules/@budibase/server/node_modules/@budibase && \
+    ls -altr /var/task/node_modules/@budibase/server/ && \
+    cat /var/task/node_modules/@budibase/server/node_modules/@budibase/auth/src/db/index.js
+
+
+COPY --from=budibase-lambda-build  /function/package.json  ${LAMBDA_TASK_ROOT}
+# COPY --from=budibase-lambda-build  /function/hosting /function/hosting/
+# RUN cd ${LAMBDA_TASK_ROOT} && sed -i 's#../../../packages/server#^1.0.0#g; s#../../../packages/worker#^1.0.0#g;' package.json && yarn
+
+COPY --from=budibase-lambda-build  /function/dist ${LAMBDA_TASK_ROOT}/dist/
+
+ 
+
+
+
+# WORKDIR /function
+# ENTRYPOINT ["/usr/bin/node" ]
+# CMD ["packages/server/dist/app.handler"]
+
+# ENTRYPOINT [ "/usr/bin/npx", "aws-lambda-ric" ]
+
+CMD "dist/lambda.handler"
