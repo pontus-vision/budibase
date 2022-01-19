@@ -5,6 +5,6 @@
     },
     "editor.defaultFormatter": "svelte.svelte-vscode",
     "search.exclude": {
-        "**/node_modules": false
+        "**/node_modules": true
     }
 }
