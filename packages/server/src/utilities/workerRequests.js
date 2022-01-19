@@ -1,10 +1,10 @@
 const fetch = require("node-fetch")
 const env = require("../environment")
 const { checkSlashesInUrl } = require("./index")
-const { getDeployedAppID } = require("@budibase/auth/db")
+const { getDeployedAppID } = require("@budibase/backend-core/db")
 const { updateAppRole } = require("./global")
-const { Headers } = require("@budibase/auth/constants")
-const { getTenantId, isTenantIdSet } = require("@budibase/auth/tenancy")
+const { Headers } = require("@budibase/backend-core/constants")
+const { getTenantId, isTenantIdSet } = require("@budibase/backend-core/tenancy")
 
 function request(ctx, request) {
   if (!request.headers) {
@@ -71,7 +71,7 @@ exports.getDeployedApps = async () => {
     for (let [key, value] of Object.entries(json)) {
       if (value.url) {
         value.url = value.url.toLowerCase()
-        apps[key] = value
+        apps[key.toLowerCase()] = value
       }
     }
     return apps
