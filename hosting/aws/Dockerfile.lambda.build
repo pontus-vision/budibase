@@ -71,7 +71,11 @@ RUN cd /function/hosting/aws/aws-lambda/ && \
     rm -rf /function/hosting/aws/aws-lambda/node_modules/@budibase/server && \
     cp -a /function/packages/server /function/hosting/aws/aws-lambda/node_modules/@budibase/server && \
     rm -rf /function/hosting/aws/aws-lambda/node_modules/@budibase/worker && \
-    cp -a /function/packages/worker /function/hosting/aws/aws-lambda/node_modules/@budibase/worker
+    cp -a /function/packages/worker /function/hosting/aws/aws-lambda/node_modules/@budibase/worker && \
+    rm -rf /function/hosting/aws/aws-lambda/node_modules/@budibase/client && \
+    cp -a /function/packages/client /function/hosting/aws/aws-lambda/node_modules/@budibase/client && \
+    rm -rf /function/hosting/aws/aws-lambda/node_modules/@budibase/backend-core && \
+    cp -a /function/packages/backend-core /function/hosting/aws/aws-lambda/node_modules/@budibase/backend-core
 
 
 COPY ./hosting /function/hosting/

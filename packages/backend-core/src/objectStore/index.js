@@ -70,11 +70,13 @@ const PUBLIC_BUCKETS = [ObjectStoreBuckets.APPS, ObjectStoreBuckets.GLOBAL]
  * @constructor
  */
 exports.ObjectStore = bucket => {
-  AWS.config.update({
-    accessKeyId: env.MINIO_ACCESS_KEY,
-    secretAccessKey: env.MINIO_SECRET_KEY,
-    region: env.AWS_REGION,
-  })
+  if (!process.env.IS_AWS_LAMBDA) {
+    AWS.config.update({
+      accessKeyId: env.MINIO_ACCESS_KEY,
+      secretAccessKey: env.MINIO_SECRET_KEY,
+      region: env.AWS_REGION,
+    })
+  }
   const config = {
     s3ForcePathStyle: true,
     signatureVersion: "v4",

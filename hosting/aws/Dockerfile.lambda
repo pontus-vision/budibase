@@ -43,8 +43,10 @@ FROM public.ecr.aws/lambda/nodejs:latest
 COPY --from=budibase-lambda-build  /function/node_modules ${LAMBDA_TASK_ROOT}/node_modules
 ENV IS_AWS_LAMBDA=true
 ENV NODE_ENV=production
+ENV AWS_REGION=eu-west-2
 COPY --from=budibase-lambda-build  /function/@budibase ${LAMBDA_TASK_ROOT}/node_modules/@budibase
 RUN ln -s  ${LAMBDA_TASK_ROOT}/node_modules/@budibase/server/node_modules/@budibase/client ${LAMBDA_TASK_ROOT}/node_modules/@budibase/server/client  && \
+    ln -s  ${LAMBDA_TASK_ROOT}/node_modules/@budibase/server/client/dist/budibase-client.js  ln -s  ${LAMBDA_TASK_ROOT}/node_modules/@budibase/server/client/ && \
     ls -altr /var/task/node_modules/@budibase/server/node_modules/@budibase && \
     ls -altr /var/task/node_modules/@budibase/server/ && \
     cat /var/task/node_modules/@budibase/server/node_modules/@budibase/backend-core/src/db/index.js

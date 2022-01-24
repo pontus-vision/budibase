@@ -1,6 +1,7 @@
 // need to load environment first
 // import { ExtendableContext } from "koa"
 // import * as lambda from 'aws-lambda';
+process.env['AWS_REGION']=process.env.PV_AWS_REGION||'eu-west-2'
 
 const serverless = require( 'aws-serverless-koa');
 const  awsServerlessKoaMiddleware = require( 'aws-serverless-koa/middleware');
@@ -47,7 +48,7 @@ app.use(
 
     
     // enableTypes: ["json", "form", "text"],
-    parsedMethods: ["POST", "PUT", "PATCH", "DELETE", "GET"],
+    parsedMethods: ["POST", "PUT", "PATCH", "DELETE" ],
   })
 )
 
@@ -106,6 +107,7 @@ app.context.auth = {}
 console.log ('init redis')
 redis.init()
 
+console.log ('after init redis')
 
 
 // export const handler =  serverless(app)
@@ -176,6 +178,7 @@ import * as lambda from 'aws-lambda';
 
 // app.use(cors())
 // app.use(expressPouchDB)
+console.log ('before createServer()')
 
 const server = createServer(app.callback())
 
@@ -200,7 +203,7 @@ export const  handler = async (event: lambda.APIGatewayProxyEvent, context: lamb
     isBase64Encoded: true
   };
 
-  console.log (`got reply ${resp.statusCode} ${JSON.stringify(logResp.headers)}`)
+  console.log (`got reply ${resp.statusCode} ${event.path} ${JSON.stringify(logResp.headers)}`)
 
   return logResp
 

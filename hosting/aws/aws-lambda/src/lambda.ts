@@ -2,6 +2,8 @@
 // import { ExtendableContext } from "koa"
 // import * as lambda from 'aws-lambda';
 
+process.env['AWS_REGION']=process.env.PV_AWS_REGION||'eu-west-2'
+
 const serverless = require( 'aws-serverless-koa');
 const  awsServerlessKoaMiddleware = require( 'aws-serverless-koa/middleware');
 const CouchDB = require("@budibase/server/dist/db")
@@ -228,7 +230,7 @@ export const  handler = async (event: lambda.APIGatewayProxyEvent, context: lamb
     isBase64Encoded: true
   };
 
-  console.log (`got reply ${resp.statusCode} ${JSON.stringify(logResp.headers)}`)
+  console.log (`got reply ${resp.statusCode} ${event.path} ${JSON.stringify(logResp.headers)}`)
 
   return logResp
 
